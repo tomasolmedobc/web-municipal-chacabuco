@@ -2,7 +2,7 @@
     <div class="site-header__top">
         <a href="{{ url('/') }}" class="site-brand">
             <div class="site-brand__logo">
-                <img src="{{ asset('images/2024/07/Escudo1_resultado.webp') }}" alt="Municipalidad de Chacabuco">
+                <img src="{{ asset('images/importantes/Escudo1_resultado.webp') }}" alt="Municipalidad de Chacabuco">
             </div>
 
             <div class="site-brand__text">

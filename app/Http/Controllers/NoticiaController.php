@@ -15,7 +15,7 @@ class NoticiaController extends Controller
         $desde = $request->get('desde');
         $hasta = $request->get('hasta');
 
-        $query = Noticia::query();
+        $query = Noticia::query()->where('estado', 'publicado');
 
         if ($busqueda) {
             $query->where(function ($q) use ($busqueda) {
@@ -35,7 +35,8 @@ class NoticiaController extends Controller
         $destacada = null;
 
         if ($paginaActual === 1 && !$busqueda && !$desde && !$hasta) {
-            $destacada = Noticia::whereNotNull('imagen_destacada')
+            $destacada = Noticia::where('estado', 'publicado')
+                ->whereNotNull('imagen_destacada')
                 ->where('imagen_destacada', '!=', '')
                 ->orderBy('fecha', 'desc')
                 ->first();
@@ -61,7 +62,9 @@ class NoticiaController extends Controller
 
     public function show($slug)
     {
-        $noticia = Noticia::where('slug', $slug)->firstOrFail();
+        $noticia = Noticia::where('slug', $slug)
+            ->where('estado', 'publicado')
+            ->firstOrFail();
 
         return view('noticias.show', compact('noticia'));
     }

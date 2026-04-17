@@ -24,7 +24,7 @@
         </div>
 
         <div class="municipal-hero__media">
-            <img src="{{ asset('images/2024/07/Imagen-de-WhatsApp-2024-07-15-a-las-08.01.13_31f4eca7_resultado.webp') }}" alt="Edificio municipal de Chacabuco">
+            <img src="{{ asset('images/importantes/Frente_municipal_resultado.webp') }}" alt="Edificio municipal de Chacabuco">
         </div>
     </section>
 

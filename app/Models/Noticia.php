@@ -10,22 +10,27 @@ class Noticia extends Model
 
     protected $fillable = [
         'wp_id',
+        'wp_modified_at',
         'titulo',
         'contenido',
         'fecha',
         'autor',
         'slug',
         'imagen_destacada',
+        'estado',
+        'user_id',
     ];
 
-    protected function casts(): array
+    protected $casts = [
+        'fecha' => 'datetime',
+        'wp_id' => 'integer',
+        'wp_modified_at' => 'datetime',
+    ];
+
+    public $timestamps = false;
+
+    public function usuario()
     {
-        return [
-            'fecha' => 'datetime',
-            'wp_id' => 'integer',
-            'wp_modified_at' => 'datetime',
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-        ];
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

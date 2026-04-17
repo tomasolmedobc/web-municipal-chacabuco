@@ -67,6 +67,7 @@ class SyncWordPressNews extends Command
                 'posts.post_content as contenido',
                 'posts.post_date as fecha',
                 'posts.post_name as slug',
+                'posts.post_status as wp_status',
                 'posts.post_author as autor_id',
                 'posts.post_modified as wp_modified_at',
                 'users.display_name as autor_nombre',
@@ -180,6 +181,7 @@ class SyncWordPressNews extends Command
             'autor' => $autor !== null ? (string) $autor : null,
             'slug' => $this->normalizeSlug($slug, $titulo, (int) $row->wp_id),
             'imagen_destacada' => $this->normalizeMediaValue($row->imagen_destacada),
+            'estado' => ($row->wp_status ?? null) === 'publish' ? 'publicado' : 'borrador',
             'wp_modified_at' => filled($row->wp_modified_at) ? Carbon::parse($row->wp_modified_at) : null,
         ];
     }

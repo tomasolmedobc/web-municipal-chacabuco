@@ -8,7 +8,8 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $ultimasNoticias = Noticia::orderBy('fecha', 'desc')
+        $ultimasNoticias = Noticia::where('estado', 'publicado')
+            ->orderBy('fecha', 'desc')
             ->take(6)
             ->get();
 

@@ -9,7 +9,7 @@
         <h1>{{ $noticia->titulo }}</h1>
 
         <div class="fecha">
-            <strong>Fecha:</strong> {{ \Carbon\Carbon::parse($noticia->fecha)->format('d/m/Y - H:i') }} hs
+            <strong>Fecha:</strong> {{ $noticia->fecha->format('d/m/Y - H:i') }} hs
         </div>
 
         @if($noticia->imagen_destacada)
