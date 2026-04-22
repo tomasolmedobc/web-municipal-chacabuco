@@ -8,28 +8,42 @@
         <p>Ultimas novedades, comunicados e informacion municipal.</p>
     </section>
 
-    <form method="GET" action="{{ route('noticias.index') }}" class="filtros">
-        <input
-            type="text"
-            name="q"
-            value="{{ $busqueda ?? '' }}"
-            placeholder="Buscar noticias..."
-            class="filtro-input filtro-input-busqueda"
-        >
+<form method="GET" action="{{ route('noticias.index') }}" class="filtros">
+    <input
+        type="text"
+        name="q"
+        value="{{ $busqueda ?? '' }}"
+        placeholder="Buscar noticias..."
+        class="filtro-input filtro-input-busqueda"
+    >
 
-        <div class="filtro-fecha">
-            <label for="desde">Desde</label>
-            <input type="date" id="desde" name="desde" value="{{ $desde ?? '' }}" class="filtro-input">
-        </div>
+    <div class="filtro-fecha">
+        <label for="desde">Desde</label>
+        <input type="date" id="desde" name="desde" value="{{ $desde ?? '' }}" class="filtro-input">
+    </div>
 
-        <div class="filtro-fecha">
-            <label for="hasta">Hasta</label>
-            <input type="date" id="hasta" name="hasta" value="{{ $hasta ?? '' }}" class="filtro-input">
-        </div>
+    <div class="filtro-fecha">
+        <label for="hasta">Hasta</label>
+        <input type="date" id="hasta" name="hasta" value="{{ $hasta ?? '' }}" class="filtro-input">
+    </div>
 
-        <button type="submit" class="boton-filtro">Filtrar</button>
-        <a href="{{ route('noticias.index') }}" class="boton-limpiar">Limpiar</a>
-    </form>
+    <div class="filtro-fecha">
+        <label for="orden">Orden</label>
+        <select name="orden" id="orden" class="filtro-input">
+            <option value="nuevas" {{ ($orden ?? 'nuevas') === 'nuevas' ? 'selected' : '' }}>Más recientes</option>
+            <option value="antiguas" {{ ($orden ?? '') === 'antiguas' ? 'selected' : '' }}>Más antiguas</option>
+        </select>
+    </div>
+
+    <button type="submit" class="boton-filtro">Filtrar</button>
+    <a href="{{ route('noticias.index') }}" class="boton-limpiar">Limpiar</a>
+</form>
+
+@if(($busqueda ?? '') !== '' || ($desde ?? '') || ($hasta ?? '') || ($orden ?? 'nuevas') !== 'nuevas')
+    <p class="fecha" style="margin-bottom: 18px;">
+        Se encontraron <strong>{{ $totalResultados }}</strong> resultado(s).
+    </p>
+@endif
 
     @if ($destacada)
         @php
@@ -107,3 +121,7 @@
         </div>
     @endif
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('js/noticias-filtros.js') }}"></script>
+@endpush

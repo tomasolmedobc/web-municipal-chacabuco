@@ -9,15 +9,15 @@
             <p class="admin-subtitle">Crea una noticia manualmente para el portal.</p>
         </div>
 
-        <a href="{{ route('admin.noticias.index') }}" class="btn btn-secondary">Volver</a>
+        <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Volver</a>
     </section>
 
-    <form action="{{ route('admin.noticias.store') }}" method="POST" enctype="multipart/form-data" class="admin-form-card">
+    <form id="form-noticia" action="{{ route('admin.noticias.store') }}" method="POST" enctype="multipart/form-data" class="admin-form-card">
         @csrf
 
         <div class="admin-form-grid">
             <div class="admin-form-group full">
-                <label for="titulo">Titulo</label>
+                <label for="titulo">Título</label>
                 <input type="text" name="titulo" id="titulo" value="{{ old('titulo') }}" required>
                 @error('titulo') <small class="auth-error">{{ $message }}</small> @enderror
             </div>
@@ -37,10 +37,18 @@
             <div class="admin-form-group">
                 <label for="estado">Estado</label>
                 <select name="estado" id="estado" required>
-                    <option value="borrador" {{ old('estado', 'borrador') === 'borrador' ? 'selected' : '' }}>Borrador</option>
+                    <option value="oculto" {{ old('estado', 'oculto') === 'oculto' ? 'selected' : '' }}>Oculto</option>
                     <option value="publicado" {{ old('estado') === 'publicado' ? 'selected' : '' }}>Publicado</option>
                 </select>
                 @error('estado') <small class="auth-error">{{ $message }}</small> @enderror
+
+                <small id="estado-alerta-oculto" class="estado-warning" style="display:none;">
+                    ⚠️ Esta noticia no será visible públicamente.
+                </small>
+
+                <small id="estado-alerta-publicado" class="estado-success" style="display:none;">
+                    ✔ Esta noticia será visible en el portal.
+                </small>
             </div>
 
             <div class="admin-form-group full">
@@ -51,11 +59,26 @@
 
             <div class="admin-form-group full">
                 <label for="contenido">Contenido</label>
-                <textarea name="contenido" id="contenido" rows="12" required>{{ old('contenido') }}</textarea>
+                <textarea name="contenido" id="contenido" rows="12">{{ old('contenido') }}</textarea>
                 @error('contenido') <small class="auth-error">{{ $message }}</small> @enderror
+            </div>
+
+            <div class="admin-form-group full">
+                <label for="archivos">Archivos adjuntos</label>
+                <input type="file" name="archivos[]" id="archivos" multiple accept=".pdf,.doc,.docx,.xls,.xlsx">
+                @error('archivos.*') <small class="auth-error">{{ $message }}</small> @enderror
             </div>
         </div>
 
         <button type="submit" class="btn btn-primary">Guardar noticia</button>
     </form>
 @endsection
+
+@push('scripts_head')
+    <script src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
+@endpush
+
+@push('scripts')
+    <script src="{{ asset('js/admin-noticias.js') }}"></script>
+    <script src="{{ asset('js/admin-editor.js') }}"></script>
+@endpush

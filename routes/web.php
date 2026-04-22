@@ -23,13 +23,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 /* Admin */
 Route::middleware(['auth', 'role:admin,editor'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-});
-
-
-
-Route::middleware(['auth', 'role:admin,editor'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-
+    Route::delete('/archivos/{archivo}', [NoticiaAdminController::class, 'destroyArchivo'])->name('admin.noticias.archivos.destroy');
     Route::get('/noticias', [NoticiaAdminController::class, 'index'])->name('admin.noticias.index');
     Route::get('/noticias/crear', [NoticiaAdminController::class, 'create'])->name('admin.noticias.create');
     Route::post('/noticias', [NoticiaAdminController::class, 'store'])->name('admin.noticias.store');

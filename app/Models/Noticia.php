@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\NoticiaArchivo;
 
 class Noticia extends Model
 {
@@ -32,5 +33,10 @@ class Noticia extends Model
     public function usuario()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function archivos()
+    {
+        return $this->hasMany(NoticiaArchivo::class);
     }
 }

@@ -11,16 +11,19 @@ class NoticiaController extends Controller
     {
         $paginaActual = (int) $request->get('page', 1);
 
-        $busqueda = $request->get('q');
+        $busqueda = trim((string) $request->get('q'));
         $desde = $request->get('desde');
         $hasta = $request->get('hasta');
+        $orden = $request->get('orden', 'nuevas');
 
-        $query = Noticia::query()->where('estado', 'publicado');
+        $query = Noticia::query()
+            ->where('estado', 'publicado');
 
-        if ($busqueda) {
+        if ($busqueda !== '') {
             $query->where(function ($q) use ($busqueda) {
                 $q->where('titulo', 'like', '%' . $busqueda . '%')
-                  ->orWhere('contenido', 'like', '%' . $busqueda . '%');
+                  ->orWhere('contenido', 'like', '%' . $busqueda . '%')
+                  ->orWhere('autor', 'like', '%' . $busqueda . '%');
             });
         }
 
@@ -34,7 +37,7 @@ class NoticiaController extends Controller
 
         $destacada = null;
 
-        if ($paginaActual === 1 && !$busqueda && !$desde && !$hasta) {
+        if ($paginaActual === 1 && $busqueda === '' && !$desde && !$hasta) {
             $destacada = Noticia::where('estado', 'publicado')
                 ->whereNotNull('imagen_destacada')
                 ->where('imagen_destacada', '!=', '')
@@ -46,25 +49,39 @@ class NoticiaController extends Controller
             $query->where('id', '!=', $destacada->id);
         }
 
+        if ($orden === 'antiguas') {
+            $query->orderBy('fecha', 'asc');
+        } else {
+            $query->orderBy('fecha', 'desc');
+        }
+
         $noticias = $query
-            ->orderBy('fecha', 'desc')
             ->paginate(9)
             ->appends($request->query());
+
+        $totalResultados = $noticias->total();
 
         return view('noticias.index', compact(
             'destacada',
             'noticias',
             'busqueda',
             'desde',
-            'hasta'
+            'hasta',
+            'orden',
+            'totalResultados'
         ));
     }
 
     public function show($slug)
     {
-        $noticia = Noticia::where('slug', $slug)
-            ->where('estado', 'publicado')
-            ->firstOrFail();
+        $query = Noticia::with('archivos')
+            ->where('slug', $slug);
+
+        if (!auth()->check() || !in_array(auth()->user()->rol, ['admin', 'editor'])) {
+            $query->where('estado', 'publicado');
+        }
+
+        $noticia = $query->firstOrFail();
 
         return view('noticias.show', compact('noticia'));
     }

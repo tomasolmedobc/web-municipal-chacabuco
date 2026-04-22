@@ -33,9 +33,11 @@
     </form>
 
     @if(session('ok'))
-        <div class="admin-alert success">
-            {{ session('ok') }}
-        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                showToast(@json(session('ok')), 'success');
+            });
+        </script>
     @endif
 
     @if(($busqueda ?? null) && $noticias->count() > 0)
@@ -58,32 +60,37 @@
             <article class="admin-list-item">
                 <div>
                     <h3>{{ $noticia->titulo }}</h3>
-                    <p>
-                        {{ $noticia->fecha?->format('d/m/Y H:i') }}
-                        ·
-                        <strong>
-                            {{ $noticia->estado === 'publicado' ? 'Publicado' : 'Oculto' }}
-                        </strong>
+
+                    <div class="meta-noticia">
+                        <span>{{ $noticia->fecha?->format('d/m/Y H:i') }}</span>
+
+                        <span class="badge-estado {{ $noticia->estado === 'publicado' ? 'badge-publicado' : 'badge-oculto' }}">
+                            {{ $noticia->estado === 'publicado' ? '✔ Publicado' : '⚠ Oculto' }}
+                        </span>
+
                         @if($noticia->autor)
-                            · {{ $noticia->autor }}
+                            <span>{{ $noticia->autor }}</span>
                         @endif
-                    </p>
+                    </div>
                 </div>
 
-                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <div class="admin-actions">
                     <a href="{{ route('noticias.show', $noticia->slug) }}" class="btn btn-secondary">Ver</a>
 
-                    <form action="{{ route('admin.noticias.toggleStatus', $noticia) }}" method="POST">
+                    <form action="{{ route('admin.noticias.toggleStatus', $noticia) }}" method="POST" class="form-toggle-estado">
                         @csrf
                         @method('PATCH')
-                        <button type="submit" class="btn btn-secondary">
+                        <button
+                            type="submit"
+                            class="btn {{ $noticia->estado === 'publicado' ? 'btn-estado-ocultar' : 'btn-estado-publicar' }}"
+                        >
                             {{ $noticia->estado === 'publicado' ? 'Ocultar' : 'Publicar' }}
                         </button>
                     </form>
 
                     <a href="{{ route('admin.noticias.edit', $noticia) }}" class="btn btn-secondary">Editar</a>
 
-                    <form action="{{ route('admin.noticias.destroy', $noticia) }}" method="POST" onsubmit="return confirm('¿Seguro que querés eliminar esta noticia?')">
+                    <form action="{{ route('admin.noticias.destroy', $noticia) }}" method="POST" class="form-eliminar-noticia" data-confirm="¿Seguro que querés eliminar esta noticia?">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-secondary">Eliminar</button>
@@ -97,3 +104,7 @@
         {{ $noticias->links('vendor.pagination.custom') }}
     </div>
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('js/admin-dashboard.js') }}"></script>
+@endpush
