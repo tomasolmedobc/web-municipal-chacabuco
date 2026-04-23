@@ -59,8 +59,15 @@
         @foreach($noticias as $noticia)
             <article class="admin-list-item">
                 <div>
-                    <h3>{{ $noticia->titulo }}</h3>
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                <h3 style="margin:0;">{{ $noticia->titulo }}</h3>
 
+                @if($noticia->categoria)
+                    <span class="badge-categoria">
+                        {{ $noticia->categoria->nombre }}
+                    </span>
+                @endif
+            </div>
                     <div class="meta-noticia">
                         <span>{{ $noticia->fecha?->format('d/m/Y H:i') }}</span>
 

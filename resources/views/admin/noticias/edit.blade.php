@@ -12,7 +12,7 @@
         <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Volver</a>
     </section>
 
-    <form  id="form-noticia" action="{{ route('admin.noticias.update', $noticia) }}" method="POST" enctype="multipart/form-data" class="admin-form-card">
+    <form id="form-noticia" action="{{ route('admin.noticias.update', $noticia) }}" method="POST" enctype="multipart/form-data" class="admin-form-card">
         @csrf
         @method('PUT')
 
@@ -53,6 +53,33 @@
             </div>
 
             <div class="admin-form-group full">
+                <label for="categorias">Categorías</label>
+                @php
+                    $categoriasSeleccionadas = old('categorias', $noticia->categorias->pluck('id')->toArray());
+                @endphp
+
+                <select name="categorias[]" id="categorias" multiple class="filtro-input categorias-select">
+                    @foreach($categoriasPadre as $categoriaPadre)
+                        <option value="{{ $categoriaPadre->id }}"
+                            {{ in_array($categoriaPadre->id, $categoriasSeleccionadas) ? 'selected' : '' }}>
+                            {{ $categoriaPadre->nombre }}
+                        </option>
+
+                        @foreach($categoriaPadre->hijas as $hija)
+                            <option value="{{ $hija->id }}"
+                                {{ in_array($hija->id, $categoriasSeleccionadas) ? 'selected' : '' }}>
+                                — {{ $hija->nombre }}
+                            </option>
+                        @endforeach
+                    @endforeach
+                </select>
+
+                <small class="fecha">Podés seleccionar una o más categorías.</small>
+                @error('categorias') <small class="auth-error">{{ $message }}</small> @enderror
+                @error('categorias.*') <small class="auth-error">{{ $message }}</small> @enderror
+            </div>
+
+            <div class="admin-form-group full">
                 <label for="imagen_destacada">Imagen destacada</label>
                 <input type="file" name="imagen_destacada" id="imagen_destacada" accept=".jpg,.jpeg,.png,.webp">
                 @error('imagen_destacada') <small class="auth-error">{{ $message }}</small> @enderror
@@ -61,7 +88,7 @@
             @if ($noticia->imagen_destacada)
                 <div class="admin-form-group full">
                     <label>Imagen actual</label>
-                    <img src="{{ $noticia->imagen_destacada }}" alt="{{ $noticia->titulo }}" style="max-width: 280px; border-radius: 12px;">
+                    <img src="{{ $noticia->imagen_destacada }}" alt="{{ $noticia->titulo }}" class="preview-imagen-admin">
                 </div>
             @endif
 

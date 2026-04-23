@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Noticia;
 use App\Models\NoticiaArchivo;
+use App\Models\Categoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -15,7 +16,7 @@ class NoticiaAdminController extends Controller
     {
         $busqueda = $request->get('q');
 
-        $query = Noticia::query();
+        $query = Noticia::with('categorias');
 
         if ($busqueda) {
             $query->where(function ($q) use ($busqueda) {
@@ -36,7 +37,12 @@ class NoticiaAdminController extends Controller
 
     public function create()
     {
-        return view('admin.noticias.create');
+        $categoriasPadre = Categoria::with('hijas')
+            ->whereNull('parent_id')
+            ->orderBy('nombre')
+            ->get();
+
+        return view('admin.noticias.create', compact('categoriasPadre'));
     }
 
     public function store(Request $request)
@@ -44,6 +50,8 @@ class NoticiaAdminController extends Controller
         $datos = $request->validate([
             'titulo' => ['required', 'string', 'max:255'],
             'contenido' => ['required', 'string'],
+            'categorias' => ['nullable', 'array'],
+            'categorias.*' => ['exists:categorias,id'],
             'fecha' => ['required', 'date'],
             'estado' => ['required', 'in:oculto,publicado'],
             'imagen_destacada' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
@@ -80,6 +88,10 @@ class NoticiaAdminController extends Controller
             'autor' => auth()->user()->name,
         ]);
 
+        if (!empty($datos['categorias'])) {
+            $noticia->categorias()->sync($datos['categorias']);
+        }
+
         if ($request->hasFile('archivos')) {
             $this->guardarArchivosAdjuntos($request->file('archivos'), $noticia);
         }
@@ -89,7 +101,14 @@ class NoticiaAdminController extends Controller
 
     public function edit(Noticia $noticia)
     {
-        return view('admin.noticias.edit', compact('noticia'));
+        $categoriasPadre = Categoria::with('hijas')
+            ->whereNull('parent_id')
+            ->orderBy('nombre')
+            ->get();
+
+        $noticia->load('categorias');
+
+        return view('admin.noticias.edit', compact('noticia', 'categoriasPadre'));
     }
 
     public function update(Request $request, Noticia $noticia)
@@ -97,6 +116,8 @@ class NoticiaAdminController extends Controller
         $datos = $request->validate([
             'titulo' => ['required', 'string', 'max:255'],
             'contenido' => ['required', 'string'],
+            'categorias' => ['nullable', 'array'],
+            'categorias.*' => ['exists:categorias,id'],
             'fecha' => ['required', 'date'],
             'estado' => ['required', 'in:oculto,publicado'],
             'imagen_destacada' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
@@ -137,6 +158,8 @@ class NoticiaAdminController extends Controller
 
         $noticia->save();
 
+        $noticia->categorias()->sync($datos['categorias'] ?? []);
+
         if ($request->hasFile('archivos')) {
             $this->guardarArchivosAdjuntos($request->file('archivos'), $noticia);
         }
@@ -160,12 +183,7 @@ class NoticiaAdminController extends Controller
             ? 'La noticia fue publicada correctamente.'
             : 'La noticia fue ocultada correctamente.';
 
-        $tipo = $noticia->estado === 'publicado' ? 'success' : 'success';
-
-        return redirect()->back()->with([
-            'ok' => $mensaje,
-            'ok_type' => $tipo,
-        ]);
+        return redirect()->back()->with('ok', $mensaje);
     }
 
     public function destroyArchivo(NoticiaArchivo $archivo)

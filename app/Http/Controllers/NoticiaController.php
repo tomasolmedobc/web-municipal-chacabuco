@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Noticia;
+use App\Models\Categoria;
 use Illuminate\Http\Request;
 
 class NoticiaController extends Controller
@@ -15,8 +16,14 @@ class NoticiaController extends Controller
         $desde = $request->get('desde');
         $hasta = $request->get('hasta');
         $orden = $request->get('orden', 'nuevas');
+        $categoriaSlug = $request->get('categoria');
 
-        $query = Noticia::query()
+        $categoriasFiltro = Categoria::whereNull('parent_id')
+            ->with('hijas')
+            ->orderBy('nombre')
+            ->get();
+
+        $query = Noticia::with('categorias')
             ->where('estado', 'publicado');
 
         if ($busqueda !== '') {
@@ -35,10 +42,17 @@ class NoticiaController extends Controller
             $query->whereDate('fecha', '<=', $hasta);
         }
 
+        if ($categoriaSlug) {
+            $query->whereHas('categorias', function ($q) use ($categoriaSlug) {
+                $q->where('slug', $categoriaSlug);
+            });
+        }
+
         $destacada = null;
 
-        if ($paginaActual === 1 && $busqueda === '' && !$desde && !$hasta) {
-            $destacada = Noticia::where('estado', 'publicado')
+        if ($paginaActual === 1 && $busqueda === '' && !$desde && !$hasta && !$categoriaSlug) {
+            $destacada = Noticia::with('categorias')
+                ->where('estado', 'publicado')
                 ->whereNotNull('imagen_destacada')
                 ->where('imagen_destacada', '!=', '')
                 ->orderBy('fecha', 'desc')
@@ -68,13 +82,15 @@ class NoticiaController extends Controller
             'desde',
             'hasta',
             'orden',
+            'categoriaSlug',
+            'categoriasFiltro',
             'totalResultados'
         ));
     }
 
     public function show($slug)
     {
-        $query = Noticia::with('archivos')
+        $query = Noticia::with(['archivos', 'categorias'])
             ->where('slug', $slug);
 
         if (!auth()->check() || !in_array(auth()->user()->rol, ['admin', 'editor'])) {

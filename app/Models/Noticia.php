@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\NoticiaArchivo;
+use App\Models\Categoria;
 
 class Noticia extends Model
 {
@@ -38,5 +39,9 @@ class Noticia extends Model
     public function archivos()
     {
         return $this->hasMany(NoticiaArchivo::class);
+    }
+    public function categorias()
+    {
+        return $this->belongsToMany(Categoria::class, 'categoria_noticia');
     }
 }

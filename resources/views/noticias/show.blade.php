@@ -8,6 +8,16 @@
 
         <h1>{{ $noticia->titulo }}</h1>
 
+        @if($noticia->categorias->count())
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+                @foreach($noticia->categorias as $categoria)
+                    <span class="categoria-noticia">
+                        {{ $categoria->nombre }}
+                    </span>
+                @endforeach
+            </div>
+        @endif
+
         <div class="fecha">
             <strong>Fecha:</strong> {{ $noticia->fecha->format('d/m/Y - H:i') }} hs
         </div>
@@ -35,69 +45,69 @@
         </div>
 
         @if($noticia->archivos->count())
-    <div style="margin-top: 30px;">
-        <h3>Archivos adjuntos</h3>
+            <div style="margin-top: 30px;">
+                <h3>Archivos adjuntos</h3>
 
-        <div class="archivos-grid">
-            @foreach($noticia->archivos as $archivo)
-                @php
-                    $extension = strtolower($archivo->extension);
-                    $icono = match($extension) {
-                        'pdf' => 'fa-file-pdf',
-                        'doc', 'docx' => 'fa-file-word',
-                        'xls', 'xlsx' => 'fa-file-excel',
-                        default => 'fa-paperclip',
-                    };
-                @endphp
+                <div class="archivos-grid">
+                    @foreach($noticia->archivos as $archivo)
+                        @php
+                            $extension = strtolower($archivo->extension);
+                            $icono = match($extension) {
+                                'pdf' => 'fa-file-pdf',
+                                'doc', 'docx' => 'fa-file-word',
+                                'xls', 'xlsx' => 'fa-file-excel',
+                                default => 'fa-paperclip',
+                            };
+                        @endphp
 
-                <div class="archivo-card">
-                    <div class="archivo-card__main">
-                        <i class="fa-solid {{ $icono }} archivo-icono"></i>
+                        <div class="archivo-card">
+                            <div class="archivo-card__main">
+                                <i class="fa-solid {{ $icono }} archivo-icono"></i>
 
-                        <div class="archivo-info">
-                            <span class="archivo-nombre">{{ $archivo->nombre_original }}</span>
-                            <span class="archivo-meta">
-                                {{ strtoupper($extension) }} · {{ $archivo->tamano_legible }}
-                            </span>
+                                <div class="archivo-info">
+                                    <span class="archivo-nombre">{{ $archivo->nombre_original }}</span>
+                                    <span class="archivo-meta">
+                                        {{ strtoupper($extension) }} · {{ $archivo->tamano_legible }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="archivo-card__actions">
+                                @if($extension === 'pdf')
+                                    <button
+                                        type="button"
+                                        class="btn btn-secondary btn-preview-pdf"
+                                        data-pdf="{{ $archivo->ruta }}"
+                                        data-title="{{ $archivo->nombre_original }}"
+                                    >
+                                        Ver PDF
+                                    </button>
+                                @endif
+
+                                <a href="{{ $archivo->ruta }}" target="_blank" class="btn btn-secondary" download>
+                                    Descargar
+                                </a>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="archivo-card__actions">
-                        @if($extension === 'pdf')
-                            <button
-                                type="button"
-                                class="btn btn-secondary btn-preview-pdf"
-                                data-pdf="{{ $archivo->ruta }}"
-                                data-title="{{ $archivo->nombre_original }}"
-                            >
-                                Ver PDF
-                            </button>
-                        @endif
-
-                        <a href="{{ $archivo->ruta }}" target="_blank" class="btn btn-secondary" download>
-                            Descargar
-                        </a>
-                    </div>
+                    @endforeach
                 </div>
-            @endforeach
-        </div>
-    </div>
-@endif
-
-    <div id="pdfModal" class="pdf-modal" hidden>
-        <div class="pdf-modal__overlay" id="pdfModalOverlay"></div>
-
-        <div class="pdf-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="pdfModalTitle">
-            <div class="pdf-modal__header">
-                <h3 id="pdfModalTitle">Vista previa PDF</h3>
-                <button type="button" class="pdf-modal__close" id="pdfModalClose">✕</button>
             </div>
+        @endif
 
-            <div class="pdf-modal__body">
-                <iframe id="pdfViewer" src="" frameborder="0"></iframe>
+        <div id="pdfModal" class="pdf-modal" hidden>
+            <div class="pdf-modal__overlay" id="pdfModalOverlay"></div>
+
+            <div class="pdf-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="pdfModalTitle">
+                <div class="pdf-modal__header">
+                    <h3 id="pdfModalTitle">Vista previa PDF</h3>
+                    <button type="button" class="pdf-modal__close" id="pdfModalClose">✕</button>
+                </div>
+
+                <div class="pdf-modal__body">
+                    <iframe id="pdfViewer" src="" frameborder="0"></iframe>
+                </div>
             </div>
         </div>
-    </div>
     </div>
 @endsection
 

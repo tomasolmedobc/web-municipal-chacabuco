@@ -52,6 +52,29 @@
             </div>
 
             <div class="admin-form-group full">
+                <label for="categorias">Categorías</label>
+                <select name="categorias[]" id="categorias" multiple class="filtro-input categorias-select">
+                    @foreach($categoriasPadre as $categoriaPadre)
+                        <option value="{{ $categoriaPadre->id }}"
+                            {{ collect(old('categorias', []))->contains($categoriaPadre->id) ? 'selected' : '' }}>
+                            {{ $categoriaPadre->nombre }}
+                        </option>
+
+                        @foreach($categoriaPadre->hijas as $hija)
+                            <option value="{{ $hija->id }}"
+                                {{ collect(old('categorias', []))->contains($hija->id) ? 'selected' : '' }}>
+                                — {{ $hija->nombre }}
+                            </option>
+                        @endforeach
+                    @endforeach
+                </select>
+
+                <small class="fecha">Podés seleccionar una o más categorías.</small>
+                @error('categorias') <small class="auth-error">{{ $message }}</small> @enderror
+                @error('categorias.*') <small class="auth-error">{{ $message }}</small> @enderror
+            </div>
+
+            <div class="admin-form-group full">
                 <label for="imagen_destacada">Imagen destacada</label>
                 <input type="file" name="imagen_destacada" id="imagen_destacada" accept=".jpg,.jpeg,.png,.webp">
                 @error('imagen_destacada') <small class="auth-error">{{ $message }}</small> @enderror
