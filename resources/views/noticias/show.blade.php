@@ -34,7 +34,7 @@
             {!! $contenido !!}
         </div>
 
-       @if($noticia->archivos->count())
+        @if($noticia->archivos->count())
     <div style="margin-top: 30px;">
         <h3>Archivos adjuntos</h3>
 

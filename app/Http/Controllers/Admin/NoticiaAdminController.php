@@ -156,7 +156,16 @@ class NoticiaAdminController extends Controller
         $noticia->estado = $noticia->estado === 'publicado' ? 'oculto' : 'publicado';
         $noticia->save();
 
-        return redirect()->back()->with('ok', 'Estado actualizado correctamente.');
+        $mensaje = $noticia->estado === 'publicado'
+            ? 'La noticia fue publicada correctamente.'
+            : 'La noticia fue ocultada correctamente.';
+
+        $tipo = $noticia->estado === 'publicado' ? 'success' : 'success';
+
+        return redirect()->back()->with([
+            'ok' => $mensaje,
+            'ok_type' => $tipo,
+        ]);
     }
 
     public function destroyArchivo(NoticiaArchivo $archivo)

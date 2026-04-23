@@ -1,8 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const formsEliminar = document.querySelectorAll('.form-eliminar-noticia');
 
-    if (!formsEliminar.length) return;
-
     formsEliminar.forEach((form) => {
         form.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -15,10 +13,15 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             showConfirm(mensaje, () => {
+                const btn = form.querySelector('button[type="submit"]');
+                if (btn) {
+                    btn.disabled = true;
+                }
                 this.submit();
             });
         });
     });
+
     const formsEstado = document.querySelectorAll('.form-toggle-estado');
 
     formsEstado.forEach((form) => {
@@ -26,6 +29,10 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
 
             showConfirm('¿Querés cambiar el estado de esta noticia?', () => {
+                const btn = form.querySelector('button[type="submit"]');
+                if (btn) {
+                    btn.disabled = true;
+                }
                 form.submit();
             });
         });
