@@ -1,9 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+/* Controllers */
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NoticiaController;
 use App\Http\Controllers\AuthController;
+
+/* Admin Controllers */
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\NoticiaAdminController;
 use App\Http\Controllers\Admin\UserController;
@@ -34,35 +38,49 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])
-    ->name('logout')
-    ->middleware('auth');
+    ->middleware('auth')
+    ->name('logout');
 
 
 /*
 |--------------------------------------------------------------------------
-| Admin general
+| Panel Admin
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth'])->prefix('admin')->group(function () {
+Route::middleware('auth')->prefix('admin')->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Dashboard
+    |--------------------------------------------------------------------------
+    */
 
     Route::get('/dashboard', [AdminController::class, 'dashboard'])
         ->name('admin.dashboard');
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Perfil (todos los usuarios logueados)
+    |--------------------------------------------------------------------------
+    */
 
     Route::get('/perfil', [PerfilController::class, 'edit'])
         ->name('admin.perfil.edit');
 
     Route::put('/perfil', [PerfilController::class, 'update'])
         ->name('admin.perfil.update');
-    
-        /*
+
+
+    /*
     |--------------------------------------------------------------------------
-    | Panel de noticias - Admin y Editor
+    | Noticias (Admin + Editor)
     |--------------------------------------------------------------------------
     */
 
     Route::middleware('role:admin,editor')->group(function () {
+
         Route::get('/noticias', [NoticiaAdminController::class, 'index'])
             ->name('admin.noticias.index');
 
@@ -91,18 +109,29 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Panel de usuarios - Solo Admin
+    | Usuarios (solo Admin)
     |--------------------------------------------------------------------------
     */
 
     Route::middleware('role:admin')->group(function () {
+
         Route::resource('usuarios', UserController::class)
             ->names('admin.usuarios');
 
         Route::post('/usuarios/{usuario}/reset-password', [UserController::class, 'resetPassword'])
             ->name('admin.usuarios.resetPassword');
-        
-            Route::get('/sistema', [SistemaController::class, 'index'])
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Sistema (configuración)
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get('/sistema', [SistemaController::class, 'index'])
             ->name('admin.sistema.index');
+
+        Route::put('/sistema', [SistemaController::class, 'update'])
+            ->name('admin.sistema.update');
     });
 });

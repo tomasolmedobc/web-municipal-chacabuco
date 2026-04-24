@@ -24,7 +24,10 @@
         </div>
 
         <div class="municipal-hero__media">
-            <img src="{{ asset('images/importantes/Frente_municipal_resultado.webp') }}" alt="Edificio municipal de Chacabuco">
+            <img 
+                src="{{ config_sistema('portada', asset('images/importantes/tu-imagen-default.webp')) }}" 
+                alt="Municipalidad de Chacabuco"
+            >
         </div>
     </section>
 

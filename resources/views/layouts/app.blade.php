@@ -68,7 +68,7 @@
             </div>
         </div>
     </div>
-    
+    <div id="toast-container"></div>
 <script src="{{ asset('js/theme.js') }}"></script>
 <script src="{{ asset('js/ui-feedback.js') }}"></script>
 @stack('scripts')
