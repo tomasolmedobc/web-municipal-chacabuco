@@ -3,19 +3,39 @@
 @section('title', 'Panel de administración')
 
 @section('content')
+<div class="admin-stats">
+    <div class="admin-stat-card">
+        <h3>Total noticias</h3>
+        <p>{{ $stats['noticias_total'] }}</p>
+    </div>
+
+    <div class="admin-stat-card">
+        <h3>Publicadas</h3>
+        <p>{{ $stats['noticias_publicadas'] }}</p>
+    </div>
+
+    <div class="admin-stat-card">
+        <h3>Ocultas</h3>
+        <p>{{ $stats['noticias_ocultas'] }}</p>
+    </div>
+
+    <div class="admin-stat-card">
+        <h3>Usuarios</h3>
+        <p>{{ $stats['usuarios_total'] }}</p>
+    </div>
+</div>
+
     <section class="admin-header">
+        
         <div>
             <h2 class="seccion-titulo">Panel de administración</h2>
             <p class="admin-subtitle">Gestioná noticias, buscá posteos y administrá su estado.</p>
         </div>
 
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <a href="{{ route('admin.noticias.create') }}" class="btn btn-primary">Nueva noticia</a>
-
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="btn btn-secondary">Cerrar sesión</button>
-            </form>
+            <a href="{{ route('admin.noticias.create') }}" class="btn btn-primary">
+                Nueva noticia
+            </a>
         </div>
     </section>
 

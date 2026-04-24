@@ -11,9 +11,32 @@
             </div>
         </a>
 
-        <button class="theme-toggle" id="theme-toggle" type="button">
-            🌙 Oscuro
-        </button>
+        <div class="site-header__actions">
+            <button class="theme-toggle" id="theme-toggle" type="button">
+                🌙 Oscuro
+            </button>
+
+            @auth
+                <div class="user-box">
+                    <div class="user-box__info">
+                        <span class="user-box__name">{{ auth()->user()->name }}</span>
+                        <span class="user-box__rol">{{ ucfirst(auth()->user()->rol) }}</span>
+                    </div>
+
+                    <div class="user-box__actions">
+                        <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary btn-sm">Panel</a>
+                        <a href="{{ route('admin.perfil.edit') }}" class="btn btn-secondary btn-sm">Perfil</a>
+
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-danger btn-sm">Salir</button>
+                        </form>
+                    </div>
+                </div>
+            @else
+                <a href="{{ route('login') }}" class="btn btn-primary">Iniciar sesión</a>
+            @endauth
+        </div>
     </div>
 
     <nav class="site-nav">

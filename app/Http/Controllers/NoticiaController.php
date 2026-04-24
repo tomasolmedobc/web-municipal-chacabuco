@@ -29,8 +29,8 @@ class NoticiaController extends Controller
         if ($busqueda !== '') {
             $query->where(function ($q) use ($busqueda) {
                 $q->where('titulo', 'like', '%' . $busqueda . '%')
-                  ->orWhere('contenido', 'like', '%' . $busqueda . '%')
-                  ->orWhere('autor', 'like', '%' . $busqueda . '%');
+                ->orWhere('contenido', 'like', '%' . $busqueda . '%')
+                ->orWhere('autor', 'like', '%' . $busqueda . '%');
             });
         }
 

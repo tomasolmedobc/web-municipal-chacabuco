@@ -123,7 +123,7 @@ h2 {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    padding: 16px 22px 10px;
+    padding: 18px 22px;
     margin-bottom: 24px;
 }
 
@@ -132,6 +132,8 @@ h2 {
     justify-content: space-between;
     align-items: center;
     gap: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
 }
 
 .site-brand {
@@ -141,8 +143,8 @@ h2 {
 }
 
 .site-brand__logo {
-    width: 58px;
-    height: 58px;
+    width: 56px;
+    height: 56px;
     border-radius: 14px;
     overflow: hidden;
     border: 1px solid var(--border);
@@ -165,23 +167,25 @@ h2 {
 
 .site-brand__text h1 {
     margin: 0;
-    font-size: 28px;
+    font-size: 30px;
+    letter-spacing: -0.4px;
     line-height: 1.1;
 }
 
 .site-nav {
+    margin-top: 0;
+    padding-top: 14px;
+    border-top: none;
+    gap: 26px;
     display: flex;
     flex-wrap: wrap;
-    gap: 22px;
-    margin-top: 12px;
-    padding-top: 14px;
     border-top: 1px solid var(--border);
 }
 
 .site-nav a {
     position: relative;
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 700;
     color: var(--text);
     opacity: 0.85;
     transition: color 0.2s ease, opacity 0.2s ease, all 0.22s ease;
@@ -222,6 +226,7 @@ h2 {
     transform: translateY(-2px);
     border-color: var(--primary);
 }
+
 
 /* =========================
    BOTONES
@@ -1546,6 +1551,15 @@ body.dark .categoria-noticia {
     .admin-form-group.full {
         grid-column: auto;
     }
+    .site-header__actions {
+        margin-left: 0;
+        width: 100%;
+        justify-content: flex-start;
+    }
+    .user-box {
+        width: 100%;
+        justify-content: space-between;
+    }
 }
 
 @media (max-width: 860px) {
@@ -1629,4 +1643,99 @@ body.dark .categoria-noticia {
     .detalle {
         padding: 20px;
     }
+}
+/* =========================
+   Usuarios
+========================= */
+
+.badge-rol.admin {
+    background: #dc2626;
+    color: #fff;
+}
+
+.badge-rol.editor {
+    background: #2563eb;
+    color: #fff;
+}
+
+.site-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+     margin-left: auto;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.user-menu form {
+    margin: 0;
+}
+
+.user-menu__name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    padding: 8px 10px;
+    border-radius: 999px;
+    background: var(--card-soft);
+    border: 1px solid var(--border);
+}
+
+@media (max-width: 760px) {
+    .site-header__actions,
+    .user-menu {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+.user-box {
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+    gap: 10px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--card-soft);
+}
+
+.user-box__info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.user-box__name {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.user-box__rol {
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.user-box__actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-sm {
+    font-size: 12px;
+    min-height: 34px;
+    padding: 0 12px;
+    border-radius: 10px;
+}
+.user-box .btn-danger {
+    background: #fff7f7;
+    color: #dc2626;
+    border-color: #fecaca;
 }
