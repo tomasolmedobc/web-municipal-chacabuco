@@ -21,12 +21,16 @@ class Noticia extends Model
         'imagen_destacada',
         'estado',
         'user_id',
+        'destacada',
+        'destacada_hasta',
     ];
 
     protected $casts = [
         'fecha' => 'datetime',
         'wp_id' => 'integer',
         'wp_modified_at' => 'datetime',
+        'destacada' => 'boolean',
+        'destacada_hasta' => 'datetime',
     ];
 
     public $timestamps = false;

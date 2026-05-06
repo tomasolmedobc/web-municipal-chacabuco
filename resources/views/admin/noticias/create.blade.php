@@ -21,18 +21,39 @@
                 <input type="text" name="titulo" id="titulo" value="{{ old('titulo') }}" required>
                 @error('titulo') <small class="auth-error">{{ $message }}</small> @enderror
             </div>
-
-            <div class="admin-form-group">
-                <label for="fecha">Fecha</label>
+        {{-- DESTACADA --}}
+        <div class="admin-form-group full">
+            <label class="check-destacada">
                 <input
-                    type="datetime-local"
-                    name="fecha"
-                    id="fecha"
-                    value="{{ old('fecha', now()->format('Y-m-d\TH:i')) }}"
-                    required
+                    type="checkbox"
+                    name="destacada"
+                    value="1"
+                    {{ old('destacada', $noticia->destacada ?? false) ? 'checked' : '' }}
                 >
-                @error('fecha') <small class="auth-error">{{ $message }}</small> @enderror
-            </div>
+
+                <span>
+                    <strong>Noticia destacada</strong>
+                    <small>Se mostrará como principal durante el tiempo configurado.</small>
+                </span>
+            </label>
+        </div>
+
+        <div class="admin-form-group full" id="destacada-config" style="display:none;">
+            <label for="destacada_dias">Duración destacada</label>
+
+            <input
+                type="number"
+                name="destacada_dias"
+                id="destacada_dias"
+                min="1"
+                max="30"
+                value="{{ old('destacada_dias', 12) }}"
+            >
+
+            <small class="fecha">
+                Cantidad de días que se mostrará como noticia principal. Máximo 30 días.
+            </small>
+        </div>
 
             <div class="admin-form-group">
                 <label for="estado">Estado</label>
@@ -50,6 +71,7 @@
                     ✔ Esta noticia será visible en el portal.
                 </small>
             </div>
+            
 
             <div class="admin-form-group full">
                 <label for="categorias">Categorías</label>

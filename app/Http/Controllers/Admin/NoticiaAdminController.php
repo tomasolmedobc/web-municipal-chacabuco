@@ -9,6 +9,7 @@ use App\Models\Categoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class NoticiaAdminController extends Controller
 {
@@ -54,20 +55,18 @@ class NoticiaAdminController extends Controller
             'categorias.*' => ['exists:categorias,id'],
             'fecha' => ['required', 'date'],
             'estado' => ['required', 'in:oculto,publicado'],
+            'destacada' => ['nullable', 'boolean'],
             'imagen_destacada' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'archivos.*' => ['nullable', 'file', 'mimes:pdf,doc,docx,xls,xlsx', 'max:10240'],
+            'destacada_dias' => ['nullable', 'integer', 'min:1', 'max:30'],
         ]);
 
-        $slugBase = Str::slug($datos['titulo']);
-        $slug = $slugBase;
-        $contador = 1;
+        $slug = $this->generarSlugUnico($datos['titulo']);
 
-        while (Noticia::where('slug', $slug)->exists()) {
-            $slug = $slugBase . '-' . $contador;
-            $contador++;
-        }
-
-        $rutaImagen = '/images/importantes/default-noticia.webp';
+        $rutaImagen = config_sistema(
+            'default_noticia',
+            '/images/importantes/default-noticia.webp'
+        );
 
         if ($request->hasFile('imagen_destacada')) {
             $rutaProcesada = $this->procesarImagen($request->file('imagen_destacada'));
@@ -77,6 +76,12 @@ class NoticiaAdminController extends Controller
             }
         }
 
+        $esDestacada = $request->boolean('destacada');
+
+        if ($esDestacada) {
+            $this->limpiarDestacadas();
+        }
+
         $noticia = Noticia::create([
             'titulo' => $datos['titulo'],
             'contenido' => $datos['contenido'],
@@ -84,19 +89,21 @@ class NoticiaAdminController extends Controller
             'slug' => $slug,
             'imagen_destacada' => $rutaImagen,
             'estado' => $datos['estado'],
-            'user_id' => auth()->id(),
-            'autor' => auth()->user()->name,
+            'destacada' => $esDestacada,
+            'destacada_hasta' => $esDestacada ? now()->addDays((int) $request->input('destacada_dias', 12)) : null,
+            'user_id' => Auth::id(),
+            'autor' => Auth::user()->name,
         ]);
 
-        if (!empty($datos['categorias'])) {
-            $noticia->categorias()->sync($datos['categorias']);
-        }
+        $noticia->categorias()->sync($datos['categorias'] ?? []);
 
         if ($request->hasFile('archivos')) {
             $this->guardarArchivosAdjuntos($request->file('archivos'), $noticia);
         }
 
-        return redirect()->route('admin.dashboard')->with('ok', 'Noticia creada correctamente.');
+        return redirect()
+            ->route('admin.dashboard')
+            ->with('ok', 'Noticia creada correctamente.');
     }
 
     public function edit(Noticia $noticia)
@@ -120,25 +127,14 @@ class NoticiaAdminController extends Controller
             'categorias.*' => ['exists:categorias,id'],
             'fecha' => ['required', 'date'],
             'estado' => ['required', 'in:oculto,publicado'],
+            'destacada' => ['nullable', 'boolean'],
             'imagen_destacada' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'archivos.*' => ['nullable', 'file', 'mimes:pdf,doc,docx,xls,xlsx', 'max:10240'],
+            'destacada_dias' => ['nullable', 'integer', 'min:1', 'max:30'],
         ]);
 
         if ($noticia->titulo !== $datos['titulo']) {
-            $slugBase = Str::slug($datos['titulo']);
-            $slug = $slugBase;
-            $contador = 1;
-
-            while (
-                Noticia::where('slug', $slug)
-                    ->where('id', '!=', $noticia->id)
-                    ->exists()
-            ) {
-                $slug = $slugBase . '-' . $contador;
-                $contador++;
-            }
-
-            $noticia->slug = $slug;
+            $noticia->slug = $this->generarSlugUnico($datos['titulo'], $noticia->id);
         }
 
         if ($request->hasFile('imagen_destacada')) {
@@ -149,12 +145,20 @@ class NoticiaAdminController extends Controller
             }
         }
 
+        $esDestacada = $request->boolean('destacada');
+
+        if ($esDestacada) {
+            $this->limpiarDestacadas($noticia->id);
+        }
+
         $noticia->titulo = $datos['titulo'];
         $noticia->contenido = $datos['contenido'];
         $noticia->fecha = $datos['fecha'];
         $noticia->estado = $datos['estado'];
-        $noticia->autor = auth()->user()->name;
-        $noticia->user_id = auth()->id();
+        $noticia->destacada = $esDestacada;
+        $noticia->destacada_hasta = $esDestacada ? now()->addDays((int) $request->input('destacada_dias', 12)) : null;
+        $noticia->autor = Auth::user()->name;
+        $noticia->user_id = Auth::id();
 
         $noticia->save();
 
@@ -164,14 +168,18 @@ class NoticiaAdminController extends Controller
             $this->guardarArchivosAdjuntos($request->file('archivos'), $noticia);
         }
 
-        return redirect()->route('admin.dashboard')->with('ok', 'Noticia actualizada correctamente.');
+        return redirect()
+            ->route('admin.dashboard')
+            ->with('ok', 'Noticia actualizada correctamente.');
     }
 
     public function destroy(Noticia $noticia)
     {
         $noticia->delete();
 
-        return redirect()->route('admin.dashboard')->with('ok', 'Noticia eliminada correctamente.');
+        return redirect()
+            ->route('admin.dashboard')
+            ->with('ok', 'Noticia eliminada correctamente.');
     }
 
     public function toggleStatus(Noticia $noticia)
@@ -199,11 +207,41 @@ class NoticiaAdminController extends Controller
         if (request()->expectsJson()) {
             return response()->json([
                 'ok' => true,
-                'message' => 'Archivo adjunto eliminado correctamente.'
+                'message' => 'Archivo adjunto eliminado correctamente.',
             ]);
         }
 
-        return redirect()->back()->with('ok', 'Archivo adjunto eliminado correctamente.');
+        return redirect()
+            ->back()
+            ->with('ok', 'Archivo adjunto eliminado correctamente.');
+    }
+
+    private function generarSlugUnico(string $titulo, ?int $ignorarId = null): string
+    {
+        $slugBase = Str::slug($titulo);
+        $slug = $slugBase;
+        $contador = 1;
+
+        while (
+            Noticia::where('slug', $slug)
+                ->when($ignorarId, fn ($q) => $q->where('id', '!=', $ignorarId))
+                ->exists()
+        ) {
+            $slug = $slugBase . '-' . $contador;
+            $contador++;
+        }
+
+        return $slug;
+    }
+
+    private function limpiarDestacadas(?int $ignorarId = null): void
+    {
+        Noticia::where('destacada', true)
+            ->when($ignorarId, fn ($q) => $q->where('id', '!=', $ignorarId))
+            ->update([
+                'destacada' => false,
+                'destacada_hasta' => null,
+            ]);
     }
 
     private function procesarImagen($archivo)
@@ -218,7 +256,9 @@ class NoticiaAdminController extends Controller
         File::ensureDirectoryExists($directorioWebp);
 
         $extension = strtolower($archivo->getClientOriginalExtension());
-        $nombreBase = time() . '_' . Str::random(6) . '_' . Str::slug(pathinfo($archivo->getClientOriginalName(), PATHINFO_FILENAME));
+        $nombreBase = time() . '_' . Str::random(6) . '_' . Str::slug(
+            pathinfo($archivo->getClientOriginalName(), PATHINFO_FILENAME)
+        );
 
         $nombreOriginal = $nombreBase . '.' . $extension;
         $rutaOriginal = $directorioOriginal . '/' . $nombreOriginal;
@@ -228,7 +268,7 @@ class NoticiaAdminController extends Controller
 
         if ($extension === 'webp') {
             copy($rutaOriginal, $rutaWebp);
-            return "/images/noticias/{$anio}/{$mes}/" . $nombreBase . '.webp';
+            return "/images/noticias/{$anio}/{$mes}/{$nombreBase}.webp";
         }
 
         if (in_array($extension, ['jpg', 'jpeg'])) {
@@ -276,15 +316,17 @@ class NoticiaAdminController extends Controller
                 $altoOriginal
             );
 
+            imagedestroy($imagen);
             $imagen = $imagenRedimensionada;
         }
 
         imagewebp($imagen, $rutaWebp, 85);
+        imagedestroy($imagen);
 
-        return "/images/noticias/{$anio}/{$mes}/" . $nombreBase . '.webp';
+        return "/images/noticias/{$anio}/{$mes}/{$nombreBase}.webp";
     }
 
-    private function guardarArchivosAdjuntos($archivos, $noticia)
+    private function guardarArchivosAdjuntos($archivos, Noticia $noticia): void
     {
         $anio = now()->format('Y');
         $mes = now()->format('m');
@@ -294,7 +336,9 @@ class NoticiaAdminController extends Controller
 
         foreach ($archivos as $archivo) {
             $extension = strtolower($archivo->getClientOriginalExtension());
-            $nombreBase = time() . '_' . Str::random(6) . '_' . Str::slug(pathinfo($archivo->getClientOriginalName(), PATHINFO_FILENAME));
+            $nombreBase = time() . '_' . Str::random(6) . '_' . Str::slug(
+                pathinfo($archivo->getClientOriginalName(), PATHINFO_FILENAME)
+            );
             $nombreFinal = $nombreBase . '.' . $extension;
 
             $archivo->move($directorio, $nombreFinal);
@@ -302,7 +346,7 @@ class NoticiaAdminController extends Controller
             $noticia->archivos()->create([
                 'nombre_original' => $archivo->getClientOriginalName(),
                 'nombre_archivo' => $nombreFinal,
-                'ruta' => "/files/noticias/{$anio}/{$mes}/" . $nombreFinal,
+                'ruta' => "/files/noticias/{$anio}/{$mes}/{$nombreFinal}",
                 'mime_type' => $archivo->getClientMimeType(),
                 'extension' => $extension,
             ]);

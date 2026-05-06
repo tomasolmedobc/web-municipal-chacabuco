@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Noticia;
 use App\Models\Categoria;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NoticiaController extends Controller
 {
@@ -29,8 +30,8 @@ class NoticiaController extends Controller
         if ($busqueda !== '') {
             $query->where(function ($q) use ($busqueda) {
                 $q->where('titulo', 'like', '%' . $busqueda . '%')
-                ->orWhere('contenido', 'like', '%' . $busqueda . '%')
-                ->orWhere('autor', 'like', '%' . $busqueda . '%');
+                    ->orWhere('contenido', 'like', '%' . $busqueda . '%')
+                    ->orWhere('autor', 'like', '%' . $busqueda . '%');
             });
         }
 
@@ -53,10 +54,23 @@ class NoticiaController extends Controller
         if ($paginaActual === 1 && $busqueda === '' && !$desde && !$hasta && !$categoriaSlug) {
             $destacada = Noticia::with('categorias')
                 ->where('estado', 'publicado')
-                ->whereNotNull('imagen_destacada')
-                ->where('imagen_destacada', '!=', '')
+                ->where('destacada', true)
+                ->where(function ($q) {
+                    $q->whereNull('destacada_hasta')
+                        ->orWhere('destacada_hasta', '>=', now());
+                })
+                ->orderBy('destacada_hasta', 'desc')
                 ->orderBy('fecha', 'desc')
                 ->first();
+
+            if (! $destacada) {
+                $destacada = Noticia::with('categorias')
+                    ->where('estado', 'publicado')
+                    ->whereNotNull('imagen_destacada')
+                    ->where('imagen_destacada', '!=', '')
+                    ->orderBy('fecha', 'desc')
+                    ->first();
+            }
         }
 
         if ($destacada) {
@@ -93,7 +107,7 @@ class NoticiaController extends Controller
         $query = Noticia::with(['archivos', 'categorias'])
             ->where('slug', $slug);
 
-        if (!auth()->check() || !in_array(auth()->user()->rol, ['admin', 'editor'])) {
+        if (!Auth::check() || !in_array(Auth::user()->rol, ['admin', 'editor'])) {
             $query->where('estado', 'publicado');
         }
 

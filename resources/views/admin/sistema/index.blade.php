@@ -20,6 +20,15 @@
     </script>
 @endif
 
+@if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            showToast(@json(session('error')), 'error');
+        });
+    </script>
+@endif
+
+
 <form action="{{ route('admin.sistema.update') }}" method="POST" enctype="multipart/form-data" class="admin-form-card">
     @csrf
     @method('PUT')

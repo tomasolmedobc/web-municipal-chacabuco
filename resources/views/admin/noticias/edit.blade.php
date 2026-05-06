@@ -22,7 +22,39 @@
                 <input type="text" name="titulo" id="titulo" value="{{ old('titulo', $noticia->titulo) }}" required>
                 @error('titulo') <small class="auth-error">{{ $message }}</small> @enderror
             </div>
+        {{-- DESTACADA --}}
+        <div class="admin-form-group full">
+            <label class="check-destacada">
+                <input
+                    type="checkbox"
+                    name="destacada"
+                    value="1"
+                    {{ old('destacada', $noticia->destacada ?? false) ? 'checked' : '' }}
+                >
 
+                <span>
+                    <strong>Noticia destacada</strong>
+                    <small>Se mostrará como principal durante el tiempo configurado.</small>
+                </span>
+            </label>
+        </div>
+
+        <div class="admin-form-group full" id="destacada-config" style="display:none;">
+            <label for="destacada_dias">Duración destacada</label>
+
+            <input
+                type="number"
+                name="destacada_dias"
+                id="destacada_dias"
+                min="1"
+                max="30"
+                value="{{ old('destacada_dias', 12) }}"
+            >
+
+            <small class="fecha">
+                Cantidad de días que se mostrará como noticia principal. Máximo 30 días.
+            </small>
+        </div>
             <div class="admin-form-group">
                 <label for="fecha">Fecha</label>
                 <input
@@ -42,11 +74,9 @@
                     <option value="publicado" {{ old('estado', $noticia->estado) === 'publicado' ? 'selected' : '' }}>Publicado</option>
                 </select>
                 @error('estado') <small class="auth-error">{{ $message }}</small> @enderror
-
                 <small id="estado-alerta-oculto" class="estado-warning" style="display:none;">
                     ⚠️ Esta noticia no será visible públicamente.
                 </small>
-
                 <small id="estado-alerta-publicado" class="estado-success" style="display:none;">
                     ✔ Esta noticia será visible en el portal.
                 </small>

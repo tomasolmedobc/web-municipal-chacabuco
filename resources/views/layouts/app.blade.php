@@ -4,12 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>@yield('title', 'Chacabuco Noticias')</title>
+
+    <meta name="description" content="@yield('meta_description', 'Noticias de la Municipalidad de Chacabuco')">
+
+    <meta property="og:title" content="@yield('title', 'Chacabuco Noticias')">
+    <meta property="og:description" content="@yield('meta_description', 'Noticias de la Municipalidad de Chacabuco')">
+    <meta property="og:image" content="@yield('og_image', asset('images/importantes/default-noticia.webp'))">
+    <meta property="og:type" content="website">
 
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
-    
 
     @stack('scripts_head')
 </head>
@@ -68,7 +75,7 @@
             </div>
         </div>
     </div>
-    <div id="toast-container"></div>
+
 <script src="{{ asset('js/theme.js') }}"></script>
 <script src="{{ asset('js/ui-feedback.js') }}"></script>
 @stack('scripts')

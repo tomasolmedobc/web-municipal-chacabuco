@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const estado = document.getElementById('estado');
     const alertaOculto = document.getElementById('estado-alerta-oculto');
     const alertaPublicado = document.getElementById('estado-alerta-publicado');
-    
+
     function actualizarEstadoVisual() {
         if (!estado) return;
 
@@ -21,6 +21,20 @@ document.addEventListener('DOMContentLoaded', function () {
         estado.addEventListener('change', actualizarEstadoVisual);
     }
 
+    const checkboxDestacada = document.querySelector('input[name="destacada"]');
+    const configDestacada = document.getElementById('destacada-config');
+
+    function actualizarDestacadaVisual() {
+        if (!checkboxDestacada || !configDestacada) return;
+
+        configDestacada.style.display = checkboxDestacada.checked ? 'block' : 'none';
+    }
+
+    if (checkboxDestacada && configDestacada) {
+        actualizarDestacadaVisual();
+        checkboxDestacada.addEventListener('change', actualizarDestacadaVisual);
+    }
+
     if (form) {
         form.addEventListener('submit', function (e) {
             if (typeof tinymce !== 'undefined') {
@@ -31,12 +45,9 @@ document.addEventListener('DOMContentLoaded', function () {
             if (contenido && !contenido.value.trim()) {
                 alert('El contenido no puede estar vacío.');
                 e.preventDefault();
+                return;
             }
-        });
-    }
 
-    if (form) {
-        form.addEventListener('submit', function () {
             const btn = form.querySelector('button[type="submit"]');
             if (btn) {
                 btn.disabled = true;

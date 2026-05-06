@@ -1,58 +1,50 @@
-document.addEventListener('DOMContentLoaded', function () {
+function showToast(message, type = 'success') {
     const toast = document.getElementById('app-toast');
-    const toastMessage = document.getElementById('app-toast-message');
+    const messageBox = document.getElementById('app-toast-message');
 
+    if (!toast || !messageBox) return;
+
+    toast.className = 'app-toast';
+    toast.classList.add(type);
+
+    messageBox.textContent = message;
+
+    requestAnimationFrame(() => {
+        toast.classList.add('show');
+    });
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3500);
+}
+
+function showConfirm(message, onConfirm) {
     const modal = document.getElementById('app-confirm-modal');
-    const modalMessage = document.getElementById('app-confirm-message');
-    const confirmBtn = document.getElementById('app-confirm-ok');
-    const cancelBtn = document.getElementById('app-confirm-cancel');
+    const messageBox = document.getElementById('app-confirm-message');
+    const btnCancel = document.getElementById('app-confirm-cancel');
+    const btnOk = document.getElementById('app-confirm-ok');
     const overlay = document.getElementById('app-confirm-overlay');
 
-    let confirmCallback = null;
+    if (!modal || !messageBox || !btnCancel || !btnOk || !overlay) {
+        if (confirm(message)) onConfirm();
+        return;
+    }
 
-    window.showToast = function (message, type = 'success') {
-        if (!toast || !toastMessage) return;
+    messageBox.textContent = message;
+    modal.hidden = false;
 
-        toastMessage.textContent = message;
-        toast.className = `app-toast show ${type}`;
-
-        clearTimeout(window.__toastTimeout);
-        window.__toastTimeout = setTimeout(() => {
-            toast.className = 'app-toast';
-        }, 2600);
-    };
-
-    window.showConfirm = function (message, onConfirm) {
-        if (!modal || !modalMessage) return;
-
-        modalMessage.textContent = message;
-        modal.hidden = false;
-        document.body.style.overflow = 'hidden';
-        confirmCallback = onConfirm;
-    };
-
-    function closeConfirm() {
-        if (!modal) return;
+    const close = () => {
         modal.hidden = true;
-        document.body.style.overflow = '';
-        confirmCallback = null;
-    }
+        btnOk.onclick = null;
+        btnCancel.onclick = null;
+        overlay.onclick = null;
+    };
 
-    if (confirmBtn) {
-        confirmBtn.addEventListener('click', function () {
-            if (typeof confirmCallback === 'function') {
-                confirmCallback();
-            }
-            closeConfirm();
-        });
-    }
+    btnOk.onclick = () => {
+        close();
+        onConfirm();
+    };
 
-    if (cancelBtn) cancelBtn.addEventListener('click', closeConfirm);
-    if (overlay) overlay.addEventListener('click', closeConfirm);
-
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && modal && !modal.hidden) {
-            closeConfirm();
-        }
-    });
-});
+    btnCancel.onclick = close;
+    overlay.onclick = close;
+}

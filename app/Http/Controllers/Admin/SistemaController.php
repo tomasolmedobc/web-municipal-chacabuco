@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Configuracion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SistemaController extends Controller
 {
@@ -26,44 +27,63 @@ class SistemaController extends Controller
         ]);
 
         if ($request->boolean('eliminar_logo')) {
-            Configuracion::where('clave', 'logo')->delete();
+            $this->eliminarConfiguracionArchivo('logo');
         }
 
         if ($request->boolean('eliminar_portada')) {
-            Configuracion::where('clave', 'portada')->delete();
+            $this->eliminarConfiguracionArchivo('portada');
         }
 
         if ($request->boolean('eliminar_default_noticia')) {
-            Configuracion::where('clave', 'default_noticia')->delete();
+            $this->eliminarConfiguracionArchivo('default_noticia');
         }
 
         if ($request->hasFile('logo')) {
-            $ruta = $request->file('logo')->store('config', 'public');
-
-            Configuracion::updateOrCreate(
-                ['clave' => 'logo'],
-                ['valor' => '/storage/' . $ruta]
-            );
+            $this->guardarConfiguracionArchivo($request, 'logo', 'config/logo');
         }
 
         if ($request->hasFile('portada')) {
-            $ruta = $request->file('portada')->store('config', 'public');
-
-            Configuracion::updateOrCreate(
-                ['clave' => 'portada'],
-                ['valor' => '/storage/' . $ruta]
-            );
+            $this->guardarConfiguracionArchivo($request, 'portada', 'config/portada');
         }
 
         if ($request->hasFile('default_noticia')) {
-            $ruta = $request->file('default_noticia')->store('config', 'public');
-
-            Configuracion::updateOrCreate(
-                ['clave' => 'default_noticia'],
-                ['valor' => '/storage/' . $ruta]
-            );
+            $this->guardarConfiguracionArchivo($request, 'default_noticia', 'config/default-noticia');
         }
 
         return back()->with('ok', 'Configuración actualizada correctamente');
+    }
+
+    private function guardarConfiguracionArchivo(Request $request, string $clave, string $carpeta): void
+    {
+        $this->eliminarArchivoAnterior($clave);
+
+        $ruta = $request->file($clave)->store($carpeta, 'public');
+
+        Configuracion::updateOrCreate(
+            ['clave' => $clave],
+            ['valor' => '/storage/' . $ruta]
+        );
+    }
+
+    private function eliminarConfiguracionArchivo(string $clave): void
+    {
+        $this->eliminarArchivoAnterior($clave);
+
+        Configuracion::where('clave', $clave)->delete();
+    }
+
+    private function eliminarArchivoAnterior(string $clave): void
+    {
+        $valorActual = Configuracion::where('clave', $clave)->value('valor');
+
+        if (!$valorActual) {
+            return;
+        }
+
+        $rutaRelativa = str_replace('/storage/', '', $valorActual);
+
+        if (Storage::disk('public')->exists($rutaRelativa)) {
+            Storage::disk('public')->delete($rutaRelativa);
+        }
     }
 }

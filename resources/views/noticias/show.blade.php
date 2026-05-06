@@ -1,7 +1,7 @@
 @extends('layouts.app')
-
 @section('title', $noticia->titulo)
-
+@section('meta_description', \Illuminate\Support\Str::of($noticia->contenido)->stripTags()->squish()->limit(160))
+@section('og_image', $noticia->imagen_destacada ?: config_sistema('default_noticia', asset('images/importantes/default-noticia.webp')))
 @section('content')
     <div class="detalle">
         <a href="{{ url('/noticias') }}" class="volver">← Volver al listado</a>
