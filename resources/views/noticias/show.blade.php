@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', $noticia->titulo)
 @section('meta_description', \Illuminate\Support\Str::of($noticia->contenido)->stripTags()->squish()->limit(160))
-@section('og_image', $noticia->imagen_destacada ?: config_sistema('default_noticia', asset('images/importantes/default-noticia.webp')))
+@section('og_image', $noticia->imagen_destacada_url)
 @section('content')
     <div class="detalle">
         <a href="{{ url('/noticias') }}" class="volver">← Volver al listado</a>
@@ -30,11 +30,9 @@
             @endif
         @endauth
 
-        @if($noticia->imagen_destacada)
-            <div class="imagen">
-                <img src="{{ $noticia->imagen_destacada }}" alt="{{ $noticia->titulo }}">
-            </div>
-        @endif
+        <div class="imagen">
+            <img src="{{ $noticia->imagen_destacada_url }}" alt="{{ $noticia->titulo }}">
+        </div>
 
         @php
             $contenido = preg_replace('/class="[^"]*"/', '', $noticia->contenido);

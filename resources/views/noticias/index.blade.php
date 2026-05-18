@@ -3,65 +3,123 @@
 @section('title', 'Noticias')
 
 @section('content')
-<section class="news-heading">
+<section class="noticias-hero">
     <div>
-        <span class="news-heading__eyebrow">Portal oficial</span>
-        <h2>Noticias</h2>
-        <p>Últimas novedades, comunicados e información municipal.</p>
+        <span class="section-badge">Portal oficial</span>
+        <h1>Noticias</h1>
+        <p>
+            Últimas novedades, comunicados e información municipal del Municipio de Chacabuco.
+        </p>
     </div>
 </section>
 
 {{-- FILTROS --}}
-<form method="GET" action="{{ route('noticias.index') }}" class="filtros">
-    <input
-        type="text"
-        name="q"
-        value="{{ $busqueda ?? '' }}"
-        placeholder="Buscar noticias..."
-        class="filtro-input filtro-input-busqueda"
-    >
+<form method="GET" action="{{ route('noticias.index') }}" class="filtros noticias-search-card">
 
-    <div class="filtro-fecha">
-        <label for="categoria">Categoría</label>
-        <select name="categoria" id="categoria" class="filtro-input">
-            <option value="">Todas</option>
+    <div class="noticias-search-card__intro">
+        <div>
+            <h2>¿Qué noticia estás buscando?</h2>
 
-            @foreach($categoriasFiltro as $categoriaPadre)
-                <option value="{{ $categoriaPadre->slug }}"
-                    {{ ($categoriaSlug ?? '') === $categoriaPadre->slug ? 'selected' : '' }}>
-                    {{ $categoriaPadre->nombre }}
+            <p>
+                Buscá novedades municipales por palabras clave, categorías o fechas específicas.
+            </p>
+        </div>
+    </div>
+
+    <div class="filtros-grid">
+
+        {{-- BUSCADOR --}}
+        <div class="filtro-buscador">
+            <label for="q">Buscar</label>
+
+            <input
+                type="text"
+                id="q"
+                name="q"
+                value="{{ $busqueda ?? '' }}"
+                placeholder="Buscar noticias..."
+                class="filtro-input filtro-input-busqueda"
+            >
+        </div>
+
+        {{-- CATEGORIA --}}
+        <div class="filtro-categoria">
+            <label for="categoria">Categoría</label>
+
+            <select name="categoria" id="categoria" class="filtro-input">
+                <option value="">Todas</option>
+
+                @foreach($categoriasFiltro as $categoriaPadre)
+                    <option value="{{ $categoriaPadre->slug }}"
+                        {{ ($categoriaSlug ?? '') === $categoriaPadre->slug ? 'selected' : '' }}>
+                        {{ $categoriaPadre->nombre }}
+                    </option>
+
+                    @foreach($categoriaPadre->hijas as $hija)
+                        <option value="{{ $hija->slug }}"
+                            {{ ($categoriaSlug ?? '') === $hija->slug ? 'selected' : '' }}>
+                            — {{ $hija->nombre }}
+                        </option>
+                    @endforeach
+                @endforeach
+            </select>
+        </div>
+
+        {{-- DESDE --}}
+        <div class="filtro-fecha">
+            <label for="desde">Desde</label>
+
+            <input
+                type="date"
+                id="desde"
+                name="desde"
+                value="{{ $desde ?? '' }}"
+                class="filtro-input"
+            >
+        </div>
+
+        {{-- HASTA --}}
+        <div class="filtro-fecha">
+            <label for="hasta">Hasta</label>
+
+            <input
+                type="date"
+                id="hasta"
+                name="hasta"
+                value="{{ $hasta ?? '' }}"
+                class="filtro-input"
+            >
+        </div>
+
+        {{-- ORDEN --}}
+        <div class="filtro-orden">
+            <label for="orden">Orden</label>
+
+            <select name="orden" id="orden" class="filtro-input">
+                <option value="nuevas"
+                    {{ ($orden ?? 'nuevas') === 'nuevas' ? 'selected' : '' }}>
+                    Más recientes
                 </option>
 
-                @foreach($categoriaPadre->hijas as $hija)
-                    <option value="{{ $hija->slug }}"
-                        {{ ($categoriaSlug ?? '') === $hija->slug ? 'selected' : '' }}>
-                        — {{ $hija->nombre }}
-                    </option>
-                @endforeach
-            @endforeach
-        </select>
+                <option value="antiguas"
+                    {{ ($orden ?? '') === 'antiguas' ? 'selected' : '' }}>
+                    Más antiguas
+                </option>
+            </select>
+        </div>
+
     </div>
 
-    <div class="filtro-fecha">
-        <label for="desde">Desde</label>
-        <input type="date" id="desde" name="desde" value="{{ $desde ?? '' }}" class="filtro-input">
+    <div class="filtros-actions">
+        <button type="submit" class="boton-filtro">
+            Filtrar
+        </button>
+
+        <a href="{{ route('noticias.index') }}" class="boton-limpiar">
+            Limpiar
+        </a>
     </div>
 
-    <div class="filtro-fecha">
-        <label for="hasta">Hasta</label>
-        <input type="date" id="hasta" name="hasta" value="{{ $hasta ?? '' }}" class="filtro-input">
-    </div>
-
-    <div class="filtro-fecha">
-        <label for="orden">Orden</label>
-        <select name="orden" id="orden" class="filtro-input">
-            <option value="nuevas" {{ ($orden ?? 'nuevas') === 'nuevas' ? 'selected' : '' }}>Más recientes</option>
-            <option value="antiguas" {{ ($orden ?? '') === 'antiguas' ? 'selected' : '' }}>Más antiguas</option>
-        </select>
-    </div>
-
-    <button type="submit" class="boton-filtro">Filtrar</button>
-    <a href="{{ route('noticias.index') }}" class="boton-limpiar">Limpiar</a>
 </form>
 
 {{-- RESULTADOS --}}
@@ -81,11 +139,9 @@
     @endphp
 
     <article class="hero">
-        @if ($destacada->imagen_destacada)
-            <a href="{{ route('noticias.show', $destacada->slug) }}" class="hero-media">
-                <img src="{{ $destacada->imagen_destacada }}" alt="{{ $destacada->titulo }}">
-            </a>
-        @endif
+        <a href="{{ route('noticias.show', $destacada->slug) }}" class="hero-media">
+            <img src="{{ $destacada->imagen_destacada_url }}" alt="{{ $destacada->titulo }}">
+        </a>
 
         <div class="hero-body">
             <div class="hero-top">
@@ -147,11 +203,9 @@
         @endphp
 
         <article class="noticia">
-            @if ($noticia->imagen_destacada)
-                <a href="{{ route('noticias.show', $noticia->slug) }}" class="noticia-media">
-                    <img src="{{ $noticia->imagen_destacada }}" alt="{{ $noticia->titulo }}">
-                </a>
-            @endif
+            <a href="{{ route('noticias.show', $noticia->slug) }}" class="noticia-media">
+                <img src="{{ $noticia->imagen_destacada_url }}" alt="{{ $noticia->titulo }}">
+            </a>
 
             <div class="noticia-body">
                 @if ($noticia->categorias->count())

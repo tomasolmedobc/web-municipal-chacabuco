@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const formsEliminar = document.querySelectorAll('.form-eliminar-noticia');
+    const formsEliminar = document.querySelectorAll('.form-eliminar-noticia, .form-eliminar-licitacion');
 
     formsEliminar.forEach((form) => {
         form.addEventListener('submit', function (e) {

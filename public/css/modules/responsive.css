@@ -1,0 +1,203 @@
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 980px) {
+    .municipal-hero,
+    .hero,
+    .quick-access__grid,
+    .news-home__grid,
+    .info-strip__grid,
+    .site-footer__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .municipal-hero__title {
+        font-size: 38px;
+    }
+
+    .hero-title {
+        font-size: 30px;
+    }
+
+    .section-heading--between {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .hero-media img {
+        min-height: 260px;
+    }
+
+    .filtros.noticias-search-card {
+        display: block;
+    }
+
+    .filtros-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+        margin-top: 22px;
+    }
+
+    .filtro-input,
+    .filtro-input-busqueda,
+    .filtro-fecha .filtro-input,
+    .filtro-fecha select.filtro-input {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .filtros-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-start;
+        margin-top: 18px;
+    }
+
+    .noticias-search-card__intro h2 {
+        font-size: 34px;
+    }
+    .licitaciones-destacadas {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 900px) {
+    .admin-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-form-group.full {
+        grid-column: auto;
+    }
+
+    .site-header__actions {
+        margin-left: 0;
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .user-box {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+@media (max-width: 860px) {
+    .noticia {
+        grid-template-columns: 1fr;
+    }
+
+    .noticia-media img {
+        height: 240px;
+    }
+
+    .detalle h1 {
+        font-size: 30px;
+    }
+
+    .admin-list-item {
+        grid-template-columns: 1fr;
+        align-items: flex-start;
+    }
+
+    .admin-actions {
+        width: 100%;
+        grid-template-columns: repeat(2, 1fr);
+        justify-content: stretch;
+    }
+
+    .admin-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    .archivo-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .archivo-card__actions {
+        width: 100%;
+    }
+
+    .pdf-modal__dialog {
+        width: calc(100vw - 20px);
+        height: 88vh;
+        margin: 10px auto;
+    }
+
+    .archivo-nombre {
+        max-width: 240px;
+    }
+
+    .site-header__actions,
+    .user-menu {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 640px) {
+    body {
+        padding: 18px 14px 32px;
+    }
+
+    .site-header__top {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .site-brand__text h1 {
+        font-size: 24px;
+    }
+
+    .municipal-hero__title {
+        font-size: 32px;
+    }
+
+    .quick-card h3,
+    .news-card h3,
+    .noticia h2 {
+        font-size: 22px;
+    }
+
+    .detalle {
+        padding: 20px;
+    }
+    .noticias-hero,
+    .noticias-search-card {
+        padding: 22px;
+    }
+
+    .noticias-hero h1 {
+        font-size: 34px;
+    }
+
+    .noticias-hero p,
+    .noticias-search-card__intro p {
+        font-size: 16px;
+    }
+
+    .noticias-search-card__intro h2 {
+        font-size: 28px;
+    }
+
+    .filtros-actions {
+        flex-direction: column;
+    }
+
+    .filtros-actions .boton-filtro,
+    .filtros-actions .boton-limpiar {
+        width: 100%;
+    }
+    .licitaciones-destacadas {
+        grid-template-columns: 1fr;
+    }
+}
+
+

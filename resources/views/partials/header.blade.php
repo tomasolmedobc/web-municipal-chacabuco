@@ -3,7 +3,7 @@
         <a href="{{ url('/') }}" class="site-brand">
             <div class="site-brand__logo">
                 <img src="{{ config_sistema('logo', asset('images/importantes/Escudo1_resultado.webp')) }}" 
-                     alt="Municipalidad de Chacabuco">
+                        alt="Municipalidad de Chacabuco">
             </div>
 
             <div class="site-brand__text">
@@ -42,6 +42,7 @@
     <nav class="site-nav">
         <a href="{{ url('/') }}">Inicio</a>
         <a href="{{ route('noticias.index') }}">Noticias</a>
+        <a href="{{ route('gobierno-abierto.index') }}">Gobierno Abierto</a>
         <a href="#">Trámites</a>
         <a href="#">Servicios</a>
         <a href="#">Áreas</a>

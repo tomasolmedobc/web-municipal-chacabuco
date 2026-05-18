@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Noticia;
+use App\Models\Licitacion;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -32,6 +33,7 @@ class AdminController extends Controller
             'noticias_total' => Noticia::count(),
             'noticias_publicadas' => Noticia::where('estado', 'publicado')->count(),
             'noticias_ocultas' => Noticia::where('estado', 'oculto')->count(),
+            'licitaciones_total' => Licitacion::count(),
             'usuarios_total' => User::count(),
         ];
 

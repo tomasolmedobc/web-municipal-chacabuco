@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Configuracion;
+use App\Models\Noticia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -76,8 +77,17 @@ class SistemaController extends Controller
     {
         $valorActual = Configuracion::where('clave', $clave)->value('valor');
 
+        if (!$valorActual && $clave === 'default_noticia') {
+            $this->liberarNoticiasConImagenDefault('');
+            return;
+        }
+
         if (!$valorActual) {
             return;
+        }
+
+        if ($clave === 'default_noticia') {
+            $this->liberarNoticiasConImagenDefault($valorActual);
         }
 
         $rutaRelativa = str_replace('/storage/', '', $valorActual);
@@ -85,5 +95,16 @@ class SistemaController extends Controller
         if (Storage::disk('public')->exists($rutaRelativa)) {
             Storage::disk('public')->delete($rutaRelativa);
         }
+    }
+
+    private function liberarNoticiasConImagenDefault(string $valorActual): void
+    {
+        Noticia::where(function ($query) use ($valorActual) {
+            $query->where('imagen_destacada', $valorActual)
+                ->orWhere('imagen_destacada', '/images/importantes/default-noticia.webp')
+                ->orWhere('imagen_destacada', 'like', '/storage/config/default-noticia/%');
+        })->update([
+            'imagen_destacada' => null,
+        ]);
     }
 }

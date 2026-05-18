@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NoticiaController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GobiernoAbiertoController;
+use App\Http\Controllers\LicitacionController;
 
 /* Admin Controllers */
 use App\Http\Controllers\AdminController;
@@ -13,6 +15,7 @@ use App\Http\Controllers\Admin\NoticiaAdminController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PerfilController;
 use App\Http\Controllers\Admin\SistemaController;
+use App\Http\Controllers\Admin\LicitacionAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,10 +23,20 @@ use App\Http\Controllers\Admin\SistemaController;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])
+    ->name('home');
 
-Route::get('/noticias', [NoticiaController::class, 'index'])->name('noticias.index');
-Route::get('/noticias/{slug}', [NoticiaController::class, 'show'])->name('noticias.show');
+Route::get('/noticias', [NoticiaController::class, 'index'])
+    ->name('noticias.index');
+
+Route::get('/noticias/{slug}', [NoticiaController::class, 'show'])
+    ->name('noticias.show');
+
+Route::get('/gobierno-abierto', [GobiernoAbiertoController::class, 'index'])
+    ->name('gobierno-abierto.index');
+
+Route::get('/gobierno-abierto/licitaciones', [LicitacionController::class, 'index'])
+    ->name('licitaciones.index');
 
 
 /*
@@ -33,11 +46,14 @@ Route::get('/noticias/{slug}', [NoticiaController::class, 'show'])->name('notici
 */
 
 Route::middleware('guest')->group(function () {
-    Route::get('/acceso-interno', [AuthController::class, 'showLogin'])->name('login');
+
+    Route::get('/acceso-interno', [AuthController::class, 'showLogin'])
+        ->name('login');
 
     Route::post('/acceso-interno', [AuthController::class, 'login'])
         ->name('login.post');
-    });
+
+});
 
 Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
@@ -64,7 +80,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Perfil (todos los usuarios logueados)
+    | Perfil
     |--------------------------------------------------------------------------
     */
 
@@ -77,11 +93,17 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Noticias (Admin + Editor)
+    | Noticias + Licitaciones
     |--------------------------------------------------------------------------
     */
 
     Route::middleware('role:admin,editor')->group(function () {
+
+        /*
+        |--------------------------------------------------------------------------
+        | Noticias
+        |--------------------------------------------------------------------------
+        */
 
         Route::get('/noticias', [NoticiaAdminController::class, 'index'])
             ->name('admin.noticias.index');
@@ -106,16 +128,48 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
         Route::delete('/archivos/{archivo}', [NoticiaAdminController::class, 'destroyArchivo'])
             ->name('admin.noticias.archivos.destroy');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Licitaciones
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get('/licitaciones', [LicitacionAdminController::class, 'index'])
+            ->name('admin.licitaciones.index');
+
+        Route::get('/licitaciones/crear', [LicitacionAdminController::class, 'create'])
+            ->name('admin.licitaciones.create');
+
+        Route::post('/licitaciones', [LicitacionAdminController::class, 'store'])
+            ->name('admin.licitaciones.store');
+
+        Route::get('/licitaciones/{licitacion}/editar', [LicitacionAdminController::class, 'edit'])
+            ->name('admin.licitaciones.edit');
+
+        Route::put('/licitaciones/{licitacion}', [LicitacionAdminController::class, 'update'])
+            ->name('admin.licitaciones.update');
+
+        Route::delete('/licitaciones/{licitacion}', [LicitacionAdminController::class, 'destroy'])
+            ->name('admin.licitaciones.destroy');
+
     });
 
 
     /*
     |--------------------------------------------------------------------------
-    | Usuarios (solo Admin)
+    | Usuarios + Sistema
     |--------------------------------------------------------------------------
     */
 
     Route::middleware('role:admin')->group(function () {
+
+        /*
+        |--------------------------------------------------------------------------
+        | Usuarios
+        |--------------------------------------------------------------------------
+        */
 
         Route::resource('usuarios', UserController::class)
             ->names('admin.usuarios');
@@ -126,7 +180,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
         /*
         |--------------------------------------------------------------------------
-        | Sistema (configuración)
+        | Sistema
         |--------------------------------------------------------------------------
         */
 
@@ -135,5 +189,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
         Route::put('/sistema', [SistemaController::class, 'update'])
             ->name('admin.sistema.update');
+
     });
+
 });

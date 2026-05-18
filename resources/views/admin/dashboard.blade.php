@@ -20,6 +20,11 @@
     </div>
 
     <div class="admin-stat-card">
+        <h3>Licitaciones</h3>
+        <p>{{ $stats['licitaciones_total'] }}</p>
+    </div>
+
+    <div class="admin-stat-card">
         <h3>Usuarios</h3>
         <p>{{ $stats['usuarios_total'] }}</p>
     </div>
@@ -35,6 +40,10 @@
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
             <a href="{{ route('admin.noticias.create') }}" class="btn btn-primary">
                 Nueva noticia
+            </a>
+
+            <a href="{{ route('admin.licitaciones.create') }}" class="btn btn-secondary">
+                Nueva licitación
             </a>
         </div>
     </section>
@@ -82,9 +91,9 @@
             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                 <h3 style="margin:0;">{{ $noticia->titulo }}</h3>
 
-                @if($noticia->categoria)
+                @if($noticia->categorias->count())
                     <span class="badge-categoria">
-                        {{ $noticia->categoria->nombre }}
+                        {{ $noticia->categorias->first()->nombre }}
                     </span>
                 @endif
             </div>

@@ -63,11 +63,7 @@ class NoticiaAdminController extends Controller
 
         $slug = $this->generarSlugUnico($datos['titulo']);
 
-        $rutaImagen = config_sistema(
-            'default_noticia',
-            '/images/importantes/default-noticia.webp'
-        );
-
+        $rutaImagen = null;
         if ($request->hasFile('imagen_destacada')) {
             $rutaProcesada = $this->procesarImagen($request->file('imagen_destacada'));
 

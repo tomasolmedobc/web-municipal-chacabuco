@@ -35,6 +35,14 @@ class Noticia extends Model
 
     public $timestamps = false;
 
+    public function getImagenDestacadaUrlAttribute(): string
+    {
+        return $this->imagen_destacada ?: config_sistema(
+            'default_noticia',
+            '/images/importantes/default-noticia.webp'
+        );
+    }
+
     public function usuario()
     {
         return $this->belongsTo(User::class, 'user_id');
