@@ -18,7 +18,7 @@ class GobiernoAbiertoController extends Controller
                 'titulo' => 'Boletin Oficial Municipal',
                 'descripcion' => 'Acceso al boletin oficial municipal.',
                 'icono' => 'fa-newspaper',
-                'url' => '#',
+                'url' => 'https://sibom.slyt.gba.gob.ar/',
                 'destacado' => false,
             ],
             [
@@ -46,7 +46,7 @@ class GobiernoAbiertoController extends Controller
                 'titulo' => 'Gastos, Recursos y Balance',
                 'descripcion' => 'Informacion presupuestaria del municipio.',
                 'icono' => 'fa-calculator',
-                'url' => '#',
+                'url' => route('gastos-recursos-balance.index'),
                 'destacado' => true,
             ],
             [

@@ -1,45 +1,47 @@
 @extends('layouts.app')
 
-@section('title', 'Licitaciones')
+@php
+    $rutaIndex = $categoriaActiva === \App\Models\Licitacion::CATEGORIA_GASTOS_RECURSOS_BALANCE
+        ? route('gastos-recursos-balance.index')
+        : route('licitaciones.index');
+@endphp
+
+@section('title', $config['titulo'])
 
 @section('content')
 <section class="noticias-hero">
     <div>
         <span class="section-badge">Gobierno abierto</span>
 
-        <h1>Licitaciones</h1>
+        <h1>{{ $config['titulo'] }}</h1>
 
-        <p>
-            Consulta licitaciones publicas y privadas del Municipio de Chacabuco.
-        </p>
+        <p>{{ $config['descripcion'] }}</p>
     </div>
 </section>
 
 @if($ultimasLicitaciones->count())
     <section class="section-heading">
-        <span class="section-badge">Destacadas</span>
+        <span class="section-badge">Nuevas</span>
 
-        <h2>Ultimas licitaciones destacadas</h2>
+        <h2>Ultimos documentos subidos</h2>
 
-        <p>
-            Las 4 publicaciones mas recientes, publicas o privadas.
-        </p>
+        <p>Las 4 publicaciones mas recientes de esta seccion.</p>
     </section>
 
     <section class="licitaciones-destacadas">
         @foreach($ultimasLicitaciones as $licitacion)
-            <a href="{{ $licitacion->archivo_ruta ?: route('licitaciones.index') }}"
-               target="{{ $licitacion->archivo_ruta ? '_blank' : '_self' }}"
-               class="licitacion-mini-card">
+            <article class="licitacion-mini-card">
                 <div class="licitacion-mini-card__icon">
-                    <i class="fa-solid {{ $licitacion->archivo_ruta ? 'fa-file-pdf' : 'fa-folder-open' }}"></i>
+                    <i class="fa-solid {{ $licitacion->archivos->count() ? 'fa-file-pdf' : $config['icono'] }}"></i>
                 </div>
 
                 <div>
                     <div class="licitacion-mini-card__badges">
-                        <span class="licitacion-badge badge-{{ $licitacion->tipo }}">
-                            {{ $licitacion->tipo === 'publica' ? 'Publica' : 'Privada' }}
-                        </span>
+                        @if($usaFiltroTipo)
+                            <span class="licitacion-badge badge-{{ $licitacion->tipo }}">
+                                {{ $licitacion->tipo === 'publica' ? 'Publica' : 'Privada' }}
+                            </span>
+                        @endif
 
                         <span class="licitacion-badge badge-{{ $licitacion->estado }}">
                             {{ ucfirst($licitacion->estado) }}
@@ -51,22 +53,34 @@
                     @if($licitacion->fecha_publicacion)
                         <small>{{ $licitacion->fecha_publicacion->format('d/m/Y') }}</small>
                     @endif
+
+                    @if($licitacion->archivos->count())
+                        <div class="licitacion-file-links">
+                            @foreach($licitacion->archivos->take(2) as $archivo)
+                                <a href="{{ $archivo->ruta }}" target="_blank">
+                                    {{ $loop->iteration === 1 ? 'Ver PDF' : 'PDF ' . $loop->iteration }}
+                                </a>
+                            @endforeach
+
+                            @if($licitacion->archivos->count() > 2)
+                                <span>+{{ $licitacion->archivos->count() - 2 }}</span>
+                            @endif
+                        </div>
+                    @endif
                 </div>
-            </a>
+            </article>
         @endforeach
     </section>
 @endif
 
 <form method="GET"
-      action="{{ route('licitaciones.index') }}"
+      action="{{ $rutaIndex }}"
       class="filtros noticias-search-card">
     <div class="noticias-search-card__intro">
         <div>
-            <h2>Buscar licitaciones</h2>
+            <h2>Buscar {{ strtolower($config['titulo']) }}</h2>
 
-            <p>
-                Busca por expediente, titulo o descripcion.
-            </p>
+            <p>Busca por expediente, titulo o descripcion.</p>
         </div>
     </div>
 
@@ -78,36 +92,62 @@
                 type="text"
                 name="q"
                 value="{{ $busqueda }}"
-                placeholder="Buscar licitacion..."
+                placeholder="Buscar..."
+                class="filtro-input"
+            >
+        </div>
+
+        @if($usaFiltroTipo)
+            <div class="filtro-fecha">
+                <label>Tipo</label>
+
+                <select name="tipo" class="filtro-input">
+                    <option value="">Todas</option>
+
+                    <option value="publica" {{ $tipo === 'publica' ? 'selected' : '' }}>
+                        Publicas
+                    </option>
+
+                    <option value="privada" {{ $tipo === 'privada' ? 'selected' : '' }}>
+                        Privadas
+                    </option>
+                </select>
+            </div>
+        @endif
+
+        <div class="filtro-fecha">
+            <label for="desde">Desde</label>
+
+            <input
+                type="date"
+                id="desde"
+                name="desde"
+                value="{{ $desde ?? '' }}"
                 class="filtro-input"
             >
         </div>
 
         <div class="filtro-fecha">
-            <label>Tipo</label>
+            <label for="hasta">Hasta</label>
 
-            <select name="tipo" class="filtro-input">
-                <option value="">Todas</option>
-
-                <option value="publica" {{ $tipo === 'publica' ? 'selected' : '' }}>
-                    Publicas
-                </option>
-
-                <option value="privada" {{ $tipo === 'privada' ? 'selected' : '' }}>
-                    Privadas
-                </option>
-            </select>
+            <input
+                type="date"
+                id="hasta"
+                name="hasta"
+                value="{{ $hasta ?? '' }}"
+                class="filtro-input"
+            >
         </div>
-    </div>
 
-    <div class="filtros-actions">
-        <button type="submit" class="boton-filtro">
-            Filtrar
-        </button>
+        <div class="filtros-actions">
+            <button type="submit" class="boton-filtro">
+                Filtrar
+            </button>
 
-        <a href="{{ route('licitaciones.index') }}" class="boton-limpiar">
-            Limpiar
-        </a>
+            <a href="{{ $rutaIndex }}" class="boton-limpiar">
+                Limpiar
+            </a>
+        </div>
     </div>
 </form>
 
@@ -115,13 +155,13 @@
     <div>
         <span class="section-badge">Listado</span>
 
-        <h2>Todas las licitaciones</h2>
+        <h2>Todos los documentos</h2>
 
         <p>
-            @if($busqueda !== '' || $tipo)
+            @if($busqueda !== '' || $tipo || ($desde ?? '') || ($hasta ?? ''))
                 Se encontraron {{ $totalResultados }} resultado(s) para los filtros aplicados.
             @else
-                Todas las licitaciones publicadas en el portal.
+                Todas las publicaciones disponibles en esta seccion.
             @endif
         </p>
     </div>
@@ -130,14 +170,14 @@
 <section class="news-home">
     <div class="news-home__grid">
         @forelse($licitaciones as $licitacion)
-            <a href="{{ $licitacion->archivo_ruta ?: route('licitaciones.index') }}"
-               target="{{ $licitacion->archivo_ruta ? '_blank' : '_self' }}"
-               class="licitacion-card">
+            <article class="licitacion-card">
                 <div class="licitacion-card__top">
                     <div class="licitacion-card__badges">
-                        <span class="licitacion-badge badge-{{ $licitacion->tipo }}">
-                            {{ $licitacion->tipo === 'publica' ? 'Publica' : 'Privada' }}
-                        </span>
+                        @if($usaFiltroTipo)
+                            <span class="licitacion-badge badge-{{ $licitacion->tipo }}">
+                                {{ $licitacion->tipo === 'publica' ? 'Publica' : 'Privada' }}
+                            </span>
+                        @endif
 
                         <span class="licitacion-badge badge-{{ $licitacion->estado }}">
                             {{ ucfirst($licitacion->estado) }}
@@ -150,9 +190,7 @@
                 </div>
 
                 @if($licitacion->descripcion)
-                    <p>
-                        {{ \Illuminate\Support\Str::limit($licitacion->descripcion, 180) }}
-                    </p>
+                    <p>{{ \Illuminate\Support\Str::limit($licitacion->descripcion, 180) }}</p>
                 @endif
 
                 <div class="licitacion-meta">
@@ -179,16 +217,18 @@
                 </div>
 
                 <div class="licitacion-actions">
-                    @if($licitacion->archivo_ruta)
-                        <span class="btn btn-primary">
-                            Ver PDF
-                        </span>
+                    @if($licitacion->archivos->count())
+                        @foreach($licitacion->archivos as $archivo)
+                            <a href="{{ $archivo->ruta }}" target="_blank" class="btn btn-primary">
+                                {{ $licitacion->archivos->count() === 1 ? 'Ver PDF' : 'PDF ' . $loop->iteration }}
+                            </a>
+                        @endforeach
                     @endif
                 </div>
-            </a>
+            </article>
         @empty
             <div class="admin-empty">
-                No hay licitaciones disponibles.
+                No hay publicaciones disponibles.
             </div>
         @endforelse
     </div>

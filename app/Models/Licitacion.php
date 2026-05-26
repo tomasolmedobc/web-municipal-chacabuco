@@ -8,7 +8,26 @@ class Licitacion extends Model
 {
     protected $table = 'licitaciones';
 
+    public const CATEGORIA_LICITACIONES = 'licitaciones';
+    public const CATEGORIA_GASTOS_RECURSOS_BALANCE = 'gastos_recursos_balance';
+
+    public const CATEGORIAS = [
+        self::CATEGORIA_LICITACIONES => [
+            'titulo' => 'Licitaciones',
+            'singular' => 'licitacion',
+            'descripcion' => 'Licitaciones publicas y privadas del Municipio de Chacabuco.',
+            'icono' => 'fa-file-contract',
+        ],
+        self::CATEGORIA_GASTOS_RECURSOS_BALANCE => [
+            'titulo' => 'Gastos, Recursos y Balance',
+            'singular' => 'documento',
+            'descripcion' => 'Informacion presupuestaria, gastos, recursos y balances municipales.',
+            'icono' => 'fa-calculator',
+        ],
+    ];
+
     protected $fillable = [
+        'categoria',
         'titulo',
         'descripcion',
         'tipo',
@@ -27,4 +46,39 @@ class Licitacion extends Model
         'anio' => 'integer',
         'archivo_peso' => 'integer',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Licitacion $licitacion) {
+            $licitacion->categoria = self::normalizarCategoria($licitacion->categoria);
+        });
+
+        static::saving(function (Licitacion $licitacion) {
+            $licitacion->categoria = self::normalizarCategoria($licitacion->categoria);
+        });
+    }
+
+    public static function normalizarCategoria(?string $categoria): string
+    {
+        return array_key_exists((string) $categoria, self::CATEGORIAS)
+            ? (string) $categoria
+            : self::CATEGORIA_LICITACIONES;
+    }
+
+    public static function configCategoria(?string $categoria): array
+    {
+        $categoria = self::normalizarCategoria($categoria);
+
+        return self::CATEGORIAS[$categoria] + ['key' => $categoria];
+    }
+
+    public function scopeCategoria($query, ?string $categoria)
+    {
+        return $query->where('categoria', self::normalizarCategoria($categoria));
+    }
+
+    public function archivos()
+    {
+        return $this->hasMany(LicitacionArchivo::class);
+    }
 }

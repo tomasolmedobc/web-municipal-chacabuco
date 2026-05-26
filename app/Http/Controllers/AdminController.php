@@ -33,7 +33,8 @@ class AdminController extends Controller
             'noticias_total' => Noticia::count(),
             'noticias_publicadas' => Noticia::where('estado', 'publicado')->count(),
             'noticias_ocultas' => Noticia::where('estado', 'oculto')->count(),
-            'licitaciones_total' => Licitacion::count(),
+            'licitaciones_total' => Licitacion::categoria(Licitacion::CATEGORIA_LICITACIONES)->count(),
+            'gobierno_abierto_total' => Licitacion::count(),
             'usuarios_total' => User::count(),
         ];
 

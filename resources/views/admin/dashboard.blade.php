@@ -20,8 +20,8 @@
     </div>
 
     <div class="admin-stat-card">
-        <h3>Licitaciones</h3>
-        <p>{{ $stats['licitaciones_total'] }}</p>
+        <h3>Gobierno abierto</h3>
+        <p>{{ $stats['gobierno_abierto_total'] }}</p>
     </div>
 
     <div class="admin-stat-card">
@@ -42,8 +42,8 @@
                 Nueva noticia
             </a>
 
-            <a href="{{ route('admin.licitaciones.create') }}" class="btn btn-secondary">
-                Nueva licitación
+            <a href="{{ route('admin.gobierno-abierto.index') }}" class="btn btn-secondary">
+                Gobierno abierto
             </a>
         </div>
     </section>

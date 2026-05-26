@@ -38,6 +38,9 @@ Route::get('/gobierno-abierto', [GobiernoAbiertoController::class, 'index'])
 Route::get('/gobierno-abierto/licitaciones', [LicitacionController::class, 'index'])
     ->name('licitaciones.index');
 
+Route::get('/gobierno-abierto/gastos-recursos-balance', [LicitacionController::class, 'gastosRecursosBalance'])
+    ->name('gastos-recursos-balance.index');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -132,15 +135,38 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
         /*
         |--------------------------------------------------------------------------
-        | Licitaciones
+        | Gobierno Abierto
         |--------------------------------------------------------------------------
         */
 
-        Route::get('/licitaciones', [LicitacionAdminController::class, 'index'])
-            ->name('admin.licitaciones.index');
+        Route::get('/gobierno-abierto', [LicitacionAdminController::class, 'index'])
+            ->name('admin.gobierno-abierto.index');
 
-        Route::get('/licitaciones/crear', [LicitacionAdminController::class, 'create'])
-            ->name('admin.licitaciones.create');
+        Route::get('/gobierno-abierto/crear', [LicitacionAdminController::class, 'create'])
+            ->name('admin.gobierno-abierto.create');
+
+        Route::post('/gobierno-abierto', [LicitacionAdminController::class, 'store'])
+            ->name('admin.gobierno-abierto.store');
+
+        Route::get('/gobierno-abierto/{licitacion}/editar', [LicitacionAdminController::class, 'edit'])
+            ->name('admin.gobierno-abierto.edit');
+
+        Route::put('/gobierno-abierto/{licitacion}', [LicitacionAdminController::class, 'update'])
+            ->name('admin.gobierno-abierto.update');
+
+        Route::delete('/gobierno-abierto/{licitacion}', [LicitacionAdminController::class, 'destroy'])
+            ->name('admin.gobierno-abierto.destroy');
+
+        Route::delete('/gobierno-abierto/archivos/{archivo}', [LicitacionAdminController::class, 'destroyArchivo'])
+            ->name('admin.gobierno-abierto.archivos.destroy');
+
+        Route::get('/licitaciones', function () {
+            return redirect()->route('admin.gobierno-abierto.index', ['categoria' => 'licitaciones']);
+        })->name('admin.licitaciones.index');
+
+        Route::get('/licitaciones/crear', function () {
+            return redirect()->route('admin.gobierno-abierto.create', ['categoria' => 'licitaciones']);
+        })->name('admin.licitaciones.create');
 
         Route::post('/licitaciones', [LicitacionAdminController::class, 'store'])
             ->name('admin.licitaciones.store');

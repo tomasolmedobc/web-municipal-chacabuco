@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const formsEliminar = document.querySelectorAll('.form-eliminar-noticia, .form-eliminar-licitacion');
+    const formsEliminar = document.querySelectorAll('.form-eliminar-noticia, .form-eliminar-licitacion, .form-eliminar-gobierno-abierto');
 
     formsEliminar.forEach((form) => {
         form.addEventListener('submit', function (e) {

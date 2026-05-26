@@ -15,12 +15,12 @@
 
     <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <a href="{{ route('admin.licitaciones.create') }}"
-           class="btn btn-primary">
+            class="btn btn-primary">
             Nueva licitación
         </a>
 
         <a href="{{ route('admin.dashboard') }}"
-           class="btn btn-secondary">
+            class="btn btn-secondary">
             Volver
         </a>
     </div>
@@ -105,21 +105,21 @@
 
                 @if($licitacion->archivo_ruta)
                     <a href="{{ $licitacion->archivo_ruta }}"
-                       target="_blank"
-                       class="btn btn-secondary">
+                        target="_blank"
+                        class="btn btn-secondary">
                         PDF
                     </a>
                 @endif
 
                 <a href="{{ route('admin.licitaciones.edit', $licitacion) }}"
-                   class="btn btn-secondary">
+                    class="btn btn-secondary">
                     Editar
                 </a>
 
                 <form action="{{ route('admin.licitaciones.destroy', $licitacion) }}"
-                      method="POST"
-                      class="form-eliminar-licitacion"
-                      data-confirm="Â¿Seguro que querÃ©s eliminar esta licitaciÃ³n?">
+                    method="POST"
+                    class="form-eliminar-licitacion"
+                    data-confirm="Â¿Seguro que querÃ©s eliminar esta licitaciÃ³n?">
 
                     @csrf
                     @method('DELETE')

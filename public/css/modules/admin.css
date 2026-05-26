@@ -102,6 +102,48 @@ Destacada
     margin-bottom: 30px;
 }
 
+.admin-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0 0 22px;
+}
+
+.admin-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 46px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--card);
+    color: var(--text);
+    font-weight: 700;
+    box-shadow: var(--shadow);
+}
+
+.admin-tab i {
+    color: var(--primary);
+}
+
+.admin-tab strong {
+    display: inline-grid;
+    place-items: center;
+    min-width: 26px;
+    height: 26px;
+    padding: 0 8px;
+    border-radius: 999px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-size: 12px;
+}
+
+.admin-tab.is-active {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
 .admin-stat-card h3 {
     margin: 0 0 10px;
     font-size: 18px;

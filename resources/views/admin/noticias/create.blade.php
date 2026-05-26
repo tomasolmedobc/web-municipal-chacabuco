@@ -56,6 +56,18 @@
         </div>
 
             <div class="admin-form-group">
+                <label for="fecha">Fecha</label>
+                <input
+                    type="datetime-local"
+                    name="fecha"
+                    id="fecha"
+                    value="{{ old('fecha', now()->format('Y-m-d\TH:i')) }}"
+                    required
+                >
+                @error('fecha') <small class="auth-error">{{ $message }}</small> @enderror
+            </div>
+
+            <div class="admin-form-group">
                 <label for="estado">Estado</label>
                 <select name="estado" id="estado" required>
                     <option value="oculto" {{ old('estado', 'oculto') === 'oculto' ? 'selected' : '' }}>Oculto</option>
