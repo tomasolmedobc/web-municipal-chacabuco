@@ -10,6 +10,7 @@ class Licitacion extends Model
 
     public const CATEGORIA_LICITACIONES = 'licitaciones';
     public const CATEGORIA_GASTOS_RECURSOS_BALANCE = 'gastos_recursos_balance';
+    public const CATEGORIA_BOTONES_ARCHIVOS_LINKS = 'botones_archivos_links';
 
     public const CATEGORIAS = [
         self::CATEGORIA_LICITACIONES => [
@@ -23,6 +24,12 @@ class Licitacion extends Model
             'singular' => 'documento',
             'descripcion' => 'Informacion presupuestaria, gastos, recursos y balances municipales.',
             'icono' => 'fa-calculator',
+        ],
+        self::CATEGORIA_BOTONES_ARCHIVOS_LINKS => [
+            'titulo' => 'Botones con archivos/links',
+            'singular' => 'boton',
+            'descripcion' => 'Accesos directos de Gobierno Abierto a documentos o enlaces externos.',
+            'icono' => 'fa-link',
         ],
     ];
 
@@ -38,6 +45,8 @@ class Licitacion extends Model
         'archivo_ruta',
         'archivo_mime',
         'archivo_peso',
+        'link_externo',
+        'orden',
         'fecha_publicacion',
     ];
 
@@ -45,6 +54,7 @@ class Licitacion extends Model
         'fecha_publicacion' => 'date',
         'anio' => 'integer',
         'archivo_peso' => 'integer',
+        'orden' => 'integer',
     ];
 
     protected static function booted(): void

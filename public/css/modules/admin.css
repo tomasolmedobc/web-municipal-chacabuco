@@ -429,11 +429,18 @@ body.dark .categoria-noticia {
 .badge-rol.admin {
     background: #dc2626;
     color: #fff;
+    padding: 4px 10px;
+    border: 1px solid #dc2626;
+    border-radius: 999px;
+
 }
 
 .badge-rol.editor {
     background: #2563eb;
     color: #fff;
+    padding: 4px 10px;
+    border: 1px solid #2563eb;
+    border-radius: 999px;
 }
 
 .config-remove {

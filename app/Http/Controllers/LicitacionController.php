@@ -17,11 +17,17 @@ class LicitacionController extends Controller
         return $this->mostrarCategoria($request, Licitacion::CATEGORIA_GASTOS_RECURSOS_BALANCE);
     }
 
+    public function botones(Request $request)
+    {
+        return $this->mostrarCategoria($request, Licitacion::CATEGORIA_BOTONES_ARCHIVOS_LINKS);
+    }
+
     private function mostrarCategoria(Request $request, string $categoria)
     {
         $categoria = Licitacion::normalizarCategoria($categoria);
         $config = Licitacion::configCategoria($categoria);
         $usaFiltroTipo = $categoria === Licitacion::CATEGORIA_LICITACIONES;
+        $esBotones = $categoria === Licitacion::CATEGORIA_BOTONES_ARCHIVOS_LINKS;
 
         $tipo = $usaFiltroTipo && in_array($request->get('tipo'), ['publica', 'privada'], true)
             ? $request->get('tipo')
@@ -54,14 +60,20 @@ class LicitacionController extends Controller
 
         $ultimasLicitaciones = Licitacion::with('archivos')
             ->categoria($categoria)
-            ->orderByDesc('fecha_publicacion')
-            ->orderByDesc('created_at')
+            ->when(
+                $esBotones,
+                fn ($query) => $query->orderBy('orden')->orderBy('titulo'),
+                fn ($query) => $query->orderByDesc('fecha_publicacion')->orderByDesc('created_at')
+            )
             ->take(4)
             ->get();
 
         $licitaciones = $query
-            ->orderByDesc('fecha_publicacion')
-            ->orderByDesc('created_at')
+            ->when(
+                $esBotones,
+                fn ($query) => $query->orderBy('orden')->orderBy('titulo'),
+                fn ($query) => $query->orderByDesc('fecha_publicacion')->orderByDesc('created_at')
+            )
             ->paginate(12)
             ->appends($request->query());
 
@@ -76,6 +88,7 @@ class LicitacionController extends Controller
             'categoriaActiva' => $categoria,
             'config' => $config,
             'usaFiltroTipo' => $usaFiltroTipo,
+            'esBotones' => $esBotones,
         ]);
     }
 }

@@ -7,7 +7,7 @@
     <div>
         <h2 class="seccion-titulo">Gobierno Abierto</h2>
         <p class="admin-subtitle">
-            Gestiona licitaciones, gastos, recursos y balances desde un mismo modulo.
+            Gestiona licitaciones, gastos, recursos, balances y accesos directos desde un mismo modulo.
         </p>
     </div>
 
@@ -77,7 +77,14 @@
                     @if($documento->archivos->count())
                         <span>
                             <i class="fa-solid fa-paperclip"></i>
-                            {{ $documento->archivos->count() }} PDF
+                            {{ $documento->archivos->count() }} archivo(s)
+                        </span>
+                    @endif
+
+                    @if($categoriaActiva === \App\Models\Licitacion::CATEGORIA_BOTONES_ARCHIVOS_LINKS && $documento->link_externo)
+                        <span>
+                            <i class="fa-solid fa-link"></i>
+                            Link externo
                         </span>
                     @endif
 
@@ -107,7 +114,11 @@
             <div class="admin-actions">
                 @if($documento->archivos->count())
                     <a href="{{ $documento->archivos->first()->ruta }}" target="_blank" class="btn btn-secondary">
-                        Ver PDF
+                        Ver archivo
+                    </a>
+                @elseif($documento->link_externo)
+                    <a href="{{ $documento->link_externo }}" target="_blank" class="btn btn-secondary">
+                        Abrir link
                     </a>
                 @endif
 

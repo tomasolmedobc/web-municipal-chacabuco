@@ -474,6 +474,12 @@ body.dark .categoria-noticia {
     display: flex;
     flex-direction: column;
     gap: 28px;
+    background: linear-gradient(135deg, var(--primary-soft), var(--card));
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+
+
+    
 }
 
 .filtros-grid {

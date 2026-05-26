@@ -41,6 +41,12 @@ Route::get('/gobierno-abierto/licitaciones', [LicitacionController::class, 'inde
 Route::get('/gobierno-abierto/gastos-recursos-balance', [LicitacionController::class, 'gastosRecursosBalance'])
     ->name('gastos-recursos-balance.index');
 
+Route::get('/gobierno-abierto/botones', [LicitacionController::class, 'botones'])
+    ->name('gobierno-abierto.botones.index');
+
+Route::get('/gobierno-abierto/accesos/{licitacion}', [GobiernoAbiertoController::class, 'showAcceso'])
+    ->name('gobierno-abierto.accesos.show');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -198,6 +204,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         */
 
         Route::resource('usuarios', UserController::class)
+            ->except(['show'])
             ->names('admin.usuarios');
 
         Route::post('/usuarios/{usuario}/reset-password', [UserController::class, 'resetPassword'])

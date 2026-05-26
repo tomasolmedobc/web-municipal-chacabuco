@@ -1,9 +1,11 @@
 @extends('layouts.app')
 
 @php
-    $rutaIndex = $categoriaActiva === \App\Models\Licitacion::CATEGORIA_GASTOS_RECURSOS_BALANCE
-        ? route('gastos-recursos-balance.index')
-        : route('licitaciones.index');
+    $rutaIndex = match ($categoriaActiva) {
+        \App\Models\Licitacion::CATEGORIA_GASTOS_RECURSOS_BALANCE => route('gastos-recursos-balance.index'),
+        \App\Models\Licitacion::CATEGORIA_BOTONES_ARCHIVOS_LINKS => route('gobierno-abierto.botones.index'),
+        default => route('licitaciones.index'),
+    };
 @endphp
 
 @section('title', $config['titulo'])
@@ -32,7 +34,7 @@
         @foreach($ultimasLicitaciones as $licitacion)
             <article class="licitacion-mini-card">
                 <div class="licitacion-mini-card__icon">
-                    <i class="fa-solid {{ $licitacion->archivos->count() ? 'fa-file-pdf' : $config['icono'] }}"></i>
+                    <i class="fa-solid {{ $licitacion->archivos->count() ? ($esBotones ? 'fa-file-lines' : 'fa-file-pdf') : $config['icono'] }}"></i>
                 </div>
 
                 <div>
@@ -58,13 +60,19 @@
                         <div class="licitacion-file-links">
                             @foreach($licitacion->archivos->take(2) as $archivo)
                                 <a href="{{ $archivo->ruta }}" target="_blank">
-                                    {{ $loop->iteration === 1 ? 'Ver PDF' : 'PDF ' . $loop->iteration }}
+                                    {{ $esBotones ? $archivo->nombre_original : ($loop->iteration === 1 ? 'Ver PDF' : 'PDF ' . $loop->iteration) }}
                                 </a>
                             @endforeach
 
                             @if($licitacion->archivos->count() > 2)
                                 <span>+{{ $licitacion->archivos->count() - 2 }}</span>
                             @endif
+                        </div>
+                    @elseif($licitacion->link_externo)
+                        <div class="licitacion-file-links">
+                            <a href="{{ $licitacion->link_externo }}" target="_blank">
+                                Abrir link
+                            </a>
                         </div>
                     @endif
                 </div>
@@ -80,7 +88,7 @@
         <div>
             <h2>Buscar {{ strtolower($config['titulo']) }}</h2>
 
-            <p>Busca por expediente, titulo o descripcion.</p>
+            <p>{{ $esBotones ? 'Busca por titulo o descripcion.' : 'Busca por expediente, titulo o descripcion.' }}</p>
         </div>
     </div>
 
@@ -115,29 +123,31 @@
             </div>
         @endif
 
-        <div class="filtro-fecha">
-            <label for="desde">Desde</label>
+        @unless($esBotones)
+            <div class="filtro-fecha">
+                <label for="desde">Desde</label>
 
-            <input
-                type="date"
-                id="desde"
-                name="desde"
-                value="{{ $desde ?? '' }}"
-                class="filtro-input"
-            >
-        </div>
+                <input
+                    type="date"
+                    id="desde"
+                    name="desde"
+                    value="{{ $desde ?? '' }}"
+                    class="filtro-input"
+                >
+            </div>
 
-        <div class="filtro-fecha">
-            <label for="hasta">Hasta</label>
+            <div class="filtro-fecha">
+                <label for="hasta">Hasta</label>
 
-            <input
-                type="date"
-                id="hasta"
-                name="hasta"
-                value="{{ $hasta ?? '' }}"
-                class="filtro-input"
-            >
-        </div>
+                <input
+                    type="date"
+                    id="hasta"
+                    name="hasta"
+                    value="{{ $hasta ?? '' }}"
+                    class="filtro-input"
+                >
+            </div>
+        @endunless
 
         <div class="filtros-actions">
             <button type="submit" class="boton-filtro">
@@ -194,21 +204,21 @@
                 @endif
 
                 <div class="licitacion-meta">
-                    @if($licitacion->numero_expediente)
+                    @if(!$esBotones && $licitacion->numero_expediente)
                         <span>
                             <i class="fa-solid fa-folder-open"></i>
                             Expte: {{ $licitacion->numero_expediente }}
                         </span>
                     @endif
 
-                    @if($licitacion->anio)
+                    @if(!$esBotones && $licitacion->anio)
                         <span>
                             <i class="fa-solid fa-calendar-days"></i>
                             {{ $licitacion->anio }}
                         </span>
                     @endif
 
-                    @if($licitacion->fecha_publicacion)
+                    @if(!$esBotones && $licitacion->fecha_publicacion)
                         <span>
                             <i class="fa-solid fa-clock"></i>
                             {{ $licitacion->fecha_publicacion->format('d/m/Y') }}
@@ -220,9 +230,13 @@
                     @if($licitacion->archivos->count())
                         @foreach($licitacion->archivos as $archivo)
                             <a href="{{ $archivo->ruta }}" target="_blank" class="btn btn-primary">
-                                {{ $licitacion->archivos->count() === 1 ? 'Ver PDF' : 'PDF ' . $loop->iteration }}
+                                {{ $esBotones ? $archivo->nombre_original : ($licitacion->archivos->count() === 1 ? 'Ver PDF' : 'PDF ' . $loop->iteration) }}
                             </a>
                         @endforeach
+                    @elseif($licitacion->link_externo)
+                        <a href="{{ $licitacion->link_externo }}" target="_blank" class="btn btn-primary">
+                            Abrir link
+                        </a>
                     @endif
                 </div>
             </article>

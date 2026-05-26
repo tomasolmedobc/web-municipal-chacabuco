@@ -24,7 +24,7 @@ class NoticiaArchivo extends Model
     {
         $rutaFisica = public_path(ltrim($this->ruta, '/'));
 
-        if (!file_exists($rutaFisica)) {
+        if (! file_exists($rutaFisica)) {
             return 'Tamaño no disponible';
         }
 

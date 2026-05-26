@@ -5,8 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Configuracion;
 use App\Models\Noticia;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class SistemaController extends Controller
 {
@@ -58,12 +62,104 @@ class SistemaController extends Controller
     {
         $this->eliminarArchivoAnterior($clave);
 
-        $ruta = $request->file($clave)->store($carpeta, 'public');
+        $ruta = $this->procesarImagenWebp($request->file($clave), $carpeta, $clave);
 
         Configuracion::updateOrCreate(
             ['clave' => $clave],
-            ['valor' => '/storage/' . $ruta]
+            ['valor' => $ruta]
         );
+    }
+
+    private function procesarImagenWebp(UploadedFile $archivo, string $carpeta, string $clave): string
+    {
+        $directorio = Storage::disk('public')->path(trim($carpeta, '/'));
+        File::ensureDirectoryExists($directorio);
+
+        $nombreBase = $this->nombreBaseUnico($directorio, $this->nombreBaseFecha(
+            pathinfo($archivo->getClientOriginalName(), PATHINFO_FILENAME)
+        ), 'webp');
+
+        $rutaWebp = $directorio . '/' . $nombreBase . '.webp';
+        $extension = strtolower($archivo->getClientOriginalExtension());
+
+        if ($extension === 'webp') {
+            $archivo->move($directorio, $nombreBase . '.webp');
+
+            return '/storage/' . trim($carpeta, '/') . '/' . $nombreBase . '.webp';
+        }
+
+        $imagen = match ($extension) {
+            'jpg', 'jpeg' => imagecreatefromjpeg($archivo->getRealPath()),
+            'png' => imagecreatefrompng($archivo->getRealPath()),
+            default => null,
+        };
+
+        if (! $imagen) {
+            throw ValidationException::withMessages([
+                $clave => 'No se pudo procesar la imagen.',
+            ]);
+        }
+
+        if ($extension === 'png') {
+            imagepalettetotruecolor($imagen);
+            imagealphablending($imagen, true);
+            imagesavealpha($imagen, true);
+        }
+
+        $maxAncho = 1600;
+        $anchoOriginal = imagesx($imagen);
+        $altoOriginal = imagesy($imagen);
+
+        if ($anchoOriginal > $maxAncho) {
+            $nuevoAncho = $maxAncho;
+            $nuevoAlto = (int) round(($altoOriginal / $anchoOriginal) * $nuevoAncho);
+            $imagenRedimensionada = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
+
+            imagealphablending($imagenRedimensionada, false);
+            imagesavealpha($imagenRedimensionada, true);
+
+            $transparente = imagecolorallocatealpha($imagenRedimensionada, 0, 0, 0, 127);
+            imagefill($imagenRedimensionada, 0, 0, $transparente);
+
+            imagecopyresampled(
+                $imagenRedimensionada,
+                $imagen,
+                0,
+                0,
+                0,
+                0,
+                $nuevoAncho,
+                $nuevoAlto,
+                $anchoOriginal,
+                $altoOriginal
+            );
+
+            imagedestroy($imagen);
+            $imagen = $imagenRedimensionada;
+        }
+
+        imagewebp($imagen, $rutaWebp, 85);
+        imagedestroy($imagen);
+
+        return '/storage/' . trim($carpeta, '/') . '/' . $nombreBase . '.webp';
+    }
+
+    private function nombreBaseFecha(string $nombreOriginal): string
+    {
+        return now()->format('dmY_Hi') . '_' . Str::slug($nombreOriginal);
+    }
+
+    private function nombreBaseUnico(string $directorio, string $nombreBase, string $extension): string
+    {
+        $nombreDisponible = $nombreBase;
+        $contador = 2;
+
+        while (File::exists($directorio . '/' . $nombreDisponible . '.' . $extension)) {
+            $nombreDisponible = $nombreBase . '_' . $contador;
+            $contador++;
+        }
+
+        return $nombreDisponible;
     }
 
     private function eliminarConfiguracionArchivo(string $clave): void

@@ -25,6 +25,8 @@ Thumbs.db
 /public/hot
 /public/storage
 /public/images
+/public/files/noticias
+/public/uploads_originales
 
 /storage/*.key
 /storage/pail

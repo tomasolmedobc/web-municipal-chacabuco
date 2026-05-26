@@ -171,6 +171,14 @@ class NoticiaAdminController extends Controller
 
     public function destroy(Noticia $noticia)
     {
+        $noticia->load('archivos');
+
+        foreach ($noticia->archivos as $archivo) {
+            $this->eliminarArchivoPublico($archivo->ruta);
+        }
+
+        $this->eliminarImagenNoticia($noticia->imagen_destacada);
+
         $noticia->delete();
 
         return redirect()
@@ -192,11 +200,7 @@ class NoticiaAdminController extends Controller
 
     public function destroyArchivo(NoticiaArchivo $archivo)
     {
-        $rutaFisica = public_path(ltrim($archivo->ruta, '/'));
-
-        if (file_exists($rutaFisica)) {
-            unlink($rutaFisica);
-        }
+        $this->eliminarArchivoPublico($archivo->ruta);
 
         $archivo->delete();
 
@@ -210,6 +214,48 @@ class NoticiaAdminController extends Controller
         return redirect()
             ->back()
             ->with('ok', 'Archivo adjunto eliminado correctamente.');
+    }
+
+    private function eliminarArchivoPublico(?string $ruta): void
+    {
+        if (! $ruta) {
+            return;
+        }
+
+        $rutaFisica = public_path(ltrim($ruta, '/'));
+
+        if (File::exists($rutaFisica) && File::isFile($rutaFisica)) {
+            File::delete($rutaFisica);
+        }
+    }
+
+    private function eliminarImagenNoticia(?string $rutaImagen): void
+    {
+        if (! $rutaImagen) {
+            return;
+        }
+
+        $this->eliminarArchivoPublico($rutaImagen);
+
+        if (! str_starts_with($rutaImagen, '/images/noticias/')) {
+            return;
+        }
+
+        $partes = explode('/', trim($rutaImagen, '/'));
+
+        if (count($partes) < 5) {
+            return;
+        }
+
+        [, , $anio, $mes, $archivo] = $partes;
+        $nombreBase = pathinfo($archivo, PATHINFO_FILENAME);
+        $directorioOriginal = public_path("uploads_originales/noticias/{$anio}/{$mes}");
+
+        foreach (glob($directorioOriginal . '/' . $nombreBase . '.*') ?: [] as $original) {
+            if (File::isFile($original)) {
+                File::delete($original);
+            }
+        }
     }
 
     private function generarSlugUnico(string $titulo, ?int $ignorarId = null): string
@@ -252,9 +298,9 @@ class NoticiaAdminController extends Controller
         File::ensureDirectoryExists($directorioWebp);
 
         $extension = strtolower($archivo->getClientOriginalExtension());
-        $nombreBase = time() . '_' . Str::random(6) . '_' . Str::slug(
+        $nombreBase = $this->nombreBaseUnico($directorioWebp, $this->nombreBaseFecha(
             pathinfo($archivo->getClientOriginalName(), PATHINFO_FILENAME)
-        );
+        ), 'webp');
 
         $nombreOriginal = $nombreBase . '.' . $extension;
         $rutaOriginal = $directorioOriginal . '/' . $nombreOriginal;
@@ -332,9 +378,9 @@ class NoticiaAdminController extends Controller
 
         foreach ($archivos as $archivo) {
             $extension = strtolower($archivo->getClientOriginalExtension());
-            $nombreBase = time() . '_' . Str::random(6) . '_' . Str::slug(
+            $nombreBase = $this->nombreBaseUnico($directorio, $this->nombreBaseFecha(
                 pathinfo($archivo->getClientOriginalName(), PATHINFO_FILENAME)
-            );
+            ), $extension);
             $nombreFinal = $nombreBase . '.' . $extension;
 
             $archivo->move($directorio, $nombreFinal);
@@ -347,5 +393,23 @@ class NoticiaAdminController extends Controller
                 'extension' => $extension,
             ]);
         }
+    }
+
+    private function nombreBaseFecha(string $nombreOriginal): string
+    {
+        return now()->format('dmY_Hi') . '_' . Str::slug($nombreOriginal);
+    }
+
+    private function nombreBaseUnico(string $directorio, string $nombreBase, string $extension): string
+    {
+        $nombreDisponible = $nombreBase;
+        $contador = 2;
+
+        while (File::exists($directorio . '/' . $nombreDisponible . '.' . $extension)) {
+            $nombreDisponible = $nombreBase . '_' . $contador;
+            $contador++;
+        }
+
+        return $nombreDisponible;
     }
 }

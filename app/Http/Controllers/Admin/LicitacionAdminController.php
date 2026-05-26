@@ -7,6 +7,7 @@ use App\Models\Licitacion;
 use App\Models\LicitacionArchivo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class LicitacionAdminController extends Controller
@@ -17,7 +18,11 @@ class LicitacionAdminController extends Controller
 
         $documentos = Licitacion::with('archivos')
             ->categoria($categoriaActiva)
-            ->latest()
+            ->when(
+                $categoriaActiva === Licitacion::CATEGORIA_BOTONES_ARCHIVOS_LINKS,
+                fn ($query) => $query->orderBy('orden')->orderBy('titulo'),
+                fn ($query) => $query->latest()
+            )
             ->paginate(15)
             ->appends($request->query());
 
@@ -51,6 +56,8 @@ class LicitacionAdminController extends Controller
     public function store(Request $request)
     {
         $data = $this->validar($request);
+        $data['orden'] = (int) ($data['orden'] ?? 0);
+        $data['link_externo'] = $data['link_externo'] ?? null;
 
         $documento = new Licitacion();
         $documento->fill($data);
@@ -79,6 +86,8 @@ class LicitacionAdminController extends Controller
     public function update(Request $request, Licitacion $licitacion)
     {
         $data = $this->validar($request);
+        $data['orden'] = (int) ($data['orden'] ?? 0);
+        $data['link_externo'] = $data['link_externo'] ?? null;
 
         $licitacion->fill($data);
         $licitacion->save();
@@ -125,6 +134,9 @@ class LicitacionAdminController extends Controller
 
     private function validar(Request $request): array
     {
+        $categoria = Licitacion::normalizarCategoria($request->input('categoria'));
+        $esBoton = $categoria === Licitacion::CATEGORIA_BOTONES_ARCHIVOS_LINKS;
+
         return $request->validate([
             'categoria' => ['required', Rule::in(array_keys(Licitacion::CATEGORIAS))],
             'titulo' => ['required', 'string', 'max:255'],
@@ -134,7 +146,14 @@ class LicitacionAdminController extends Controller
             'numero_expediente' => ['nullable', 'string', 'max:255'],
             'anio' => ['nullable', 'integer'],
             'fecha_publicacion' => ['nullable', 'date'],
-            'archivos.*' => ['nullable', 'file', 'mimes:pdf', 'max:10240'],
+            'link_externo' => ['nullable', 'url', 'max:2048'],
+            'orden' => ['nullable', 'integer', 'min:0', 'max:999'],
+            'archivos.*' => [
+                'nullable',
+                'file',
+                $esBoton ? 'mimes:pdf,doc,docx,xls,xlsx' : 'mimes:pdf',
+                'max:10240',
+            ],
         ]);
     }
 
@@ -145,14 +164,21 @@ class LicitacionAdminController extends Controller
         }
 
         foreach ($request->file('archivos') as $archivo) {
-            $ruta = $archivo->store('gobierno-abierto/' . $documento->categoria, 'public');
+            $carpeta = 'gobierno-abierto/' . $documento->categoria;
+            $extension = strtolower($archivo->getClientOriginalExtension());
+            $nombreArchivo = $this->nombreArchivoUnico(
+                $carpeta,
+                $this->nombreBaseFecha(pathinfo($archivo->getClientOriginalName(), PATHINFO_FILENAME)),
+                $extension
+            );
+            $ruta = $archivo->storeAs($carpeta, $nombreArchivo, 'public');
 
             $documento->archivos()->create([
                 'nombre_original' => $archivo->getClientOriginalName(),
                 'nombre_archivo' => basename($ruta),
                 'ruta' => '/storage/' . $ruta,
                 'mime_type' => $archivo->getMimeType(),
-                'extension' => strtolower($archivo->getClientOriginalExtension()),
+                'extension' => $extension,
                 'tamano' => $archivo->getSize(),
             ]);
 
@@ -164,6 +190,24 @@ class LicitacionAdminController extends Controller
                 $documento->save();
             }
         }
+    }
+
+    private function nombreBaseFecha(string $nombreOriginal): string
+    {
+        return now()->format('dmY_Hi') . '_' . Str::slug($nombreOriginal);
+    }
+
+    private function nombreArchivoUnico(string $carpeta, string $nombreBase, string $extension): string
+    {
+        $nombreDisponible = $nombreBase . '.' . $extension;
+        $contador = 2;
+
+        while (Storage::disk('public')->exists(trim($carpeta, '/') . '/' . $nombreDisponible)) {
+            $nombreDisponible = $nombreBase . '_' . $contador . '.' . $extension;
+            $contador++;
+        }
+
+        return $nombreDisponible;
     }
 
     private function eliminarArchivoFisico(?string $ruta): void

@@ -119,7 +119,7 @@
                 <form action="{{ route('admin.licitaciones.destroy', $licitacion) }}"
                     method="POST"
                     class="form-eliminar-licitacion"
-                    data-confirm="Â¿Seguro que querÃ©s eliminar esta licitaciÃ³n?">
+                    data-confirm="¿Seguro que querés eliminar esta licitación?">
 
                     @csrf
                     @method('DELETE')
