@@ -47,6 +47,10 @@ Route::get('/gobierno-abierto/botones', [LicitacionController::class, 'botones']
 Route::get('/gobierno-abierto/accesos/{licitacion}', [GobiernoAbiertoController::class, 'showAcceso'])
     ->name('gobierno-abierto.accesos.show');
 
+Route::get('/gobierno-abierto/proveedores', function () {
+    return view('gobierno-abierto.proveedores.index');
+})->name('proveedores.index');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -185,7 +189,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
         Route::delete('/licitaciones/{licitacion}', [LicitacionAdminController::class, 'destroy'])
             ->name('admin.licitaciones.destroy');
-
+        
     });
 
 

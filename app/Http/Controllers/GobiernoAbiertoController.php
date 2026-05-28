@@ -29,8 +29,8 @@ class GobiernoAbiertoController extends Controller
                 'titulo' => 'Consulta Proveedores',
                 'descripcion' => 'Seguimiento de documentacion para proveedores.',
                 'icono' => 'fa-user-tie',
-                'url' => '#',
-                'destacado' => false,
+                'url' => route('proveedores.index'),
+                'destacado' => true,
             ],
             $this->botonDocumento(
                 'Ordenanza Vigente',
@@ -43,6 +43,12 @@ class GobiernoAbiertoController extends Controller
                 'Listado de empleados municipales.',
                 'fa-users',
                 ['nomina', 'nómina', 'empleado']
+            ),
+            $this->botonDocumento(
+                'Informes Viales',
+                'Informes y documentacion vial del municipio.',
+                'fa-road',
+                ['informe', 'informes', 'vial', 'viales']
             ),
             [
                 'titulo' => 'Gastos, Recursos y Balance',

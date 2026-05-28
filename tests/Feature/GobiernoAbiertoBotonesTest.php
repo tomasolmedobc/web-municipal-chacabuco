@@ -64,6 +64,20 @@ class GobiernoAbiertoBotonesTest extends TestCase
         $response->assertSee($boton->link_externo);
     }
 
+    public function test_providers_page_is_public_and_linked_from_open_government(): void
+    {
+        $index = $this->get(route('gobierno-abierto.index'));
+
+        $index->assertOk();
+        $index->assertSee(route('proveedores.index'));
+        $this->assertSame('http://localhost/gobierno-abierto/proveedores', route('proveedores.index'));
+
+        $proveedores = $this->get(route('proveedores.index'));
+
+        $proveedores->assertOk();
+        $proveedores->assertSee('Compras y Proveedores');
+    }
+
     public function test_public_index_uses_latest_active_document_for_fixed_buttons(): void
     {
         Licitacion::create([
@@ -93,6 +107,38 @@ class GobiernoAbiertoBotonesTest extends TestCase
         $response->assertOk();
         $response->assertSee('https://example.com/ordenanza-nueva.pdf');
         $response->assertDontSee('https://example.com/ordenanza-vieja.pdf');
+    }
+
+    public function test_public_index_uses_latest_active_road_report_for_fixed_button(): void
+    {
+        Licitacion::create([
+            'categoria' => Licitacion::CATEGORIA_BOTONES_ARCHIVOS_LINKS,
+            'titulo' => 'Informes Viales',
+            'descripcion' => 'Informe vial anterior.',
+            'tipo' => 'publica',
+            'estado' => 'activa',
+            'link_externo' => 'https://example.com/informe-vial-viejo.pdf',
+            'created_at' => now()->subDay(),
+            'updated_at' => now()->subDay(),
+        ]);
+
+        Licitacion::create([
+            'categoria' => Licitacion::CATEGORIA_BOTONES_ARCHIVOS_LINKS,
+            'titulo' => 'Informes Viales',
+            'descripcion' => 'Informe vial nuevo.',
+            'tipo' => 'publica',
+            'estado' => 'activa',
+            'link_externo' => 'https://example.com/informe-vial-nuevo.pdf',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->get(route('gobierno-abierto.index'));
+
+        $response->assertOk();
+        $response->assertSee('Informes Viales');
+        $response->assertSee('https://example.com/informe-vial-nuevo.pdf');
+        $response->assertDontSee('https://example.com/informe-vial-viejo.pdf');
     }
 
     public function test_fixed_button_with_multiple_files_opens_file_picker(): void
