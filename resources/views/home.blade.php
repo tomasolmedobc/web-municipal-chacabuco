@@ -18,8 +18,8 @@
 
             <div class="municipal-hero__actions">
                 <a href="{{ route('noticias.index') }}" class="btn btn-primary">Ver noticias</a>
-                <a href="#" class="btn btn-secondary">Trámites</a>
-                <a href="#" class="btn btn-secondary">Servicios</a>
+                <a href="{{ route('tramites-servicios.index') }}" class="btn btn-secondary">Tramites</a>
+                <a href="{{ route('gobierno-abierto.index') }}" class="btn btn-secondary">Gobierno Abierto</a>
             </div>
         </div>
 
@@ -44,13 +44,13 @@
                 <p>Novedades, comunicados y actualidad municipal.</p>
             </a>
 
-            <a href="#" class="quick-card">
+            <a href="{{ route('tramites-servicios.index') }}" class="quick-card">
                 <span class="quick-card__icon">📄</span>
                 <h3>Trámites</h3>
                 <p>Accedé a gestiones y trámites municipales.</p>
             </a>
 
-            <a href="#" class="quick-card">
+            <a href="{{ route('tramites-servicios.index') }}" class="quick-card">
                 <span class="quick-card__icon">🛠️</span>
                 <h3>Servicios</h3>
                 <p>Información útil para vecinos y vecinas.</p>

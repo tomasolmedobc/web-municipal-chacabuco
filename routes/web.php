@@ -8,6 +8,9 @@ use App\Http\Controllers\NoticiaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GobiernoAbiertoController;
 use App\Http\Controllers\LicitacionController;
+use App\Http\Controllers\AccesoMunicipalController;
+use App\Http\Controllers\TramitesServiciosController;
+use App\Http\Controllers\ExpedienteConsultaController;
 
 /* Admin Controllers */
 use App\Http\Controllers\AdminController;
@@ -50,6 +53,24 @@ Route::get('/gobierno-abierto/accesos/{licitacion}', [GobiernoAbiertoController:
 Route::get('/gobierno-abierto/proveedores', function () {
     return view('gobierno-abierto.proveedores.index');
 })->name('proveedores.index');
+
+Route::get('/tramites-y-servicios', [TramitesServiciosController::class, 'index'])
+    ->name('tramites-servicios.index');
+
+Route::get('/tramites-y-servicios/expedientes', [ExpedienteConsultaController::class, 'index'])
+    ->name('expedientes.index');
+
+Route::post('/tramites-y-servicios/expedientes', [ExpedienteConsultaController::class, 'consultar'])
+    ->name('expedientes.consultar');
+
+Route::get('/acceso-municipal', [AccesoMunicipalController::class, 'show'])
+    ->name('acceso-municipal.index');
+
+Route::post('/acceso-municipal', [AccesoMunicipalController::class, 'authenticate'])
+    ->name('acceso-municipal.authenticate');
+
+Route::post('/acceso-municipal/salir', [AccesoMunicipalController::class, 'logout'])
+    ->name('acceso-municipal.logout');
 
 
 /*

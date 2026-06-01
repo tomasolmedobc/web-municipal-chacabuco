@@ -84,6 +84,26 @@ return [
             ]) : [],
         ],
 
+        'expedientes' => [
+            'driver' => 'mysql',
+            'url' => env('EXPEDIENTES_DB_URL'),
+            'host' => env('EXPEDIENTES_DB_HOST', '127.0.0.1'),
+            'port' => env('EXPEDIENTES_DB_PORT', '3306'),
+            'database' => env('EXPEDIENTES_DB_DATABASE', 'expedientes'),
+            'username' => env('EXPEDIENTES_DB_USERNAME', ''),
+            'password' => env('EXPEDIENTES_DB_PASSWORD', ''),
+            'unix_socket' => env('EXPEDIENTES_DB_SOCKET', ''),
+            'charset' => env('EXPEDIENTES_DB_CHARSET', 'utf8mb4'),
+            'collation' => env('EXPEDIENTES_DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => false,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                (PHP_VERSION_ID >= 80500 ? Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA) => env('EXPEDIENTES_MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),

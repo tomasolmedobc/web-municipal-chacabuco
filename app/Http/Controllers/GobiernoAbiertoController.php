@@ -63,6 +63,13 @@ class GobiernoAbiertoController extends Controller
                 'fa-sitemap',
                 ['organigrama']
             ),
+            [
+                'titulo' => 'Gis',
+                'descripcion' => 'Sistemas de Información Geográfica',
+                'icono' => 'fa-signs-post',
+                'url' => 'http://gis.chacabuco.gob.ar/home/',
+                'destacado' => false,
+            ],
         ];
 
         return view('gobierno-abierto.index', compact('items'));

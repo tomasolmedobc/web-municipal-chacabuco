@@ -48,8 +48,8 @@
                 <div>
                     <h4>Enlaces útiles</h4>
                     <p><a href="{{ route('noticias.index') }}">Noticias</a></p>
-                    <p><a href="#">Trámites</a></p>
-                    <p><a href="#">Servicios</a></p>
+                    <p><a href="{{ route('tramites-servicios.index') }}">Tramites</a></p>
+                    <p><a href="{{ route('tramites-servicios.index') }}">Servicios</a></p>
                 </div>
             </div>
 
