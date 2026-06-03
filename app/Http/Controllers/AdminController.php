@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Noticia;
 use App\Models\Licitacion;
+use App\Models\HabilitacionDocumento;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -35,6 +36,7 @@ class AdminController extends Controller
             'noticias_ocultas' => Noticia::where('estado', 'oculto')->count(),
             'licitaciones_total' => Licitacion::categoria(Licitacion::CATEGORIA_LICITACIONES)->count(),
             'gobierno_abierto_total' => Licitacion::count(),
+            'habilitaciones_total' => HabilitacionDocumento::count(),
             'usuarios_total' => User::count(),
         ];
 

@@ -11,6 +11,7 @@ use App\Http\Controllers\LicitacionController;
 use App\Http\Controllers\AccesoMunicipalController;
 use App\Http\Controllers\TramitesServiciosController;
 use App\Http\Controllers\ExpedienteConsultaController;
+use App\Http\Controllers\HabilitacionesController;
 
 /* Admin Controllers */
 use App\Http\Controllers\AdminController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PerfilController;
 use App\Http\Controllers\Admin\SistemaController;
 use App\Http\Controllers\Admin\LicitacionAdminController;
+use App\Http\Controllers\Admin\HabilitacionAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +64,9 @@ Route::get('/tramites-y-servicios/expedientes', [ExpedienteConsultaController::c
 
 Route::post('/tramites-y-servicios/expedientes', [ExpedienteConsultaController::class, 'consultar'])
     ->name('expedientes.consultar');
+
+Route::get('/tramites-y-servicios/habilitaciones', [HabilitacionesController::class, 'index'])
+    ->name('habilitaciones.index');
 
 Route::get('/acceso-municipal', [AccesoMunicipalController::class, 'show'])
     ->name('acceso-municipal.index');
@@ -210,6 +215,30 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
         Route::delete('/licitaciones/{licitacion}', [LicitacionAdminController::class, 'destroy'])
             ->name('admin.licitaciones.destroy');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Habilitaciones
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get('/habilitaciones', [HabilitacionAdminController::class, 'index'])
+            ->name('admin.habilitaciones.index');
+
+        Route::get('/habilitaciones/crear', [HabilitacionAdminController::class, 'create'])
+            ->name('admin.habilitaciones.create');
+
+        Route::post('/habilitaciones', [HabilitacionAdminController::class, 'store'])
+            ->name('admin.habilitaciones.store');
+
+        Route::get('/habilitaciones/{habilitacion}/editar', [HabilitacionAdminController::class, 'edit'])
+            ->name('admin.habilitaciones.edit');
+
+        Route::put('/habilitaciones/{habilitacion}', [HabilitacionAdminController::class, 'update'])
+            ->name('admin.habilitaciones.update');
+
+        Route::delete('/habilitaciones/{habilitacion}', [HabilitacionAdminController::class, 'destroy'])
+            ->name('admin.habilitaciones.destroy');
         
     });
 

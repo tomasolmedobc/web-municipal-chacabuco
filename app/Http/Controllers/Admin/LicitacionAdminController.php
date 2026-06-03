@@ -164,7 +164,7 @@ class LicitacionAdminController extends Controller
         }
 
         foreach ($request->file('archivos') as $archivo) {
-            $carpeta = 'gobierno-abierto/' . $documento->categoria;
+            $carpeta = $this->carpetaArchivo($archivo->getClientOriginalName(), $documento);
             $extension = strtolower($archivo->getClientOriginalExtension());
             $nombreArchivo = $this->nombreArchivoUnico(
                 $carpeta,
@@ -190,6 +190,18 @@ class LicitacionAdminController extends Controller
                 $documento->save();
             }
         }
+    }
+
+    private function carpetaArchivo(string $nombreOriginal, Licitacion $documento): string
+    {
+        $esOrdenanza = str_contains(Str::lower($nombreOriginal), 'ordenanza');
+        $esOrdenanzaVigente = Str::lower(trim($documento->titulo)) === 'ordenanza vigente';
+
+        if ($esOrdenanza && ! $esOrdenanzaVigente) {
+            return 'Ordenanza';
+        }
+
+        return 'gobierno-abierto/' . $documento->categoria;
     }
 
     private function nombreBaseFecha(string $nombreOriginal): string

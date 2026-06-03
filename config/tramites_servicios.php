@@ -18,7 +18,7 @@ return [
             'titulo' => 'Habilitaciones',
             'descripcion' => 'Alta, renovacion y consulta de habilitaciones comerciales.',
             'icono' => 'fa-store',
-            'url' => '#',
+            'url' => '/tramites-y-servicios/habilitaciones',
         ],
         [
             'titulo' => 'Reempadronamiento',

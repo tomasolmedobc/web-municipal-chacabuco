@@ -45,6 +45,32 @@ class GobiernoAbiertoBotonesTest extends TestCase
         Storage::disk('public')->assertExists(str_replace('/storage/', '', $boton->archivos->first()->ruta));
     }
 
+    public function test_open_government_current_ordinance_keeps_its_own_folder(): void
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+        $user->forceFill(['rol' => 'admin'])->save();
+
+        $this->actingAs($user)->post(route('admin.gobierno-abierto.store'), [
+            'categoria' => Licitacion::CATEGORIA_BOTONES_ARCHIVOS_LINKS,
+            'titulo' => 'Ordenanza Vigente',
+            'descripcion' => 'Ordenanza impositiva anual.',
+            'tipo' => 'publica',
+            'estado' => 'activa',
+            'orden' => 1,
+            'archivos' => [
+                UploadedFile::fake()->create('ordenanza-vigente.pdf', 128, 'application/pdf'),
+            ],
+        ]);
+
+        $boton = Licitacion::with('archivos')->where('titulo', 'Ordenanza Vigente')->first();
+
+        $this->assertNotNull($boton);
+        $this->assertStringStartsWith('/storage/gobierno-abierto/botones_archivos_links/', $boton->archivos->first()->ruta);
+        Storage::disk('public')->assertExists(str_replace('/storage/', '', $boton->archivos->first()->ruta));
+    }
+
     public function test_active_open_government_buttons_are_rendered_on_public_index(): void
     {
         $boton = Licitacion::create([

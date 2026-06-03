@@ -8,6 +8,7 @@ use App\Models\NoticiaArchivo;
 use App\Models\Categoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 
@@ -373,22 +374,31 @@ class NoticiaAdminController extends Controller
         $anio = now()->format('Y');
         $mes = now()->format('m');
 
-        $directorio = public_path("files/noticias/{$anio}/{$mes}");
+        $carpetaPublica = "files/noticias/{$anio}/{$mes}";
+        $directorio = public_path($carpetaPublica);
         File::ensureDirectoryExists($directorio);
 
         foreach ($archivos as $archivo) {
             $extension = strtolower($archivo->getClientOriginalExtension());
-            $nombreBase = $this->nombreBaseUnico($directorio, $this->nombreBaseFecha(
-                pathinfo($archivo->getClientOriginalName(), PATHINFO_FILENAME)
-            ), $extension);
+            $nombreOriginal = $archivo->getClientOriginalName();
+            $nombreBase = $this->nombreBaseFecha(pathinfo($nombreOriginal, PATHINFO_FILENAME));
             $nombreFinal = $nombreBase . '.' . $extension;
 
-            $archivo->move($directorio, $nombreFinal);
+            if (str_contains(Str::lower($nombreOriginal), 'ordenanza')) {
+                $nombreFinal = $this->nombreStorageUnico('Ordenanza', $nombreBase, $extension);
+                $rutaStorage = $archivo->storeAs('Ordenanza', $nombreFinal, 'public');
+                $rutaPublica = '/storage/' . $rutaStorage;
+            } else {
+                $nombreBase = $this->nombreBaseUnico($directorio, $nombreBase, $extension);
+                $nombreFinal = $nombreBase . '.' . $extension;
+                $archivo->move($directorio, $nombreFinal);
+                $rutaPublica = "/{$carpetaPublica}/{$nombreFinal}";
+            }
 
             $noticia->archivos()->create([
-                'nombre_original' => $archivo->getClientOriginalName(),
+                'nombre_original' => $nombreOriginal,
                 'nombre_archivo' => $nombreFinal,
-                'ruta' => "/files/noticias/{$anio}/{$mes}/{$nombreFinal}",
+                'ruta' => $rutaPublica,
                 'mime_type' => $archivo->getClientMimeType(),
                 'extension' => $extension,
             ]);
@@ -407,6 +417,19 @@ class NoticiaAdminController extends Controller
 
         while (File::exists($directorio . '/' . $nombreDisponible . '.' . $extension)) {
             $nombreDisponible = $nombreBase . '_' . $contador;
+            $contador++;
+        }
+
+        return $nombreDisponible;
+    }
+
+    private function nombreStorageUnico(string $carpeta, string $nombreBase, string $extension): string
+    {
+        $nombreDisponible = $nombreBase . '.' . $extension;
+        $contador = 2;
+
+        while (Storage::disk('public')->exists(trim($carpeta, '/') . '/' . $nombreDisponible)) {
+            $nombreDisponible = $nombreBase . '_' . $contador . '.' . $extension;
             $contador++;
         }
 

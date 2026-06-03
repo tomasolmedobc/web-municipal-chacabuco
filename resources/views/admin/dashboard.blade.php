@@ -25,6 +25,11 @@
     </div>
 
     <div class="admin-stat-card">
+        <h3>Habilitaciones</h3>
+        <p>{{ $stats['habilitaciones_total'] }}</p>
+    </div>
+
+    <div class="admin-stat-card">
         <h3>Usuarios</h3>
         <p>{{ $stats['usuarios_total'] }}</p>
     </div>
@@ -44,6 +49,10 @@
 
             <a href="{{ route('admin.gobierno-abierto.index') }}" class="btn btn-secondary">
                 Gobierno abierto
+            </a>
+
+            <a href="{{ route('admin.habilitaciones.index') }}" class="btn btn-secondary">
+                Habilitaciones
             </a>
         </div>
     </section>
