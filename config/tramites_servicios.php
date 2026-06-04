@@ -93,7 +93,7 @@ return [
             'titulo' => 'Telemedicina Online',
             'descripcion' => 'Acceso a consultas y atencion medica remota.',
             'icono' => 'fa-laptop-medical',
-            'url' => '#',
+            'url' => 'https://chacabuco.itconsultsa.com/login',
         ],
         [
             'titulo' => 'Solicitud de turno Hospitalario',
@@ -117,12 +117,6 @@ return [
             'titulo' => 'OMIC',
             'descripcion' => 'Informacion y consultas de defensa del consumidor.',
             'icono' => 'fa-handshake-angle',
-            'url' => '#',
-        ],
-        [
-            'titulo' => 'Huerta Familiar',
-            'descripcion' => 'Informacion sobre programas y recursos para huertas familiares.',
-            'icono' => 'fa-seedling',
             'url' => '#',
         ],
     ],
