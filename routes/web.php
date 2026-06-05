@@ -12,6 +12,9 @@ use App\Http\Controllers\AccesoMunicipalController;
 use App\Http\Controllers\TramitesServiciosController;
 use App\Http\Controllers\ExpedienteConsultaController;
 use App\Http\Controllers\HabilitacionesController;
+use App\Http\Controllers\InfraccionesController;
+use App\Http\Controllers\ReclamosController;
+use App\Http\Controllers\OmicController;
 
 /* Admin Controllers */
 use App\Http\Controllers\AdminController;
@@ -21,6 +24,7 @@ use App\Http\Controllers\Admin\PerfilController;
 use App\Http\Controllers\Admin\SistemaController;
 use App\Http\Controllers\Admin\LicitacionAdminController;
 use App\Http\Controllers\Admin\HabilitacionAdminController;
+use App\Http\Controllers\Admin\PublicAccessButtonController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,6 +71,34 @@ Route::post('/tramites-y-servicios/expedientes', [ExpedienteConsultaController::
 
 Route::get('/tramites-y-servicios/habilitaciones', [HabilitacionesController::class, 'index'])
     ->name('habilitaciones.index');
+
+Route::get('/tramites-y-servicios/infracciones', [InfraccionesController::class, 'index'])
+    ->name('infracciones.index');
+
+Route::post('/tramites-y-servicios/infracciones', [InfraccionesController::class, 'consultar'])
+    ->name('infracciones.consultar');
+
+Route::get('/tramites-y-servicios/infracciones/cedula/{falta}', [InfraccionesController::class, 'cedula'])
+    ->whereNumber('falta')
+    ->name('infracciones.cedula');
+
+Route::post('/tramites-y-servicios/infracciones/libre-deuda', [InfraccionesController::class, 'libreDeuda'])
+    ->name('infracciones.libre-deuda');
+
+Route::get('/tramites-y-servicios/reclamos', [ReclamosController::class, 'index'])
+    ->name('reclamos.index');
+
+Route::post('/tramites-y-servicios/reclamos', [ReclamosController::class, 'store'])
+    ->name('reclamos.store');
+
+Route::post('/tramites-y-servicios/reclamos/consulta', [ReclamosController::class, 'consultar'])
+    ->name('reclamos.consultar');
+
+Route::get('/tramites-y-servicios/omic', [OmicController::class, 'index'])
+    ->name('omic.index');
+
+Route::post('/tramites-y-servicios/omic', [OmicController::class, 'store'])
+    ->name('omic.store');
 
 Route::get('/acceso-municipal', [AccesoMunicipalController::class, 'show'])
     ->name('acceso-municipal.index');
@@ -276,6 +308,12 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
         Route::put('/sistema', [SistemaController::class, 'update'])
             ->name('admin.sistema.update');
+
+        Route::get('/botones-visibilidad', [PublicAccessButtonController::class, 'index'])
+            ->name('admin.botones-visibilidad.index');
+
+        Route::put('/botones-visibilidad', [PublicAccessButtonController::class, 'update'])
+            ->name('admin.botones-visibilidad.update');
 
     });
 

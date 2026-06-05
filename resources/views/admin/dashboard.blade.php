@@ -54,6 +54,7 @@
             <a href="{{ route('admin.habilitaciones.index') }}" class="btn btn-secondary">
                 Habilitaciones
             </a>
+
         </div>
     </section>
 

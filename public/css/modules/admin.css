@@ -477,3 +477,308 @@ body.dark .categoria-noticia {
     max-height: 90px;
     border-radius: 8px;
 }
+
+/* =========================
+   VISIBILIDAD DE BOTONES
+========================= */
+.admin-visibility-form {
+    display: grid;
+    gap: 18px;
+}
+
+.visibility-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.visibility-summary article {
+    display: grid;
+    gap: 5px;
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+}
+
+.visibility-summary span,
+.visibility-summary small {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.visibility-summary strong {
+    color: var(--text);
+    font-size: 32px;
+    line-height: 1;
+}
+
+.visibility-section {
+    display: grid;
+    gap: 16px;
+    overflow: hidden;
+}
+
+.visibility-section__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+}
+
+.visibility-section__header h2 {
+    margin: 0 0 4px;
+    font-size: 22px;
+}
+
+.visibility-section__header p {
+    margin: 0;
+    color: var(--muted);
+}
+
+.visibility-section__count {
+    min-width: 42px;
+    height: 42px;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 12px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-weight: 900;
+}
+
+.visibility-list {
+    display: grid;
+    gap: 10px;
+}
+
+.visibility-item {
+    display: grid;
+    grid-template-columns: minmax(260px, 1fr) minmax(260px, 420px) 150px;
+    gap: 18px;
+    align-items: center;
+    min-height: 86px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card-soft);
+    transition: border-color .2s ease, background .2s ease, opacity .2s ease;
+}
+
+.visibility-item.is-visible {
+    border-color: rgba(37, 99, 235, .28);
+}
+
+.visibility-item.is-hidden {
+    opacity: .72;
+}
+
+.visibility-item__main {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.visibility-item__icon {
+    width: 46px;
+    height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    border-radius: 10px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-size: 18px;
+}
+
+.visibility-item.is-hidden .visibility-item__icon {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+body.dark .visibility-item.is-hidden .visibility-item__icon {
+    background: rgba(148, 163, 184, .12);
+    color: #94a3b8;
+}
+
+.visibility-item__title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 5px;
+}
+
+.visibility-item h3 {
+    margin: 0;
+    font-size: 17px;
+}
+
+.visibility-item__title em {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #86efac;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 900;
+}
+
+.visibility-item.is-hidden .visibility-item__title em {
+    background: #f1f5f9;
+    color: #475569;
+    border-color: #cbd5e1;
+}
+
+body.dark .visibility-item__title em {
+    background: rgba(22, 101, 52, .2);
+    color: #86efac;
+    border-color: rgba(74, 222, 128, .4);
+}
+
+body.dark .visibility-item.is-hidden .visibility-item__title em {
+    background: rgba(148, 163, 184, .12);
+    color: #cbd5e1;
+    border-color: rgba(148, 163, 184, .25);
+}
+
+.visibility-item p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.5;
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.visibility-link {
+    display: grid;
+    gap: 6px;
+}
+
+.visibility-link span {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.visibility-link input {
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--card);
+    color: var(--text);
+    padding: 0 12px;
+    font: inherit;
+}
+
+.visibility-link input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+.visibility-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    justify-self: end;
+    min-height: 44px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--card);
+    cursor: pointer;
+    user-select: none;
+}
+
+.visibility-switch input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.visibility-switch span {
+    position: relative;
+    width: 46px;
+    height: 26px;
+    border-radius: 999px;
+    background: #cbd5e1;
+    transition: background .2s ease;
+}
+
+.visibility-switch span::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, .2);
+    transition: transform .2s ease;
+}
+
+.visibility-switch input:checked + span {
+    background: var(--primary);
+}
+
+.visibility-switch input:checked + span::after {
+    transform: translateX(20px);
+}
+
+.visibility-switch strong {
+    min-width: 58px;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.visibility-actions {
+    position: sticky;
+    bottom: 14px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+}
+
+@media (max-width: 760px) {
+    .visibility-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .visibility-item {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+    }
+
+    .visibility-item__main {
+        align-items: flex-start;
+    }
+
+    .visibility-switch {
+        justify-content: space-between;
+        justify-self: stretch;
+        border-radius: 12px;
+    }
+}

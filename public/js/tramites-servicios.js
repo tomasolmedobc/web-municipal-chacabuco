@@ -11,29 +11,60 @@ document.addEventListener('DOMContentLoaded', () => {
     const empty = panel.querySelector('[data-ts-empty]');
     let activeType = 'tramites';
 
-    const normalize = (value) => value.toString().trim().toLowerCase();
+    const normalize = (value) => value
+        .toString()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim()
+        .toLowerCase();
 
-    const updateCards = () => {
-        const query = normalize(search?.value || '');
-        const activeContent = contents.find((content) => content.dataset.tsContent === activeType);
-        const cards = [...(activeContent?.querySelectorAll('[data-ts-card]') || [])];
-        let visible = 0;
+    const setTabCount = (type, count) => {
+        const tab = tabs.find((item) => item.dataset.tsTab === type);
+        const badge = tab?.querySelector('[data-ts-count]');
 
-        cards.forEach((card) => {
-            const matches = !query || normalize(card.dataset.tsSearchText || '').includes(query);
-            card.hidden = !matches;
-
-            if (matches) {
-                visible += 1;
-            }
-        });
-
-        if (empty) {
-            empty.hidden = visible > 0;
+        if (badge) {
+            badge.textContent = count;
         }
     };
 
-    const activateTab = (type) => {
+    const updateCards = () => {
+        const query = normalize(search?.value || '');
+        const counts = {};
+        let totalVisible = 0;
+
+        contents.forEach((content) => {
+            const type = content.dataset.tsContent;
+            const cards = [...content.querySelectorAll('[data-ts-card]')];
+            let visible = 0;
+
+            cards.forEach((card) => {
+                const matches = !query || normalize(card.dataset.tsSearchText || '').includes(query);
+                card.hidden = !matches;
+
+                if (matches) {
+                    visible += 1;
+                }
+            });
+
+            counts[type] = visible;
+            totalVisible += visible;
+            setTabCount(type, visible);
+        });
+
+        if (query && counts[activeType] === 0) {
+            const target = Object.keys(counts).find((type) => counts[type] > 0);
+
+            if (target) {
+                activateTab(target, false);
+            }
+        }
+
+        if (empty) {
+            empty.hidden = totalVisible > 0;
+        }
+    };
+
+    const activateTab = (type, refresh = true) => {
         activeType = type;
 
         tabs.forEach((tab) => {
@@ -46,7 +77,9 @@ document.addEventListener('DOMContentLoaded', () => {
             content.classList.toggle('is-active', content.dataset.tsContent === type);
         });
 
-        updateCards();
+        if (refresh) {
+            updateCards();
+        }
     };
 
     tabs.forEach((tab) => {
@@ -54,5 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     search?.addEventListener('input', updateCards);
+    search?.addEventListener('search', updateCards);
     updateCards();
 });

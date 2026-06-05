@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\PublicAccessButtonService;
+
 class TramitesServiciosController extends Controller
 {
-    public function index()
+    public function index(PublicAccessButtonService $buttons)
     {
         return view('tramites-servicios.index', [
-            'tramites' => collect(config('tramites_servicios.tramites', [])),
-            'servicios' => collect(config('tramites_servicios.servicios', [])),
+            'tramites' => $buttons->tramitesVisibles(),
+            'servicios' => $buttons->serviciosVisibles(),
         ]);
     }
 }

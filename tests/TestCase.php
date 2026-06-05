@@ -11,9 +11,9 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        $compiledPath = sys_get_temp_dir()
-            .DIRECTORY_SEPARATOR.'chacabuco-testing-views'
-            .DIRECTORY_SEPARATOR.str_replace('\\', '-', static::class);
+        $compiledPath = storage_path('framework/testing/views')
+            .DIRECTORY_SEPARATOR.str_replace('\\', '-', static::class)
+            .DIRECTORY_SEPARATOR.str_replace(['\\', '/', ' '], '-', $this->name());
 
         File::ensureDirectoryExists($compiledPath);
 

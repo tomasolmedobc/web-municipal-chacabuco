@@ -1,0 +1,326 @@
+/* =========================
+   CONSULTA DE INFRACCIONES
+========================= */
+
+.inf-hero {
+    background: linear-gradient(135deg, var(--primary-soft), var(--card));
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 36px;
+    box-shadow: var(--shadow);
+}
+
+.inf-hero h1 {
+    margin: 0 0 14px;
+    font-size: clamp(34px, 5vw, 48px);
+    font-weight: 900;
+    line-height: 1.05;
+}
+
+.inf-hero p {
+    max-width: 760px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 18px;
+    line-height: 1.7;
+}
+
+.inf-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+    gap: 20px;
+    align-items: start;
+}
+
+.inf-form,
+.inf-help,
+.inf-message,
+.inf-results {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+}
+
+.inf-form {
+    display: grid;
+    gap: 20px;
+    padding: 24px;
+}
+
+.inf-form__header {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.inf-form__icon {
+    width: 54px;
+    height: 54px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    border-radius: 14px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-size: 24px;
+}
+
+.inf-form h2,
+.inf-help h2,
+.inf-results h2 {
+    margin: 0 0 6px;
+    font-size: 24px;
+    line-height: 1.2;
+}
+
+.inf-form p,
+.inf-help p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.inf-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.inf-options label {
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card-soft);
+    padding: 0 14px;
+    cursor: pointer;
+    font-weight: 800;
+}
+
+.inf-options input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+}
+
+.inf-field {
+    display: grid;
+    gap: 7px;
+}
+
+.inf-field span {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.inf-field input {
+    width: 100%;
+    height: 48px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--card-soft);
+    color: var(--text);
+    padding: 0 14px;
+    font: inherit;
+    text-transform: uppercase;
+}
+
+.inf-field input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+.inf-field small {
+    color: var(--danger);
+    font-weight: 700;
+}
+
+.inf-form .btn {
+    width: fit-content;
+    gap: 9px;
+}
+
+.inf-help {
+    display: grid;
+    gap: 16px;
+    padding: 22px;
+}
+
+.inf-help__item {
+    display: flex;
+    gap: 10px;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.inf-help__item i {
+    color: var(--primary);
+    margin-top: 4px;
+}
+
+.inf-message {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    color: var(--muted);
+    padding: 18px 20px;
+}
+
+.inf-message i {
+    color: var(--danger);
+}
+
+.inf-results {
+    display: grid;
+    gap: 20px;
+    padding: 24px;
+}
+
+.inf-table-wrap {
+    overflow-x: auto;
+}
+
+.inf-table {
+    width: 100%;
+    min-width: 820px;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 14px;
+}
+
+.inf-table th,
+.inf-table td {
+    border-bottom: 1px solid var(--border);
+    padding: 14px 12px;
+    text-align: left;
+    vertical-align: top;
+    line-height: 1.5;
+}
+
+.inf-table th {
+    background: var(--card-soft);
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.inf-table td {
+    color: var(--text);
+}
+
+.inf-table tr:last-child td {
+    border-bottom: 0;
+}
+
+.inf-empty {
+    border: 1px dashed var(--border);
+    border-radius: 16px;
+    background: var(--card-soft);
+    color: var(--muted);
+    padding: 22px;
+    text-align: center;
+}
+
+.inf-free-debt {
+    display: grid;
+    gap: 18px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--card-soft);
+    padding: 20px;
+}
+
+.inf-free-debt h3 {
+    margin: 0 0 6px;
+    font-size: 21px;
+}
+
+.inf-free-debt p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.inf-free-debt__form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+    gap: 14px;
+    align-items: end;
+}
+
+.inf-free-debt__form label {
+    display: grid;
+    gap: 7px;
+}
+
+.inf-free-debt__form label span {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.inf-free-debt__form input {
+    width: 100%;
+    height: 46px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--card);
+    color: var(--text);
+    padding: 0 14px;
+    font: inherit;
+}
+
+.inf-free-debt__form input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+.inf-free-debt__form small {
+    color: var(--danger);
+    font-weight: 700;
+}
+
+.inf-table .btn {
+    min-height: 38px;
+    padding: 0 12px;
+    white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+    .inf-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .inf-free-debt__form {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .inf-hero,
+    .inf-form,
+    .inf-help,
+    .inf-results {
+        padding: 18px;
+    }
+
+    .inf-form__header {
+        flex-direction: column;
+    }
+
+    .inf-options {
+        grid-template-columns: 1fr;
+    }
+
+    .inf-form .btn {
+        width: 100%;
+    }
+}

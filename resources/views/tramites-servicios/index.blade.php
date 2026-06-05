@@ -21,7 +21,7 @@
                     data-ts-tab="tramites">
                 <i class="fa-solid fa-file-signature"></i>
                 Tramites
-                <span>{{ $tramites->count() }}</span>
+                <span data-ts-count>{{ $tramites->count() }}</span>
             </button>
 
             <button class="ts-tab"
@@ -31,7 +31,7 @@
                     data-ts-tab="servicios">
                 <i class="fa-solid fa-screwdriver-wrench"></i>
                 Servicios
-                <span>{{ $servicios->count() }}</span>
+                <span data-ts-count>{{ $servicios->count() }}</span>
             </button>
         </div>
 
@@ -40,6 +40,7 @@
             <input type="search"
                    placeholder="Buscar por nombre o descripcion"
                    data-ts-search
+                   autocomplete="off"
                    aria-label="Buscar tramites y servicios">
         </label>
     </div>

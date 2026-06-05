@@ -20,7 +20,10 @@
         <p>Ingresá una palabra clave para encontrar accesos rápidamente.</p>
     </div>
 
-    <input type="text" id="ga-search" placeholder="Buscar por licitaciones, proveedores, ordenanzas...">
+    <input type="search"
+           id="ga-search"
+           placeholder="Buscar por licitaciones, proveedores, ordenanzas..."
+           autocomplete="off">
 </section>
 
 <section class="section-heading section-heading--between">
@@ -46,6 +49,10 @@
         </a>
     @endforeach
 </section>
+
+<div class="ga-empty" id="ga-empty" hidden>
+    No se encontraron accesos para la busqueda ingresada.
+</div>
 @endsection
 
 @push('scripts')
@@ -53,16 +60,38 @@
 document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('ga-search');
     const cards = document.querySelectorAll('.ga-card');
+    const empty = document.getElementById('ga-empty');
 
     if (!input) return;
 
-    input.addEventListener('input', () => {
-        const term = input.value.toLowerCase().trim();
+    const normalize = (value) => value
+        .toString()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim()
+        .toLowerCase();
+
+    const filterCards = () => {
+        const term = normalize(input.value);
+        let visible = 0;
 
         cards.forEach(card => {
-            card.style.display = card.dataset.title.includes(term) ? '' : 'none';
+            const matches = !term || normalize(card.dataset.title || '').includes(term);
+            card.hidden = !matches;
+
+            if (matches) {
+                visible += 1;
+            }
         });
-    });
+
+        if (empty) {
+            empty.hidden = visible > 0;
+        }
+    };
+
+    input.addEventListener('input', filterCards);
+    input.addEventListener('search', filterCards);
+    filterCards();
 });
 </script>
 @endpush

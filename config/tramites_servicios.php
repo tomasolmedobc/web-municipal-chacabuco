@@ -30,13 +30,13 @@ return [
             'titulo' => 'Gestion de Reclamos',
             'descripcion' => 'Carga y seguimiento de reclamos realizados al municipio.',
             'icono' => 'fa-comments',
-            'url' => '#',
+            'url' => '/tramites-y-servicios/reclamos',
         ],
         [
             'titulo' => 'Infracciones',
             'descripcion' => 'Consulta de infracciones, actas y gestiones relacionadas.',
             'icono' => 'fa-triangle-exclamation',
-            'url' => '#',
+            'url' => '/tramites-y-servicios/infracciones',
         ],
         [
             'titulo' => 'Carnet de Conducir',
@@ -99,7 +99,7 @@ return [
             'titulo' => 'Solicitud de turno Hospitalario',
             'descripcion' => 'Reserva y consulta de turnos para atencion hospitalaria.',
             'icono' => 'fa-hospital-user',
-            'url' => '#',
+            'url' => 'https://tramites.chacabuco.gob.ar/turnos/',
         ],
         [
             'titulo' => 'Recaudacion',
@@ -117,6 +117,12 @@ return [
             'titulo' => 'OMIC',
             'descripcion' => 'Informacion y consultas de defensa del consumidor.',
             'icono' => 'fa-handshake-angle',
+            'url' => '/tramites-y-servicios/omic',
+        ],
+        [
+            'titulo' => 'Huerta Familiar',
+            'descripcion' => 'Informacion y acompaniamiento para programas de huerta familiar.',
+            'icono' => 'fa-seedling',
             'url' => '#',
         ],
     ],

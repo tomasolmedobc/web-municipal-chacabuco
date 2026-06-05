@@ -35,6 +35,10 @@
                 <a href="{{ route('admin.sistema.index') }}" class="btn btn-secondary">
                     Configuración del sistema
                 </a>
+
+                <a href="{{ route('admin.botones-visibilidad.index') }}" class="btn btn-secondary">
+                    Visibilidad botones
+                </a>
             </div>
         </div>
     @endif

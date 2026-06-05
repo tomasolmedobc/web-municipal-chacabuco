@@ -3,15 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Licitacion;
+use App\Services\PublicAccessButtonService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class GobiernoAbiertoController extends Controller
 {
-    public function index()
+    public function index(PublicAccessButtonService $buttons)
     {
         $items = [
             [
+                'clave' => 'licitaciones',
                 'titulo' => 'Licitaciones',
                 'descripcion' => 'Accede a las licitaciones publicas y privadas del Municipio de Chacabuco.',
                 'icono' => 'fa-file-contract',
@@ -19,6 +21,7 @@ class GobiernoAbiertoController extends Controller
                 'destacado' => true,
             ],
             [
+                'clave' => 'boletin-oficial-municipal',
                 'titulo' => 'Boletin Oficial Municipal',
                 'descripcion' => 'Acceso al boletin oficial municipal.',
                 'icono' => 'fa-newspaper',
@@ -26,6 +29,7 @@ class GobiernoAbiertoController extends Controller
                 'destacado' => false,
             ],
             [
+                'clave' => 'consulta-proveedores',
                 'titulo' => 'Consulta Proveedores',
                 'descripcion' => 'Seguimiento de documentacion para proveedores.',
                 'icono' => 'fa-user-tie',
@@ -33,24 +37,28 @@ class GobiernoAbiertoController extends Controller
                 'destacado' => true,
             ],
             $this->botonDocumento(
+                'ordenanza-vigente',
                 'Ordenanza Vigente',
                 'Ordenanza impositiva anual y normativa vigente.',
                 'fa-scale-balanced',
                 ['ordenanza']
             ),
             $this->botonDocumento(
+                'nomina-de-empleados',
                 'Nomina de empleados',
                 'Listado de empleados municipales.',
                 'fa-users',
                 ['nomina', 'nómina', 'empleado']
             ),
             $this->botonDocumento(
+                'informes-viales',
                 'Informes Viales',
                 'Informes y documentacion vial del municipio.',
                 'fa-road',
                 ['informe', 'informes', 'vial', 'viales']
             ),
             [
+                'clave' => 'gastos-recursos-balance',
                 'titulo' => 'Gastos, Recursos y Balance',
                 'descripcion' => 'Informacion presupuestaria del municipio.',
                 'icono' => 'fa-calculator',
@@ -58,12 +66,14 @@ class GobiernoAbiertoController extends Controller
                 'destacado' => true,
             ],
             $this->botonDocumento(
+                'organigrama',
                 'Organigrama',
                 'Estructura municipal, jerarquias y dependencias.',
                 'fa-sitemap',
                 ['organigrama']
             ),
             [
+                'clave' => 'gis',
                 'titulo' => 'Gis',
                 'descripcion' => 'Sistemas de Información Geográfica',
                 'icono' => 'fa-signs-post',
@@ -71,6 +81,8 @@ class GobiernoAbiertoController extends Controller
                 'destacado' => false,
             ],
         ];
+
+        $items = $buttons->gobiernoAbiertoVisibles($items);
 
         return view('gobierno-abierto.index', compact('items'));
     }
@@ -99,7 +111,7 @@ class GobiernoAbiertoController extends Controller
         ]);
     }
 
-    private function botonDocumento(string $titulo, string $descripcion, string $icono, array $terminos): array
+    private function botonDocumento(string $clave, string $titulo, string $descripcion, string $icono, array $terminos): array
     {
         $documento = Licitacion::with('archivos')
             ->categoria(Licitacion::CATEGORIA_BOTONES_ARCHIVOS_LINKS)
@@ -119,6 +131,7 @@ class GobiernoAbiertoController extends Controller
             ->first();
 
         return [
+            'clave' => $clave,
             'titulo' => $titulo,
             'descripcion' => $documento?->descripcion ?: $descripcion,
             'icono' => $icono,

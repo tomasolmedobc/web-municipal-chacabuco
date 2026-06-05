@@ -12,14 +12,14 @@ class ExpedienteConsultaController extends Controller
     public function index()
     {
         return view('expedientes.index', [
-            'form' => [
+            'form' => session('expedientes_form', [
                 'numero' => '',
                 'letra' => '',
                 'anio' => now()->year,
-            ],
-            'expediente' => null,
-            'pasos' => collect(),
-            'mensaje' => null,
+            ]),
+            'expediente' => $this->resultadoDesdeSesion('expedientes_resultado'),
+            'pasos' => $this->resultadosDesdeSesion('expedientes_pasos'),
+            'mensaje' => session('expedientes_mensaje'),
         ]);
     }
 
@@ -49,28 +49,51 @@ class ExpedienteConsultaController extends Controller
             $expediente = $this->buscarExpediente($form);
 
             if (! $expediente) {
-                return view('expedientes.index', [
-                    'form' => $form,
-                    'expediente' => null,
-                    'pasos' => collect(),
-                    'mensaje' => 'No se encontraron expedientes con ese codigo.',
-                ]);
+                return redirect()
+                    ->route('expedientes.index')
+                    ->with([
+                        'expedientes_form' => $form,
+                        'expedientes_resultado' => null,
+                        'expedientes_pasos' => [],
+                        'expedientes_mensaje' => 'No se encontraron expedientes con ese codigo.',
+                    ]);
             }
 
-            return view('expedientes.index', [
-                'form' => $form,
-                'expediente' => $expediente,
-                'pasos' => $this->buscarPasos($expediente),
-                'mensaje' => null,
-            ]);
+            return redirect()
+                ->route('expedientes.index')
+                ->with([
+                    'expedientes_form' => $form,
+                    'expedientes_resultado' => $expediente,
+                    'expedientes_pasos' => $this->buscarPasos($expediente)->all(),
+                    'expedientes_mensaje' => null,
+                ]);
         } catch (QueryException $exception) {
-            return view('expedientes.index', [
-                'form' => $form,
-                'expediente' => null,
-                'pasos' => collect(),
-                'mensaje' => $this->mensajeErrorConsulta($exception),
-            ]);
+            return redirect()
+                ->route('expedientes.index')
+                ->with([
+                    'expedientes_form' => $form,
+                    'expedientes_resultado' => null,
+                    'expedientes_pasos' => [],
+                    'expedientes_mensaje' => $this->mensajeErrorConsulta($exception),
+                ]);
         }
+    }
+
+    private function resultadoDesdeSesion(string $clave): ?object
+    {
+        $resultado = session($clave);
+
+        if (! $resultado) {
+            return null;
+        }
+
+        return is_array($resultado) ? (object) $resultado : $resultado;
+    }
+
+    private function resultadosDesdeSesion(string $clave)
+    {
+        return collect(session($clave, []))
+            ->map(fn ($item) => is_array($item) ? (object) $item : $item);
     }
 
     private function mensajeErrorConsulta(QueryException $exception): string
@@ -127,7 +150,7 @@ class ExpedienteConsultaController extends Controller
     {
         return DB::connection('expedientes')
             ->table('expedientespasos as ep')
-            ->leftJoin('Oficinas as o', 'o.IdOficina', '=', 'ep.IdOficina')
+            ->leftJoin('oficinas as o', 'o.IdOficina', '=', 'ep.IdOficina')
             ->select([
                 'ep.FechaHoraIngreso',
                 'ep.ObservacionPub',

@@ -56,6 +56,7 @@
 .ga-search-card input:focus {
     outline: none;
     border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-soft);
 }
 
 .ga-grid {
@@ -73,6 +74,10 @@
     padding: 24px;
     box-shadow: var(--shadow);
     transition: all .22s ease;
+}
+
+.ga-card[hidden] {
+    display: none;
 }
 
 .ga-card:hover {
@@ -114,6 +119,15 @@
     margin: 0;
     color: var(--muted);
     font-size: 14px;
+}
+
+.ga-empty {
+    background: var(--card);
+    border: 1px dashed var(--border);
+    border-radius: 16px;
+    color: var(--muted);
+    padding: 22px;
+    text-align: center;
 }
 
 @media (max-width: 980px) {
