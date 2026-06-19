@@ -1,0 +1,197 @@
+/* =========================
+    SALUD MENTAL
+========================= */
+
+.sm-urgencia {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    background: var(--primary-soft);
+    border: 1px solid var(--primary);
+    border-radius: 16px;
+    padding: 20px 24px;
+}
+
+.sm-urgencia__icono {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: var(--primary);
+    color: #fff;
+    font-size: 20px;
+}
+
+.sm-urgencia h3 {
+    margin: 0 0 6px;
+    font-size: 16px;
+    color: var(--text);
+}
+
+.sm-urgencia p {
+    margin: 0;
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+.sm-grid {
+    columns: 3;
+    column-gap: 18px;
+}
+
+.sm-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: var(--shadow);
+    display: grid;
+    gap: 16px;
+    break-inside: avoid;
+    margin-bottom: 18px;
+}
+
+.sm-card__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.sm-card__header > div {
+    min-width: 0;
+}
+
+.sm-card__icono {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-size: 20px;
+}
+
+.sm-card__nombre {
+    margin: 0 0 5px;
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.3;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: .3px;
+    overflow-wrap: break-word;
+}
+
+.sm-card__direccion {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    font-size: 13px;
+    color: var(--muted);
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.sm-agenda {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    display: grid;
+    gap: 12px;
+}
+
+.sm-agenda__dia {
+    display: grid;
+    gap: 6px;
+}
+
+.sm-agenda__dia-nombre {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+.sm-agenda__turnos {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 4px;
+}
+
+.sm-agenda__turnos li {
+    display: grid;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--text);
+}
+
+.sm-agenda__profesional {
+    font-weight: 600;
+    overflow-wrap: break-word;
+}
+
+.sm-agenda__horario {
+    justify-self: start;
+    background: var(--card-soft);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 2px 10px;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 600;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.sm-agenda__vacio {
+    margin: 0;
+    font-size: 13px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+}
+
+.sm-card[hidden] {
+    display: none;
+}
+
+.sm-empty {
+    background: var(--card);
+    border: 1px dashed var(--border);
+    border-radius: 16px;
+    color: var(--muted);
+    padding: 22px;
+    text-align: center;
+}
+
+.sm-volver {
+    display: flex;
+    justify-content: flex-start;
+}
+
+@media (max-width: 1100px) {
+    .sm-grid {
+        columns: 2;
+    }
+}
+
+@media (max-width: 680px) {
+    .sm-urgencia {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .sm-grid {
+        columns: 1;
+    }
+}

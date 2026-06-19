@@ -68,6 +68,8 @@ class SistemaController extends Controller
             ['clave' => $clave],
             ['valor' => $ruta]
         );
+
+        config_sistema_flush($clave);
     }
 
     private function procesarImagenWebp(UploadedFile $archivo, string $carpeta, string $clave): string
@@ -167,6 +169,8 @@ class SistemaController extends Controller
         $this->eliminarArchivoAnterior($clave);
 
         Configuracion::where('clave', $clave)->delete();
+
+        config_sistema_flush($clave);
     }
 
     private function eliminarArchivoAnterior(string $clave): void

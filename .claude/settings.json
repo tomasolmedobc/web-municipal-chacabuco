@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s \"http://chacabuco.test/turismo/eventos-proximos\")",
+      "Bash(curl -s -o /dev/null -w \"home HTTP: %{http_code}\" \"http://chacabuco.test/\")",
+      "PowerShell(cd c:\\\\laragon\\\\www\\\\chacabuco; $php = \\(Get-ChildItem \"C:\\\\laragon\\\\bin\\\\php\" -Filter \"php.exe\" -Recurse | Select-Object -First 1\\).FullName; Write-Host \"PHP: $php\"; & $php artisan migrate --path=database/migrations/2026_06_19_000000_add_hora_inicio_to_turismo_items.php 2>&1)",
+      "Read(//c/laragon/bin/php/**)"
+    ]
+  }
+}

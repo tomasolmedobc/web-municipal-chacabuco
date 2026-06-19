@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AuditLog;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -30,12 +31,14 @@ class UserController extends Controller
             'rol' => 'required|in:admin,editor',
         ]);
 
-        User::create([
+        $nuevoUsuario = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'rol' => $data['rol'],
         ]);
+
+        AuditLog::registrar('crear', 'User', $nuevoUsuario->id, "Usuario creado: \"{$data['name']}\" ({$data['email']}) — rol: {$data['rol']}");
 
         return redirect()
             ->route('admin.usuarios.index')
@@ -70,6 +73,8 @@ class UserController extends Controller
 
         $usuario->save();
 
+        AuditLog::registrar('editar', 'User', $usuario->id, "Usuario editado: \"{$usuario->name}\" ({$usuario->email}) — rol: {$usuario->rol}");
+
         return back()->with('ok', 'Usuario actualizado correctamente');
     }
 
@@ -79,6 +84,8 @@ class UserController extends Controller
             return back()->with('error', 'No podés eliminarte a vos mismo');
         }
 
+        AuditLog::registrar('eliminar', 'User', $usuario->id, "Usuario eliminado: \"{$usuario->name}\" ({$usuario->email})");
+
         $usuario->delete();
 
         return back()->with('ok', 'Usuario eliminado correctamente');
@@ -86,11 +93,13 @@ class UserController extends Controller
 
     public function resetPassword(User $usuario)
     {
-        $nuevaPassword = Str::random(8);
+        $nuevaPassword = Str::random(12);
 
         $usuario->password = Hash::make($nuevaPassword);
         $usuario->save();
 
-        return back()->with('ok', "Nueva contraseña: {$nuevaPassword}");
+        AuditLog::registrar('editar', 'User', $usuario->id, "Contraseña reseteada para: \"{$usuario->name}\" ({$usuario->email})");
+
+        return back()->with('password_generada', $nuevaPassword);
     }
 }

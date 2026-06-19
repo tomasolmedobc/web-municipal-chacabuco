@@ -31,9 +31,9 @@ class Noticia extends Model
         'wp_modified_at' => 'datetime',
         'destacada' => 'boolean',
         'destacada_hasta' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
-
-    public $timestamps = false;
 
     public function getImagenDestacadaUrlAttribute(): string
     {

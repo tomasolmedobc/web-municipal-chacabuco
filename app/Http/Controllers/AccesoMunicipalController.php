@@ -6,9 +6,12 @@ use Illuminate\Http\Request;
 
 class AccesoMunicipalController extends Controller
 {
+    private const SESSION_TTL_HORAS = 8;
+
     public function show(Request $request)
     {
-        if (! $request->session()->get('acceso_municipal_autorizado')) {
+        if (! $this->sesionValida($request)) {
+            $this->limpiarSesion($request);
             return view('acceso-municipal.login');
         }
 
@@ -34,14 +37,31 @@ class AccesoMunicipalController extends Controller
         }
 
         $request->session()->put('acceso_municipal_autorizado', true);
+        $request->session()->put('acceso_municipal_expira', now()->addHours(self::SESSION_TTL_HORAS)->timestamp);
 
         return redirect()->route('acceso-municipal.index');
     }
 
     public function logout(Request $request)
     {
-        $request->session()->forget('acceso_municipal_autorizado');
+        $this->limpiarSesion($request);
 
         return redirect()->route('acceso-municipal.index');
+    }
+
+    private function sesionValida(Request $request): bool
+    {
+        if (! $request->session()->get('acceso_municipal_autorizado')) {
+            return false;
+        }
+
+        $expira = $request->session()->get('acceso_municipal_expira', 0);
+
+        return now()->timestamp <= $expira;
+    }
+
+    private function limpiarSesion(Request $request): void
+    {
+        $request->session()->forget(['acceso_municipal_autorizado', 'acceso_municipal_expira']);
     }
 }

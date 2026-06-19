@@ -15,6 +15,8 @@ use App\Http\Controllers\HabilitacionesController;
 use App\Http\Controllers\InfraccionesController;
 use App\Http\Controllers\ReclamosController;
 use App\Http\Controllers\OmicController;
+use App\Http\Controllers\TurismoController;
+use App\Http\Controllers\BaileEgresadosController;
 
 /* Admin Controllers */
 use App\Http\Controllers\AdminController;
@@ -24,7 +26,13 @@ use App\Http\Controllers\Admin\PerfilController;
 use App\Http\Controllers\Admin\SistemaController;
 use App\Http\Controllers\Admin\LicitacionAdminController;
 use App\Http\Controllers\Admin\HabilitacionAdminController;
+use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\PublicAccessButtonController;
+use App\Http\Controllers\Admin\TurismoAdminController;
+use App\Http\Controllers\Admin\LocalidadAdminController;
+use App\Http\Controllers\Admin\BaileUsuariosAdminController;
+use App\Http\Controllers\Admin\BaileAsientosAdminController;
+use App\Http\Controllers\Admin\BaileReservasAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +71,9 @@ Route::get('/gobierno-abierto/proveedores', function () {
 Route::get('/tramites-y-servicios', [TramitesServiciosController::class, 'index'])
     ->name('tramites-servicios.index');
 
+Route::get('/tramites-y-servicios/salud-mental', [TramitesServiciosController::class, 'saludMental'])
+    ->name('tramites-servicios.salud-mental');
+
 Route::get('/tramites-y-servicios/expedientes', [ExpedienteConsultaController::class, 'index'])
     ->name('expedientes.index');
 
@@ -100,10 +111,29 @@ Route::get('/tramites-y-servicios/omic', [OmicController::class, 'index'])
 Route::post('/tramites-y-servicios/omic', [OmicController::class, 'store'])
     ->name('omic.store');
 
+Route::get('/turismo/eventos-proximos', [TurismoController::class, 'eventosProximos'])
+    ->name('turismo.eventos-proximos');
+
+Route::get('/turismo', [TurismoController::class, 'index'])
+    ->name('turismo.index');
+
+Route::get('/turismo/{localidad}', [TurismoController::class, 'show'])
+    ->name('turismo.show');
+
+Route::prefix('baile-egresados')->name('baile-egresados.')->group(function () {
+    Route::get('/', [BaileEgresadosController::class, 'index'])->name('index');
+    Route::get('/reservar', [BaileEgresadosController::class, 'reservarForm'])->name('reservar');
+    Route::post('/reservar', [BaileEgresadosController::class, 'guardarReserva'])->name('guardar');
+    Route::get('/confirmacion', [BaileEgresadosController::class, 'confirmacion'])->name('confirmacion');
+    Route::get('/consultar', [BaileEgresadosController::class, 'consultarForm'])->name('consultar');
+    Route::post('/consultar', [BaileEgresadosController::class, 'consultar'])->name('consultar.post');
+});
+
 Route::get('/acceso-municipal', [AccesoMunicipalController::class, 'show'])
     ->name('acceso-municipal.index');
 
 Route::post('/acceso-municipal', [AccesoMunicipalController::class, 'authenticate'])
+    ->middleware('throttle:5,1')
     ->name('acceso-municipal.authenticate');
 
 Route::post('/acceso-municipal/salir', [AccesoMunicipalController::class, 'logout'])
@@ -122,6 +152,7 @@ Route::middleware('guest')->group(function () {
         ->name('login');
 
     Route::post('/acceso-interno', [AuthController::class, 'login'])
+        ->middleware('throttle:5,1')
         ->name('login.post');
 
 });
@@ -271,7 +302,61 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
         Route::delete('/habilitaciones/{habilitacion}', [HabilitacionAdminController::class, 'destroy'])
             ->name('admin.habilitaciones.destroy');
-        
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Turismo
+        |--------------------------------------------------------------------------
+        */
+
+        Route::prefix('baile-egresados')->name('admin.baile.')->group(function () {
+            Route::get('/usuarios', [BaileUsuariosAdminController::class, 'index'])->name('usuarios.index');
+            Route::get('/usuarios/crear', [BaileUsuariosAdminController::class, 'create'])->name('usuarios.create');
+            Route::post('/usuarios', [BaileUsuariosAdminController::class, 'store'])->name('usuarios.store');
+            Route::get('/usuarios/{usuario}/editar', [BaileUsuariosAdminController::class, 'edit'])->name('usuarios.edit');
+            Route::put('/usuarios/{usuario}', [BaileUsuariosAdminController::class, 'update'])->name('usuarios.update');
+            Route::delete('/usuarios/{usuario}', [BaileUsuariosAdminController::class, 'destroy'])->name('usuarios.destroy');
+
+            Route::get('/asientos', [BaileAsientosAdminController::class, 'index'])->name('asientos.index');
+            Route::get('/asientos/crear', [BaileAsientosAdminController::class, 'create'])->name('asientos.create');
+            Route::post('/asientos', [BaileAsientosAdminController::class, 'store'])->name('asientos.store');
+            Route::get('/asientos/{asiento}/editar', [BaileAsientosAdminController::class, 'edit'])->name('asientos.edit');
+            Route::put('/asientos/{asiento}', [BaileAsientosAdminController::class, 'update'])->name('asientos.update');
+            Route::delete('/asientos/{asiento}', [BaileAsientosAdminController::class, 'destroy'])->name('asientos.destroy');
+
+            Route::get('/reservas', [BaileReservasAdminController::class, 'index'])->name('reservas.index');
+            Route::patch('/reservas/{reserva}/pago', [BaileReservasAdminController::class, 'togglePago'])->name('reservas.pago');
+            Route::delete('/reservas/{reserva}', [BaileReservasAdminController::class, 'destroy'])->name('reservas.destroy');
+        });
+
+        Route::get('/turismo/localidades', [LocalidadAdminController::class, 'index'])
+            ->name('admin.turismo.localidades.index');
+
+        Route::get('/turismo/localidades/{localidad}/editar', [LocalidadAdminController::class, 'edit'])
+            ->name('admin.turismo.localidades.edit');
+
+        Route::put('/turismo/localidades/{localidad}', [LocalidadAdminController::class, 'update'])
+            ->name('admin.turismo.localidades.update');
+
+        Route::get('/turismo', [TurismoAdminController::class, 'index'])
+            ->name('admin.turismo.index');
+
+        Route::get('/turismo/crear', [TurismoAdminController::class, 'create'])
+            ->name('admin.turismo.create');
+
+        Route::post('/turismo', [TurismoAdminController::class, 'store'])
+            ->name('admin.turismo.store');
+
+        Route::get('/turismo/{turismo}/editar', [TurismoAdminController::class, 'edit'])
+            ->name('admin.turismo.edit');
+
+        Route::put('/turismo/{turismo}', [TurismoAdminController::class, 'update'])
+            ->name('admin.turismo.update');
+
+        Route::delete('/turismo/{turismo}', [TurismoAdminController::class, 'destroy'])
+            ->name('admin.turismo.destroy');
+
     });
 
 
@@ -314,6 +399,9 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
         Route::put('/botones-visibilidad', [PublicAccessButtonController::class, 'update'])
             ->name('admin.botones-visibilidad.update');
+
+        Route::get('/audit-log', [AuditLogController::class, 'index'])
+            ->name('admin.audit-log.index');
 
     });
 

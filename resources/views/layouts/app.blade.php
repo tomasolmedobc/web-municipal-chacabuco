@@ -76,8 +76,79 @@
         </div>
     </div>
 
+@include('partials.evento-reminder')
+
 <script src="{{ asset('js/theme.js') }}"></script>
 <script src="{{ asset('js/ui-feedback.js') }}"></script>
+<script>
+(function () {
+    const ENDPOINT   = '/turismo/eventos-proximos';
+    const INTERVALO  = 5 * 60 * 1000;
+    const DEMORA_INI = 2 * 1000;
+    const DURACION   = 17 * 1000;
+
+    const card      = document.getElementById('evento-reminder');
+    const body      = document.getElementById('evento-reminder-body');
+    const btnCerrar = document.getElementById('evento-reminder-close');
+
+    if (!card || !body || !btnCerrar) return;
+
+    let ocultarTimer = null;
+
+    function formatFecha(inicio, fin) {
+        if (!inicio) return '';
+        return fin && fin !== inicio ? inicio + ' al ' + fin : inicio;
+    }
+
+    function mostrar(eventos) {
+        if (!eventos.length) return;
+
+        body.innerHTML = eventos.map(ev => {
+            const fecha = formatFecha(ev.fecha_inicio, ev.fecha_fin);
+            const hora  = ev.hora_inicio ? ev.hora_inicio + ' hs' : '';
+            const href  = '/turismo/' + (ev.slug_localidad || '') + '?tipo=evento';
+            return `<a href="${href}" class="evento-reminder__item">
+                        <span class="evento-reminder__nombre">${ev.titulo}</span>
+                        <span class="evento-reminder__meta">
+                            <span class="evento-reminder__localidad">
+                                <i class="fa-solid fa-location-dot"></i> ${ev.localidad}
+                            </span>
+                            ${fecha ? `<span class="evento-reminder__fecha">${hora ? hora + ' · ' : ''}${fecha}</span>` : (hora ? `<span class="evento-reminder__fecha">${hora}</span>` : '')}
+                        </span>
+                    </a>`;
+        }).join('');
+
+        card.hidden = false;
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => card.classList.add('is-visible'));
+        });
+
+        clearTimeout(ocultarTimer);
+        ocultarTimer = setTimeout(ocultar, DURACION);
+    }
+
+    function ocultar() {
+        card.classList.remove('is-visible');
+        card.addEventListener('transitionend', () => {
+            card.hidden = true;
+        }, { once: true });
+    }
+
+    async function verificarEventos() {
+        try {
+            const res = await fetch(ENDPOINT);
+            if (!res.ok) return;
+            const eventos = await res.json();
+            if (eventos.length) mostrar(eventos);
+        } catch (_) {}
+    }
+
+    btnCerrar.addEventListener('click', ocultar);
+
+    setTimeout(verificarEventos, DEMORA_INI);
+    setInterval(verificarEventos, INTERVALO);
+})();
+</script>
 @stack('scripts')
 </body>
 </html>

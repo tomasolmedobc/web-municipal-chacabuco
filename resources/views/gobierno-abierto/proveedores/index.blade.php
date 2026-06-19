@@ -138,6 +138,36 @@
                 </p>
             </div>
         </details>
+
+        <details class="accordion-item">
+            <summary>
+                Creación de usuario para el sistema de proveedores
+            </summary>
+
+            <div class="accordion-content">
+                <p>Para solicitar el alta de usuario en el sistema, enviá los siguientes datos:</p>
+
+                <div class="proveedores-bank-card" style="gap: 10px;">
+                    <span><strong>CUIT:</strong></span>
+                    <span><strong>RAZÓN SOCIAL:</strong></span>
+                    <span><strong>MAIL:</strong></span>
+                    <span><strong>TELÉFONO:</strong></span>
+                </div>
+
+                <p style="margin-top: 14px;">Enviá la información a cualquiera de estas direcciones:</p>
+
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px;">
+                    <a href="mailto:desistemas_chacabuco@gmail.com" class="btn btn-secondary" style="font-size: 14px;">
+                        <i class="fa-solid fa-envelope"></i>
+                        desistemas_chacabuco@gmail.com
+                    </a>
+                    <a href="mailto:sistemas@chacabuco.gob.ar" class="btn btn-secondary" style="font-size: 14px;">
+                        <i class="fa-solid fa-envelope"></i>
+                        sistemas@chacabuco.gob.ar
+                    </a>
+                </div>
+            </div>
+        </details>
     </div>
 </section>
 

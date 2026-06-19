@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AuditLog;
 use App\Models\HabilitacionDocumento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -69,6 +70,8 @@ class HabilitacionAdminController extends Controller
         $documento = HabilitacionDocumento::create($data);
         $this->guardarArchivo($request, $documento);
 
+        AuditLog::registrar('crear', 'HabilitacionDocumento', $documento->id, "Habilitación creada: \"{$documento->titulo}\" (sección: {$documento->seccion})");
+
         return redirect()
             ->route('admin.habilitaciones.index', ['seccion' => $documento->seccion])
             ->with('ok', ucfirst(HabilitacionDocumento::configSeccion($documento->seccion)['singular']) . ' creado correctamente');
@@ -94,6 +97,8 @@ class HabilitacionAdminController extends Controller
         $habilitacion->fill($data)->save();
         $this->guardarArchivo($request, $habilitacion);
 
+        AuditLog::registrar('editar', 'HabilitacionDocumento', $habilitacion->id, "Habilitación editada: \"{$habilitacion->titulo}\" (sección: {$habilitacion->seccion})");
+
         return redirect()
             ->route('admin.habilitaciones.index', ['seccion' => $habilitacion->seccion])
             ->with('ok', ucfirst(HabilitacionDocumento::configSeccion($habilitacion->seccion)['singular']) . ' actualizado correctamente');
@@ -102,6 +107,8 @@ class HabilitacionAdminController extends Controller
     public function destroy(HabilitacionDocumento $habilitacion)
     {
         $seccion = $habilitacion->seccion;
+        AuditLog::registrar('eliminar', 'HabilitacionDocumento', $habilitacion->id, "Habilitación eliminada: \"{$habilitacion->titulo}\" (sección: {$seccion})");
+
         $this->eliminarArchivoFisico($habilitacion->archivo_ruta);
         $habilitacion->delete();
 

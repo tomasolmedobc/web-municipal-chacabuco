@@ -68,10 +68,10 @@
                 <p>Contactos y canales de atención municipal.</p>
             </a>
 
-            <a href="#" class="quick-card">
-                <span class="quick-card__icon">📍</span>
-                <h3>Contacto</h3>
-                <p>Ubicación, horarios y medios de contacto.</p>
+            <a href="{{ route('proveedores.index') }}" class="quick-card">
+                <span class="quick-card__icon">🏪</span>
+                <h3>Proveedores</h3>
+                <p>Información para proveedores del municipio de Chacabuco.</p>
             </a>
         </div>
     </section>
@@ -206,4 +206,6 @@
             </div>
         </div>
     </section>
+
 @endsection
+

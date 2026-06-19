@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AuditLog;
 use App\Models\Licitacion;
 use App\Models\LicitacionArchivo;
 use Illuminate\Http\Request;
@@ -65,6 +66,8 @@ class LicitacionAdminController extends Controller
 
         $this->guardarArchivos($request, $documento);
 
+        AuditLog::registrar('crear', 'Licitacion', $documento->id, "Licitacion creada: \"{$documento->titulo}\" (categoría: {$documento->categoria})");
+
         return redirect()
             ->route('admin.gobierno-abierto.index', ['categoria' => $documento->categoria])
             ->with('ok', $this->mensajeOk($documento->categoria, 'creado'));
@@ -93,6 +96,8 @@ class LicitacionAdminController extends Controller
         $licitacion->save();
         $this->guardarArchivos($request, $licitacion);
 
+        AuditLog::registrar('editar', 'Licitacion', $licitacion->id, "Licitacion editada: \"{$licitacion->titulo}\" (categoría: {$licitacion->categoria})");
+
         return redirect()
             ->route('admin.gobierno-abierto.index', ['categoria' => $licitacion->categoria])
             ->with('ok', $this->mensajeOk($licitacion->categoria, 'actualizado'));
@@ -107,6 +112,8 @@ class LicitacionAdminController extends Controller
         foreach ($licitacion->archivos as $archivo) {
             $this->eliminarArchivoFisico($archivo->ruta);
         }
+
+        AuditLog::registrar('eliminar', 'Licitacion', $licitacion->id, "Licitacion eliminada: \"{$licitacion->titulo}\" (categoría: {$categoria})");
 
         $licitacion->delete();
 

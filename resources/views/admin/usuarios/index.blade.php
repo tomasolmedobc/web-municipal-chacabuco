@@ -31,6 +31,23 @@
         </script>
     @endif
 
+    @if(session('password_generada'))
+        <div class="password-reset-banner" id="password-reset-banner">
+            <div>
+                <strong>Contraseña generada — copiala y compartila con el usuario:</strong>
+                <code id="nueva-password">{{ session('password_generada') }}</code>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center; flex-shrink:0;">
+                <button type="button" class="btn btn-secondary" onclick="
+                    navigator.clipboard.writeText(document.getElementById('nueva-password').innerText);
+                    this.textContent = '¡Copiado!';
+                    setTimeout(() => this.textContent = 'Copiar', 2000);
+                ">Copiar</button>
+                <button type="button" class="btn btn-secondary" onclick="document.getElementById('password-reset-banner').remove()">Cerrar</button>
+            </div>
+        </div>
+    @endif
+
     @if($usuarios->count() === 0)
         <div class="admin-list-item">
             <div>

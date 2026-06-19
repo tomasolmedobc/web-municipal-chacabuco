@@ -102,6 +102,12 @@ return [
             'url' => 'https://tramites.chacabuco.gob.ar/turnos/',
         ],
         [
+            'titulo' => 'Salud Mental',
+            'descripcion' => 'Puntos de ayuda y telefonos de contacto para asistencia en salud mental.',
+            'icono' => 'fa-brain',
+            'url' => '/tramites-y-servicios/salud-mental',
+        ],
+        [
             'titulo' => 'Recaudacion',
             'descripcion' => 'Acceso a gestiones y consultas del area de recaudacion.',
             'icono' => 'fa-cash-register',

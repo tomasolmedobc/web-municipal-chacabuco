@@ -55,6 +55,20 @@
                 Habilitaciones
             </a>
 
+            <a href="{{ route('admin.turismo.index') }}" class="btn btn-secondary">
+                Turismo
+            </a>
+
+            <a href="{{ route('admin.baile.usuarios.index') }}" class="btn btn-secondary">
+                Baile de Egresados
+            </a>
+
+            @if(auth()->user()->rol === 'admin')
+                <a href="{{ route('admin.audit-log.index') }}" class="btn btn-secondary">
+                    Auditoría
+                </a>
+            @endif
+
         </div>
     </section>
 

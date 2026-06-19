@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AuditLog;
 use App\Models\Noticia;
 use App\Models\NoticiaArchivo;
 use App\Models\Categoria;
@@ -98,6 +99,8 @@ class NoticiaAdminController extends Controller
             $this->guardarArchivosAdjuntos($request->file('archivos'), $noticia);
         }
 
+        AuditLog::registrar('crear', 'Noticia', $noticia->id, "Noticia creada: \"{$noticia->titulo}\"");
+
         return redirect()
             ->route('admin.dashboard')
             ->with('ok', 'Noticia creada correctamente.');
@@ -165,6 +168,8 @@ class NoticiaAdminController extends Controller
             $this->guardarArchivosAdjuntos($request->file('archivos'), $noticia);
         }
 
+        AuditLog::registrar('editar', 'Noticia', $noticia->id, "Noticia editada: \"{$noticia->titulo}\"");
+
         return redirect()
             ->route('admin.dashboard')
             ->with('ok', 'Noticia actualizada correctamente.');
@@ -179,6 +184,8 @@ class NoticiaAdminController extends Controller
         }
 
         $this->eliminarImagenNoticia($noticia->imagen_destacada);
+
+        AuditLog::registrar('eliminar', 'Noticia', $noticia->id, "Noticia eliminada: \"{$noticia->titulo}\"");
 
         $noticia->delete();
 
@@ -223,7 +230,23 @@ class NoticiaAdminController extends Controller
             return;
         }
 
-        $rutaFisica = public_path(ltrim($ruta, '/'));
+        $rutaNormalizada = '/' . ltrim(str_replace('\\', '/', $ruta), '/');
+
+        $prefijosPermitidos = ['/images/noticias/', '/files/noticias/', '/storage/'];
+
+        $permitida = false;
+        foreach ($prefijosPermitidos as $prefijo) {
+            if (str_starts_with($rutaNormalizada, $prefijo)) {
+                $permitida = true;
+                break;
+            }
+        }
+
+        if (! $permitida) {
+            return;
+        }
+
+        $rutaFisica = public_path(ltrim($rutaNormalizada, '/'));
 
         if (File::exists($rutaFisica) && File::isFile($rutaFisica)) {
             File::delete($rutaFisica);
