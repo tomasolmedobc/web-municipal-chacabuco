@@ -94,7 +94,7 @@
 
         <div class="admin-form-group">
             <label for="link_externo">Link externo</label>
-            <input type="url"
+            <input type="text"
                    name="link_externo"
                    id="link_externo"
                    value="{{ old('link_externo', $item->link_externo) }}"
@@ -155,6 +155,14 @@
             </label>
         </div>
 
+        <div class="admin-form-group">
+            <label for="mostrar_detalle" style="display:flex; align-items:center; gap:8px;">
+                <input type="checkbox" name="mostrar_detalle" id="mostrar_detalle" value="1" {{ old('mostrar_detalle', $item->mostrar_detalle) ? 'checked' : '' }} style="width:auto;">
+                Mostrar página de detalle completa
+            </label>
+            <small class="fecha">Si está activo, la card tendrá un link "Ver más" que abre el detalle.</small>
+        </div>
+
         <div class="admin-form-group full">
             <label for="imagen">Imagen</label>
             <input type="file" name="imagen" id="imagen" accept=".jpg,.jpeg,.png,.webp">
@@ -164,8 +172,99 @@
 
         @if($esEdicion && $item->imagen)
             <div class="admin-form-group full">
-                <label>Imagen actual</label>
+                <label>Imagen de portada actual</label>
                 <img src="{{ $item->imagen_url }}" alt="{{ $item->titulo }}" class="preview-imagen-admin">
+            </div>
+        @endif
+
+        @if($esEdicion)
+            <div class="admin-form-group full">
+                <label for="galeria">Galería de imágenes <small class="fecha">(podés subir varias a la vez)</small></label>
+                <input type="file" name="galeria[]" id="galeria" accept=".jpg,.jpeg,.png,.webp" multiple>
+                <small class="fecha">JPG, PNG, WEBP. Máximo 8MB por imagen.</small>
+                @error('galeria.*') <small class="auth-error">{{ $message }}</small> @enderror
+            </div>
+
+            @if($item->galeria && $item->galeria->count())
+                <div class="admin-form-group full">
+                    <label>
+                        Imágenes de galería actuales
+                        <small class="fecha"> — <i class="fa-regular fa-star"></i> = usar como portada del header</small>
+                    </label>
+                    <div class="turismo-galeria-admin">
+                        @foreach($item->galeria as $img)
+                            <div class="turismo-galeria-admin__item {{ $img->es_header ? 'turismo-galeria-admin__item--header' : '' }}">
+                                <img src="{{ $img->imagen_url }}" alt="Imagen galería">
+
+                                @if($img->es_header)
+                                    <span class="turismo-galeria-admin__badge-header" title="Portada del header activa">
+                                        <i class="fa-solid fa-star"></i>
+                                    </span>
+                                @else
+                                    <button type="button"
+                                            class="turismo-galeria-admin__set-header js-accion-ajax"
+                                            data-url="{{ route('admin.turismo.galeria.header', [$item, $img]) }}"
+                                            data-method="PATCH"
+                                            title="Usar como portada del header">
+                                        <i class="fa-regular fa-star"></i>
+                                    </button>
+                                @endif
+
+                                <button type="button"
+                                        class="turismo-galeria-admin__borrar js-accion-ajax"
+                                        data-url="{{ route('admin.turismo.galeria.destroy', [$item, $img]) }}"
+                                        data-method="DELETE"
+                                        data-confirm="¿Eliminar esta imagen de la galería?"
+                                        title="Eliminar">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+        @endif
+
+        <div class="admin-form-group full">
+            <label for="adjuntos">Archivos adjuntos <small class="fecha">(PDF, Word, Excel, ZIP — podés subir varios a la vez)</small></label>
+            <input type="file" name="adjuntos[]" id="adjuntos" accept=".pdf,.doc,.docx,.xls,.xlsx,.zip" multiple>
+            <small class="fecha">Máximo 20MB por archivo.</small>
+            @error('adjuntos.*') <small class="auth-error">{{ $message }}</small> @enderror
+        </div>
+
+        @if($esEdicion && $item->archivos && $item->archivos->count())
+            <div class="admin-form-group full">
+                <label>Archivos adjuntos actuales</label>
+                <div class="turismo-archivos-admin">
+                    @foreach($item->archivos as $archivo)
+                        @php
+                            $ext = strtolower($archivo->extension);
+                            $icono = match($ext) {
+                                'pdf'        => 'fa-file-pdf',
+                                'doc','docx' => 'fa-file-word',
+                                'xls','xlsx' => 'fa-file-excel',
+                                'zip'        => 'fa-file-zipper',
+                                default      => 'fa-paperclip',
+                            };
+                        @endphp
+                        <div class="turismo-archivos-admin__item">
+                            <i class="fa-solid {{ $icono }}"></i>
+                            <span class="turismo-archivos-admin__nombre" title="{{ $archivo->nombre_original }}">
+                                {{ Str::limit($archivo->nombre_original, 40) }}
+                            </span>
+                            <span class="turismo-archivos-admin__meta">{{ strtoupper($ext) }} · {{ $archivo->tamano_legible }}</span>
+                            <button type="button"
+                                    class="turismo-archivos-admin__borrar js-accion-ajax"
+                                    data-url="{{ route('admin.turismo.archivos.destroy', [$item, $archivo]) }}"
+                                    data-method="DELETE"
+                                    data-confirm="¿Eliminar el archivo «{{ $archivo->nombre_original }}»?"
+                                    title="Eliminar">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         @endif
     </div>
@@ -217,6 +316,29 @@
 
             tipoSelect.addEventListener('change', actualizarCamposEvento);
             actualizarCamposEvento();
+
+            // Acciones de galería y archivos sin formularios anidados
+            document.querySelectorAll('.js-accion-ajax').forEach(btn => {
+                btn.addEventListener('click', async function () {
+                    const msg = this.dataset.confirm;
+                    if (msg && !window.confirm(msg)) return;
+
+                    const token = document.querySelector('meta[name="csrf-token"]')?.content;
+                    const body  = new FormData();
+                    body.append('_token', token);
+                    body.append('_method', this.dataset.method || 'POST');
+
+                    this.disabled = true;
+
+                    try {
+                        await fetch(this.dataset.url, { method: 'POST', body });
+                        window.location.reload();
+                    } catch (e) {
+                        this.disabled = false;
+                        alert('Error al procesar la acción. Intentá de nuevo.');
+                    }
+                });
+            });
         });
     </script>
 @endpush

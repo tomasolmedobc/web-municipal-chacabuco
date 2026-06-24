@@ -247,6 +247,88 @@ a.turismo-item-card:hover {
     width: fit-content;
 }
 
+.turismo-item-card__ver-mas {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 4px;
+}
+
+/* Detalle de ítem */
+.turismo-item-detalle {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 28px;
+    align-items: start;
+}
+
+.turismo-item-detalle--full {
+    grid-template-columns: 1fr;
+}
+
+.turismo-item-detalle__aside {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    display: grid;
+    gap: 18px;
+    position: sticky;
+    top: 20px;
+}
+
+.turismo-item-detalle__meta-bloque {
+    display: grid;
+    gap: 4px;
+}
+
+.turismo-item-detalle__meta-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.turismo-item-detalle__meta-valor {
+    font-size: 15px;
+    color: var(--text);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+a.turismo-item-detalle__meta-valor:hover { color: var(--primary); }
+
+.turismo-item-detalle__main {
+    display: grid;
+    gap: 20px;
+}
+
+.turismo-item-detalle__imagen {
+    width: 100%;
+    max-height: 420px;
+    object-fit: cover;
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+}
+
+@media (max-width: 900px) {
+    .turismo-item-detalle {
+        grid-template-columns: 1fr;
+    }
+
+    .turismo-item-detalle__aside {
+        position: static;
+    }
+}
+
 @media (max-width: 1100px) {
     .turismo-localidad-grid,
     .turismo-item-grid {
@@ -263,6 +345,355 @@ a.turismo-item-card:hover {
     .turismo-localidad-grid,
     .turismo-item-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+/* =========================
+   GALERÍA DE IMÁGENES
+========================= */
+
+.turismo-galeria {
+    margin-top: 8px;
+}
+
+.turismo-galeria__titulo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 14px;
+    color: var(--text);
+}
+
+.turismo-galeria__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 220px));
+    gap: 10px;
+    justify-content: start;
+}
+
+.turismo-galeria__thumb {
+    position: relative;
+    aspect-ratio: 4/3;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    background: var(--card);
+    box-shadow: var(--shadow);
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.turismo-galeria__thumb:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 24px rgba(0,0,0,.18);
+}
+
+.turismo-galeria__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: filter .18s ease;
+}
+
+.turismo-galeria__thumb:hover img {
+    filter: brightness(.75);
+}
+
+.turismo-galeria__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 28px;
+    opacity: 0;
+    transition: opacity .18s ease;
+}
+
+.turismo-galeria__thumb:hover .turismo-galeria__overlay {
+    opacity: 1;
+}
+
+/* Admin galería */
+.turismo-galeria-admin {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.turismo-galeria-admin__item {
+    position: relative;
+    width: 110px;
+    height: 82px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+}
+
+.turismo-galeria-admin__item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.turismo-galeria-admin__borrar {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(220,38,38,.85);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .15s;
+}
+
+.turismo-galeria-admin__borrar:hover {
+    background: #b91c1c;
+}
+
+.turismo-galeria-admin__set-header {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    background: rgba(0,0,0,.55);
+    color: #facc15;
+    border: none;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .15s;
+}
+
+.turismo-galeria-admin__set-header:hover {
+    background: rgba(0,0,0,.8);
+}
+
+.turismo-galeria-admin__badge-header {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    background: #f59e0b;
+    color: #fff;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.turismo-galeria-admin__item--header {
+    outline: 2px solid #f59e0b;
+    outline-offset: 2px;
+}
+
+/* Admin archivos adjuntos */
+.turismo-archivos-admin {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.turismo-archivos-admin__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--hover);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+.turismo-archivos-admin__item i {
+    font-size: 18px;
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.turismo-archivos-admin__nombre {
+    flex: 1;
+    font-weight: 600;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.turismo-archivos-admin__meta {
+    color: var(--muted);
+    font-size: 11px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.turismo-archivos-admin__borrar {
+    background: rgba(220,38,38,.1);
+    color: #dc2626;
+    border: none;
+    border-radius: 6px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+    flex-shrink: 0;
+    transition: background .15s;
+}
+
+.turismo-archivos-admin__borrar:hover {
+    background: #dc2626;
+    color: #fff;
+}
+
+/* Sección adjuntos en detalle público */
+.turismo-adjuntos {
+    margin-top: 8px;
+}
+
+/* =========================
+   LIGHTBOX
+========================= */
+
+.turismo-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.turismo-lightbox[hidden] { display: none; }
+
+.turismo-lightbox__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.88);
+    backdrop-filter: blur(4px);
+    cursor: zoom-out;
+}
+
+.turismo-lightbox__dialog {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    width: min(92vw, 1100px);
+    max-height: 92vh;
+    background: var(--card);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 24px 80px rgba(0,0,0,.5);
+}
+
+.turismo-lightbox__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.turismo-lightbox__titulo {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.turismo-lightbox__controles {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.turismo-lightbox__controles button {
+    background: var(--hover);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text);
+    font-size: 14px;
+    transition: background .15s, color .15s;
+}
+
+.turismo-lightbox__controles button:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}
+
+.turismo-lightbox__body {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    min-height: 200px;
+}
+
+.turismo-lightbox__body img {
+    max-width: 100%;
+    max-height: calc(92vh - 100px);
+    object-fit: contain;
+    display: block;
+    transition: transform .2s ease;
+    cursor: zoom-in;
+}
+
+.turismo-lightbox__counter {
+    padding: 8px 18px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+    .turismo-galeria__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .turismo-lightbox__dialog {
+        width: 100vw;
+        height: 100%;
+        border-radius: 0;
+        max-height: 100%;
     }
 }
 

@@ -48,13 +48,15 @@ class TurismoItem extends Model
         'imagen',
         'estado',
         'destacado',
+        'mostrar_detalle',
         'orden',
     ];
 
     protected $casts = [
         'fecha_inicio' => 'date',
         'fecha_fin' => 'date',
-        'destacado' => 'boolean',
+        'destacado'       => 'boolean',
+        'mostrar_detalle' => 'boolean',
         'orden' => 'integer',
     ];
 
@@ -94,8 +96,26 @@ class TurismoItem extends Model
         return $this->belongsTo(Localidad::class);
     }
 
+    public function galeria()
+    {
+        return $this->hasMany(TurismoItemImagen::class, 'turismo_item_id')->orderBy('orden');
+    }
+
+    public function archivos()
+    {
+        return $this->hasMany(TurismoItemArchivo::class, 'turismo_item_id')->orderBy('created_at');
+    }
+
     public function getImagenUrlAttribute(): string
     {
-        return $this->imagen ?: '/images/importantes/default-noticia.webp';
+        if ($this->imagen) {
+            return $this->imagen;
+        }
+
+        if ($this->relationLoaded('localidad') && $this->localidad?->imagen_portada) {
+            return $this->localidad->imagen_portada_url;
+        }
+
+        return '/images/importantes/default-noticia.webp';
     }
 }

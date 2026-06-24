@@ -47,30 +47,31 @@
 
         <div class="turismo-item-grid">
             @foreach($destacados as $item)
-                <a href="{{ route('turismo.show', ['localidad' => $item->localidad->slug, 'tipo' => $item->tipo]) }}"
-                   class="turismo-item-card {{ $item->imagen ? '' : 'turismo-item-card--icon' }}">
+                @php
+                    $url = $item->mostrar_detalle
+                        ? route('turismo.show.item', [$item->localidad->slug, $item->id])
+                        : route('turismo.show', ['localidad' => $item->localidad->slug, 'tipo' => $item->tipo]);
+                @endphp
+                <a href="{{ $url }}" class="turismo-item-card">
                     <span class="turismo-item-card__badge">Destacado</span>
-
-                    @if($item->imagen)
-                        <img src="{{ $item->imagen_url }}" alt="{{ $item->titulo }}">
-                    @else
-                        <div class="turismo-item-card__icon">
-                            <i class="fa-solid {{ \App\Models\TurismoItem::configTipo($item->tipo)['icono'] }}"></i>
-                        </div>
-                    @endif
+                    <img src="{{ $item->imagen_url }}" alt="{{ $item->titulo }}">
 
                     <div class="turismo-item-card__body">
                         <span class="hero-badge">{{ \App\Models\TurismoItem::configTipo($item->tipo)['titulo'] }}</span>
                         <h3>{{ $item->titulo }}</h3>
 
                         @if($item->descripcion)
-                            <p>{{ \Illuminate\Support\Str::limit(strip_tags($item->descripcion), 120) }}</p>
+                            <p>{{ \Illuminate\Support\Str::limit(html_entity_decode(strip_tags($item->descripcion), ENT_QUOTES | ENT_HTML5, 'UTF-8'), 120) }}</p>
                         @endif
 
                         <span class="turismo-item-card__localidad">
                             <i class="fa-solid fa-location-dot"></i>
                             {{ $item->localidad->nombre }}
                         </span>
+
+                        @if($item->mostrar_detalle)
+                            <span class="turismo-item-card__ver-mas">Ver más →</span>
+                        @endif
                     </div>
                 </a>
             @endforeach
@@ -87,17 +88,14 @@
 
         <div class="turismo-item-grid">
             @foreach($eventosFinalizados as $item)
-                <a href="{{ route('turismo.show', ['localidad' => $item->localidad->slug, 'tipo' => 'evento']) }}"
-                   class="turismo-item-card {{ $item->imagen ? '' : 'turismo-item-card--icon' }} turismo-item-card--finalizado">
+                @php
+                    $urlFin = $item->mostrar_detalle
+                        ? route('turismo.show.item', [$item->localidad->slug, $item->id])
+                        : route('turismo.show', ['localidad' => $item->localidad->slug, 'tipo' => 'evento']);
+                @endphp
+                <a href="{{ $urlFin }}" class="turismo-item-card turismo-item-card--finalizado">
                     <span class="turismo-item-card__badge turismo-item-card__badge--finalizado">Finalizado</span>
-
-                    @if($item->imagen)
-                        <img src="{{ $item->imagen_url }}" alt="{{ $item->titulo }}">
-                    @else
-                        <div class="turismo-item-card__icon">
-                            <i class="fa-solid fa-calendar-xmark"></i>
-                        </div>
-                    @endif
+                    <img src="{{ $item->imagen_url }}" alt="{{ $item->titulo }}">
 
                     <div class="turismo-item-card__body">
                         <h3>{{ $item->titulo }}</h3>

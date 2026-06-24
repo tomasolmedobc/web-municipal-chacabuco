@@ -101,7 +101,7 @@
 
                 @if($item->descripcion)
                     <p class="admin-subtitle">
-                        {{ \Illuminate\Support\Str::limit($item->descripcion, 180) }}
+                        {{ \Illuminate\Support\Str::limit(html_entity_decode(strip_tags($item->descripcion), ENT_QUOTES | ENT_HTML5, 'UTF-8'), 180) }}
                     </p>
                 @endif
 

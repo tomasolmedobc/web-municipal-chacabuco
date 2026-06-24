@@ -117,6 +117,10 @@ Route::get('/turismo/eventos-proximos', [TurismoController::class, 'eventosProxi
 Route::get('/turismo', [TurismoController::class, 'index'])
     ->name('turismo.index');
 
+Route::get('/turismo/{localidad}/{item}', [TurismoController::class, 'showItem'])
+    ->whereNumber('item')
+    ->name('turismo.show.item');
+
 Route::get('/turismo/{localidad}', [TurismoController::class, 'show'])
     ->name('turismo.show');
 
@@ -356,6 +360,15 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
         Route::delete('/turismo/{turismo}', [TurismoAdminController::class, 'destroy'])
             ->name('admin.turismo.destroy');
+
+        Route::delete('/turismo/{turismo}/galeria/{imagen}', [TurismoAdminController::class, 'destroyImagen'])
+            ->name('admin.turismo.galeria.destroy');
+
+        Route::patch('/turismo/{turismo}/galeria/{imagen}/header', [TurismoAdminController::class, 'setHeader'])
+            ->name('admin.turismo.galeria.header');
+
+        Route::delete('/turismo/{turismo}/archivos/{archivo}', [TurismoAdminController::class, 'destroyArchivo'])
+            ->name('admin.turismo.archivos.destroy');
 
     });
 

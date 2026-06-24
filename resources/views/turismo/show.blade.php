@@ -59,21 +59,22 @@
                                     ($item->fecha_fin && $item->fecha_fin->toDateString() < $hoy)
                                     || (!$item->fecha_fin && $item->fecha_inicio->toDateString() < $hoy)
                                 );
+                            $urlDetalle = $item->mostrar_detalle
+                                ? route('turismo.show.item', [$localidad->slug, $item->id])
+                                : null;
+                            $tag = $urlDetalle ? 'a' : 'div';
                         @endphp
-                        <div class="turismo-item-card {{ $item->imagen ? '' : 'turismo-item-card--icon' }} {{ $eventoFinalizado ? 'turismo-item-card--finalizado' : '' }}">
+                        <{{ $tag }}
+                            @if($urlDetalle) href="{{ $urlDetalle }}" @endif
+                            class="turismo-item-card {{ $eventoFinalizado ? 'turismo-item-card--finalizado' : '' }}">
+
                             @if($eventoFinalizado)
                                 <span class="turismo-item-card__badge turismo-item-card__badge--finalizado">Finalizado</span>
                             @elseif($item->destacado)
                                 <span class="turismo-item-card__badge">Destacado</span>
                             @endif
 
-                            @if($item->imagen)
-                                <img src="{{ $item->imagen_url }}" alt="{{ $item->titulo }}">
-                            @else
-                                <div class="turismo-item-card__icon">
-                                    <i class="fa-solid {{ $config['icono'] }}"></i>
-                                </div>
-                            @endif
+                            <img src="{{ $item->imagen ?: $localidad->imagen_portada_url }}" alt="{{ $item->titulo }}">
 
                             <div class="turismo-item-card__body">
                                 @if($item->categoria)
@@ -83,7 +84,7 @@
                                 <h3>{{ $item->titulo }}</h3>
 
                                 @if($item->descripcion)
-                                    <p>{{ \Illuminate\Support\Str::limit(strip_tags($item->descripcion), 140) }}</p>
+                                    <p>{{ \Illuminate\Support\Str::limit(html_entity_decode(strip_tags($item->descripcion), ENT_QUOTES | ENT_HTML5, 'UTF-8'), 140) }}</p>
                                 @endif
 
                                 @if($tipo === \App\Models\TurismoItem::TIPO_EVENTO && $item->fecha_inicio)
@@ -105,13 +106,17 @@
                                     <span><i class="fa-solid fa-phone"></i> {{ $item->telefono }}</span>
                                 @endif
 
-                                @if($item->link_externo)
+                                @if($urlDetalle)
+                                    <span class="turismo-item-card__ver-mas">
+                                        Ver más <i class="fa-solid fa-arrow-right"></i>
+                                    </span>
+                                @elseif($item->link_externo)
                                     <a href="{{ $item->link_externo }}" target="_blank" rel="noopener" class="btn btn-secondary">
                                         Más información
                                     </a>
                                 @endif
                             </div>
-                        </div>
+                        </{{ $tag }}>
                     @endforeach
                 </div>
             </div>

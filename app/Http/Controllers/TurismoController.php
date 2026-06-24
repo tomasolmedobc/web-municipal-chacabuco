@@ -109,6 +109,22 @@ class TurismoController extends Controller
         ]);
     }
 
+    public function showItem(string $localidad, int $item)
+    {
+        $localidad = Localidad::visible()->where('slug', $localidad)->firstOrFail();
+
+        $item = TurismoItem::visible()
+            ->where('localidad_id', $localidad->id)
+            ->where('mostrar_detalle', true)
+            ->with('galeria', 'archivos')
+            ->findOrFail($item);
+
+        $config = TurismoItem::configTipo($item->tipo);
+        $item->descripcion = $this->limpiarHtml($item->descripcion);
+
+        return view('turismo.item', compact('localidad', 'item', 'config'));
+    }
+
     private function limpiarHtml(?string $html): ?string
     {
         if (! $html) {
