@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\HabilitacionDocumento;
+use App\Http\Requests\Admin\HabilitacionRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 
 class HabilitacionAdminController extends Controller
 {
@@ -60,9 +60,9 @@ class HabilitacionAdminController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(HabilitacionRequest $request)
     {
-        $data = $this->validar($request);
+        $data = $request->validated();
         $data['orden'] = (int) ($data['orden'] ?? 0);
         $data['link_externo'] = $data['link_externo'] ?? null;
         $data['descripcion'] = $this->descripcionPorDefecto($data);
@@ -87,9 +87,9 @@ class HabilitacionAdminController extends Controller
         ]);
     }
 
-    public function update(Request $request, HabilitacionDocumento $habilitacion)
+    public function update(HabilitacionRequest $request, HabilitacionDocumento $habilitacion)
     {
-        $data = $this->validar($request);
+        $data = $request->validated();
         $data['orden'] = (int) ($data['orden'] ?? 0);
         $data['link_externo'] = $data['link_externo'] ?? null;
         $data['descripcion'] = $this->descripcionPorDefecto($data);
@@ -115,30 +115,6 @@ class HabilitacionAdminController extends Controller
         return redirect()
             ->route('admin.habilitaciones.index', ['seccion' => $seccion])
             ->with('ok', 'Registro eliminado correctamente');
-    }
-
-    private function validar(Request $request): array
-    {
-        $seccion = HabilitacionDocumento::normalizarSeccion($request->input('seccion'));
-        $esOrdenanza = $seccion === HabilitacionDocumento::SECCION_ORDENANZAS;
-
-        return $request->validate([
-            'seccion' => ['required', Rule::in(array_keys(HabilitacionDocumento::SECCIONES))],
-            'titulo' => ['required', 'string', 'max:255'],
-            'descripcion' => ['nullable', 'string'],
-            'categoria' => ['nullable', 'string', 'max:255'],
-            'numero' => [$esOrdenanza ? 'required' : 'nullable', 'string', 'max:80'],
-            'anio' => ['nullable', 'integer', 'between:1900,' . (date('Y') + 1)],
-            'estado' => ['required', 'in:visible,oculto'],
-            'orden' => ['nullable', 'integer', 'min:0', 'max:999'],
-            'link_externo' => ['nullable', 'url', 'max:2048'],
-            'archivo' => [
-                request()->route('habilitacion') || $request->filled('link_externo') ? 'nullable' : 'required',
-                'file',
-                $esOrdenanza ? 'mimes:pdf' : 'mimes:pdf,doc,docx',
-                'max:10240',
-            ],
-        ]);
     }
 
     private function guardarArchivo(Request $request, HabilitacionDocumento $documento): void

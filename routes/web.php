@@ -17,6 +17,8 @@ use App\Http\Controllers\ReclamosController;
 use App\Http\Controllers\OmicController;
 use App\Http\Controllers\TurismoController;
 use App\Http\Controllers\BaileEgresadosController;
+use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\TelefonoUtilController;
 
 /* Admin Controllers */
 use App\Http\Controllers\AdminController;
@@ -33,6 +35,8 @@ use App\Http\Controllers\Admin\LocalidadAdminController;
 use App\Http\Controllers\Admin\BaileUsuariosAdminController;
 use App\Http\Controllers\Admin\BaileAsientosAdminController;
 use App\Http\Controllers\Admin\BaileReservasAdminController;
+use App\Http\Controllers\Admin\PopupAdminController;
+use App\Http\Controllers\Admin\TelefonoUtilAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -132,6 +136,12 @@ Route::prefix('baile-egresados')->name('baile-egresados.')->group(function () {
     Route::get('/consultar', [BaileEgresadosController::class, 'consultarForm'])->name('consultar');
     Route::post('/consultar', [BaileEgresadosController::class, 'consultar'])->name('consultar.post');
 });
+
+Route::get('/telefonos-utiles', [TelefonoUtilController::class, 'index'])
+    ->name('telefonos-utiles.index');
+
+Route::post('/chatbot', [ChatbotController::class, 'responder'])
+    ->name('chatbot.responder');
 
 Route::get('/acceso-municipal', [AccesoMunicipalController::class, 'show'])
     ->name('acceso-municipal.index');
@@ -370,6 +380,31 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::delete('/turismo/{turismo}/archivos/{archivo}', [TurismoAdminController::class, 'destroyArchivo'])
             ->name('admin.turismo.archivos.destroy');
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | Teléfonos Útiles
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get('/telefonos-utiles', [TelefonoUtilAdminController::class, 'index'])
+            ->name('admin.telefonos-utiles.index');
+
+        Route::get('/telefonos-utiles/crear', [TelefonoUtilAdminController::class, 'create'])
+            ->name('admin.telefonos-utiles.create');
+
+        Route::post('/telefonos-utiles', [TelefonoUtilAdminController::class, 'store'])
+            ->name('admin.telefonos-utiles.store');
+
+        Route::get('/telefonos-utiles/{telefonoUtil}/editar', [TelefonoUtilAdminController::class, 'edit'])
+            ->name('admin.telefonos-utiles.edit');
+
+        Route::put('/telefonos-utiles/{telefonoUtil}', [TelefonoUtilAdminController::class, 'update'])
+            ->name('admin.telefonos-utiles.update');
+
+        Route::delete('/telefonos-utiles/{telefonoUtil}', [TelefonoUtilAdminController::class, 'destroy'])
+            ->name('admin.telefonos-utiles.destroy');
+
     });
 
 
@@ -406,6 +441,12 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
         Route::put('/sistema', [SistemaController::class, 'update'])
             ->name('admin.sistema.update');
+
+        Route::get('/popup', [PopupAdminController::class, 'index'])
+            ->name('admin.popup.index');
+
+        Route::put('/popup', [PopupAdminController::class, 'update'])
+            ->name('admin.popup.update');
 
         Route::get('/botones-visibilidad', [PublicAccessButtonController::class, 'index'])
             ->name('admin.botones-visibilidad.index');

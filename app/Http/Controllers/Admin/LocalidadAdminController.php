@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\Localidad;
 use App\Support\ImageUploader;
+use App\Http\Requests\Admin\LocalidadRequest;
 use Illuminate\Http\Request;
 
 class LocalidadAdminController extends Controller
@@ -26,15 +27,9 @@ class LocalidadAdminController extends Controller
         ]);
     }
 
-    public function update(Request $request, Localidad $localidad)
+    public function update(LocalidadRequest $request, Localidad $localidad)
     {
-        $data = $request->validate([
-            'historia' => ['nullable', 'string'],
-            'descripcion' => ['nullable', 'string', 'max:1000'],
-            'imagen_portada' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
-            'orden' => ['nullable', 'integer', 'min:0', 'max:999'],
-            'estado' => ['required', 'in:visible,oculto'],
-        ]);
+        $data = $request->validated();
 
         $data['orden'] = (int) ($data['orden'] ?? 0);
 

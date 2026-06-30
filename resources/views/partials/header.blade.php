@@ -45,7 +45,7 @@
         <a href="{{ route('gobierno-abierto.index') }}">Gobierno Abierto</a>
         <a href="{{ route('tramites-servicios.index') }}">Tramites y Servicios</a>
         <a href="{{ route('turismo.index') }}">Turismo</a>
-        <a href="#">Contacto</a>
+        <a href="{{ route('telefonos-utiles.index') }}">Teléfonos Útiles</a>
         <a href="{{ route('acceso-municipal.index') }}">Acceso Municipal</a>
     </nav>
 </header>

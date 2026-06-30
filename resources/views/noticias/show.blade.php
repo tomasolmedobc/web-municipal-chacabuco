@@ -42,6 +42,21 @@
             {!! $contenido !!}
         </div>
 
+        @if($noticia->video_url && video_embed_url($noticia->video_url))
+            <div class="video-embed">
+                <h3 class="video-embed__titulo">
+                    <i class="fa-brands fa-youtube"></i>
+                    Video
+                </h3>
+                <div class="video-embed__wrap">
+                    <iframe src="{{ video_embed_url($noticia->video_url) }}"
+                            title="Video de la noticia"
+                            allowfullscreen
+                            loading="lazy"></iframe>
+                </div>
+            </div>
+        @endif
+
         @if($noticia->archivos->count())
             <div style="margin-top: 30px;">
                 <h3>Archivos adjuntos</h3>

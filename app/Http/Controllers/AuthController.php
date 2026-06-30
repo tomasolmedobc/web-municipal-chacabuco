@@ -9,17 +9,29 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
-        return view('auth.login');
+        $a = rand(1, 9);
+        $b = rand(1, 9);
+        session(['captcha_respuesta' => $a + $b]);
+
+        return view('auth.login', ['captcha_pregunta' => "$a + $b"]);
     }
 
     public function login(Request $request)
     {
-        $credenciales = $request->validate([
-            'email' => ['required', 'email'],
+        $request->validate([
+            'email'    => ['required', 'email'],
             'password' => ['required'],
+            'captcha'  => ['required', 'numeric'],
         ]);
 
-        if (Auth::attempt($credenciales)) {
+        if ((int) $request->input('captcha') !== (int) session('captcha_respuesta')) {
+            session()->forget('captcha_respuesta');
+            return back()->withErrors(['captcha' => 'Respuesta incorrecta.'])->onlyInput('email');
+        }
+
+        session()->forget('captcha_respuesta');
+
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $request->session()->regenerate();
 
             return redirect()->route('admin.dashboard');

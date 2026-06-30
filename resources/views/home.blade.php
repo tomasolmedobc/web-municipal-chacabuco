@@ -24,12 +24,21 @@
         </div>
 
         <div class="municipal-hero__media">
-            <img 
-                src="{{ config_sistema('portada', asset('images/importantes/tu-imagen-default.webp')) }}" 
+            <img
+                src="{{ config_sistema('portada', asset('images/importantes/tu-imagen-default.webp')) }}"
                 alt="Municipalidad de Chacabuco"
             >
         </div>
     </section>
+
+    <div id="clima-widget" class="clima-widget" hidden aria-label="Temperatura actual en Chacabuco">
+        <span class="clima-widget__icon" id="clima-icon">—</span>
+        <div class="clima-widget__data">
+            <span class="clima-widget__temp" id="clima-temp">--°</span>
+            <span class="clima-widget__lugar">Chacabuco, BA</span>
+        </div>
+        <button type="button" class="clima-widget__cerrar" id="clima-cerrar" aria-label="Cerrar widget de clima">×</button>
+    </div>
 
     <section class="quick-access">
         <div class="section-heading">
@@ -62,7 +71,7 @@
                 <p>Información pública, licitaciones, nóminas, datos institucionales y documentación del Municipio de Chacabuco.</p>
             </a>
 
-            <a href="#" class="quick-card">
+            <a href="{{ route('telefonos-utiles.index') }}" class="quick-card">
                 <span class="quick-card__icon">📞</span>
                 <h3>Teléfonos útiles</h3>
                 <p>Contactos y canales de atención municipal.</p>
@@ -208,4 +217,43 @@
     </section>
 
 @endsection
+
+@push('scripts')
+<script>
+(function () {
+    const STORAGE_KEY = 'chacabuco_clima_oculto';
+    const widget = document.getElementById('clima-widget');
+    if (!widget) return;
+
+    if (localStorage.getItem(STORAGE_KEY) === '1') return;
+
+    const WMO = {
+        0:'☀️', 1:'🌤️', 2:'⛅', 3:'☁️',
+        45:'🌫️', 48:'🌫️',
+        51:'🌦️', 53:'🌦️', 55:'🌦️',
+        61:'🌧️', 63:'🌧️', 65:'🌧️',
+        71:'🌨️', 73:'🌨️', 75:'🌨️', 77:'🌨️',
+        80:'🌦️', 81:'🌦️', 82:'🌦️',
+        85:'🌨️', 86:'🌨️',
+        95:'⛈️', 96:'⛈️', 99:'⛈️'
+    };
+
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=-34.6435&longitude=-60.4737&current=temperature_2m,weathercode&timezone=America%2FArgentina%2FBuenos_Aires&forecast_days=1')
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(data => {
+            const temp = Math.round(data.current.temperature_2m);
+            const code = data.current.weathercode;
+            document.getElementById('clima-temp').textContent = temp + '°C';
+            document.getElementById('clima-icon').textContent = WMO[code] ?? '🌡️';
+            widget.hidden = false;
+        })
+        .catch(() => { /* silencioso — no mostrar si falla la API */ });
+
+    document.getElementById('clima-cerrar').addEventListener('click', function () {
+        widget.hidden = true;
+        localStorage.setItem(STORAGE_KEY, '1');
+    });
+})();
+</script>
+@endpush
 

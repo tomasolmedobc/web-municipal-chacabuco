@@ -347,3 +347,88 @@
     color: var(--muted);
     font-size: 16px;
 }
+
+/* =========================
+   CLIMA WIDGET
+========================= */
+.clima-widget {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 10px 10px 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--primary);
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.14);
+    color: var(--text);
+    user-select: none;
+    z-index: 999;
+    min-width: 148px;
+    animation: clima-entrar 0.3s ease both;
+    transition: box-shadow 0.2s ease;
+}
+
+@keyframes clima-entrar {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.clima-widget:hover {
+    box-shadow: 0 6px 28px rgba(0,0,0,.2);
+}
+
+.clima-widget[hidden] { display: none; }
+
+.clima-widget__icon {
+    font-size: 26px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.clima-widget__data {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+}
+
+.clima-widget__temp {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--text);
+}
+
+.clima-widget__lugar {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.clima-widget__cerrar {
+    align-self: flex-start;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.15s ease;
+    flex-shrink: 0;
+}
+
+.clima-widget__cerrar:hover {
+    color: var(--text);
+}
+
+@media (max-width: 600px) {
+    .clima-widget { display: none !important; }
+}

@@ -7,6 +7,8 @@ use App\Models\AuditLog;
 use App\Models\Noticia;
 use App\Models\NoticiaArchivo;
 use App\Models\Categoria;
+use App\Http\Requests\Admin\NoticiaRequest;
+use App\Support\ImageUploader;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -48,26 +50,15 @@ class NoticiaAdminController extends Controller
         return view('admin.noticias.create', compact('categoriasPadre'));
     }
 
-    public function store(Request $request)
+    public function store(NoticiaRequest $request)
     {
-        $datos = $request->validate([
-            'titulo' => ['required', 'string', 'max:255'],
-            'contenido' => ['required', 'string'],
-            'categorias' => ['nullable', 'array'],
-            'categorias.*' => ['exists:categorias,id'],
-            'fecha' => ['required', 'date'],
-            'estado' => ['required', 'in:oculto,publicado'],
-            'destacada' => ['nullable', 'boolean'],
-            'imagen_destacada' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-            'archivos.*' => ['nullable', 'file', 'mimes:pdf,doc,docx,xls,xlsx', 'max:10240'],
-            'destacada_dias' => ['nullable', 'integer', 'min:1', 'max:30'],
-        ]);
+        $datos = $request->validated();
 
         $slug = $this->generarSlugUnico($datos['titulo']);
 
         $rutaImagen = null;
         if ($request->hasFile('imagen_destacada')) {
-            $rutaProcesada = $this->procesarImagen($request->file('imagen_destacada'));
+            $rutaProcesada = ImageUploader::guardarWebpConOriginal($request->file('imagen_destacada'), 'noticias');
 
             if ($rutaProcesada) {
                 $rutaImagen = $rutaProcesada;
@@ -118,27 +109,16 @@ class NoticiaAdminController extends Controller
         return view('admin.noticias.edit', compact('noticia', 'categoriasPadre'));
     }
 
-    public function update(Request $request, Noticia $noticia)
+    public function update(NoticiaRequest $request, Noticia $noticia)
     {
-        $datos = $request->validate([
-            'titulo' => ['required', 'string', 'max:255'],
-            'contenido' => ['required', 'string'],
-            'categorias' => ['nullable', 'array'],
-            'categorias.*' => ['exists:categorias,id'],
-            'fecha' => ['required', 'date'],
-            'estado' => ['required', 'in:oculto,publicado'],
-            'destacada' => ['nullable', 'boolean'],
-            'imagen_destacada' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-            'archivos.*' => ['nullable', 'file', 'mimes:pdf,doc,docx,xls,xlsx', 'max:10240'],
-            'destacada_dias' => ['nullable', 'integer', 'min:1', 'max:30'],
-        ]);
+        $datos = $request->validated();
 
         if ($noticia->titulo !== $datos['titulo']) {
             $noticia->slug = $this->generarSlugUnico($datos['titulo'], $noticia->id);
         }
 
         if ($request->hasFile('imagen_destacada')) {
-            $rutaProcesada = $this->procesarImagen($request->file('imagen_destacada'));
+            $rutaProcesada = ImageUploader::guardarWebpConOriginal($request->file('imagen_destacada'), 'noticias');
 
             if ($rutaProcesada) {
                 $noticia->imagen_destacada = $rutaProcesada;
@@ -310,88 +290,6 @@ class NoticiaAdminController extends Controller
             ]);
     }
 
-    private function procesarImagen($archivo)
-    {
-        $anio = now()->format('Y');
-        $mes = now()->format('m');
-
-        $directorioOriginal = public_path("uploads_originales/noticias/{$anio}/{$mes}");
-        $directorioWebp = public_path("images/noticias/{$anio}/{$mes}");
-
-        File::ensureDirectoryExists($directorioOriginal);
-        File::ensureDirectoryExists($directorioWebp);
-
-        $extension = strtolower($archivo->getClientOriginalExtension());
-        $nombreBase = $this->nombreBaseUnico($directorioWebp, $this->nombreBaseFecha(
-            pathinfo($archivo->getClientOriginalName(), PATHINFO_FILENAME)
-        ), 'webp');
-
-        $nombreOriginal = $nombreBase . '.' . $extension;
-        $rutaOriginal = $directorioOriginal . '/' . $nombreOriginal;
-        $rutaWebp = $directorioWebp . '/' . $nombreBase . '.webp';
-
-        $archivo->move($directorioOriginal, $nombreOriginal);
-
-        if ($extension === 'webp') {
-            copy($rutaOriginal, $rutaWebp);
-            return "/images/noticias/{$anio}/{$mes}/{$nombreBase}.webp";
-        }
-
-        if (in_array($extension, ['jpg', 'jpeg'])) {
-            $imagen = imagecreatefromjpeg($rutaOriginal);
-        } elseif ($extension === 'png') {
-            $imagen = imagecreatefrompng($rutaOriginal);
-
-            imagepalettetotruecolor($imagen);
-            imagealphablending($imagen, true);
-            imagesavealpha($imagen, true);
-        } else {
-            return null;
-        }
-
-        if (!$imagen) {
-            return null;
-        }
-
-        $maxAncho = 1600;
-        $anchoOriginal = imagesx($imagen);
-        $altoOriginal = imagesy($imagen);
-
-        if ($anchoOriginal > $maxAncho) {
-            $nuevoAncho = $maxAncho;
-            $nuevoAlto = (int) round(($altoOriginal / $anchoOriginal) * $nuevoAncho);
-
-            $imagenRedimensionada = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
-
-            imagealphablending($imagenRedimensionada, false);
-            imagesavealpha($imagenRedimensionada, true);
-
-            $transparente = imagecolorallocatealpha($imagenRedimensionada, 0, 0, 0, 127);
-            imagefill($imagenRedimensionada, 0, 0, $transparente);
-
-            imagecopyresampled(
-                $imagenRedimensionada,
-                $imagen,
-                0,
-                0,
-                0,
-                0,
-                $nuevoAncho,
-                $nuevoAlto,
-                $anchoOriginal,
-                $altoOriginal
-            );
-
-            imagedestroy($imagen);
-            $imagen = $imagenRedimensionada;
-        }
-
-        imagewebp($imagen, $rutaWebp, 85);
-        imagedestroy($imagen);
-
-        return "/images/noticias/{$anio}/{$mes}/{$nombreBase}.webp";
-    }
-
     private function guardarArchivosAdjuntos($archivos, Noticia $noticia): void
     {
         $anio = now()->format('Y');
@@ -404,7 +302,7 @@ class NoticiaAdminController extends Controller
         foreach ($archivos as $archivo) {
             $extension = strtolower($archivo->getClientOriginalExtension());
             $nombreOriginal = $archivo->getClientOriginalName();
-            $nombreBase = $this->nombreBaseFecha(pathinfo($nombreOriginal, PATHINFO_FILENAME));
+            $nombreBase = ImageUploader::nombreBaseFecha(pathinfo($nombreOriginal, PATHINFO_FILENAME));
             $nombreFinal = $nombreBase . '.' . $extension;
 
             if (str_contains(Str::lower($nombreOriginal), 'ordenanza')) {
@@ -412,7 +310,7 @@ class NoticiaAdminController extends Controller
                 $rutaStorage = $archivo->storeAs('Ordenanza', $nombreFinal, 'public');
                 $rutaPublica = '/storage/' . $rutaStorage;
             } else {
-                $nombreBase = $this->nombreBaseUnico($directorio, $nombreBase, $extension);
+                $nombreBase = ImageUploader::nombreBaseUnico($directorio, $nombreBase, $extension);
                 $nombreFinal = $nombreBase . '.' . $extension;
                 $archivo->move($directorio, $nombreFinal);
                 $rutaPublica = "/{$carpetaPublica}/{$nombreFinal}";
@@ -426,24 +324,6 @@ class NoticiaAdminController extends Controller
                 'extension' => $extension,
             ]);
         }
-    }
-
-    private function nombreBaseFecha(string $nombreOriginal): string
-    {
-        return now()->format('dmY_Hi') . '_' . Str::slug($nombreOriginal);
-    }
-
-    private function nombreBaseUnico(string $directorio, string $nombreBase, string $extension): string
-    {
-        $nombreDisponible = $nombreBase;
-        $contador = 2;
-
-        while (File::exists($directorio . '/' . $nombreDisponible . '.' . $extension)) {
-            $nombreDisponible = $nombreBase . '_' . $contador;
-            $contador++;
-        }
-
-        return $nombreDisponible;
     }
 
     private function nombreStorageUnico(string $carpeta, string $nombreBase, string $extension): string

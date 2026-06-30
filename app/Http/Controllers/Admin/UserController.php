@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\User;
+use App\Http\Requests\Admin\StoreUserRequest;
+use App\Http\Requests\Admin\UpdateUserRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -22,14 +24,9 @@ class UserController extends Controller
         return view('admin.usuarios.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6|confirmed',
-            'rol' => 'required|in:admin,editor',
-        ]);
+        $data = $request->validated();
 
         $nuevoUsuario = User::create([
             'name' => $data['name'],
@@ -50,14 +47,9 @@ class UserController extends Controller
         return view('admin.usuarios.edit', compact('usuario'));
     }
 
-    public function update(Request $request, User $usuario)
+    public function update(UpdateUserRequest $request, User $usuario)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => "required|email|unique:users,email,{$usuario->id}",
-            'rol' => 'required|in:admin,editor',
-            'password' => 'nullable|min:6|confirmed',
-        ]);
+        $data = $request->validated();
 
         if (auth()->id() === $usuario->id && $data['rol'] !== 'admin') {
             return back()->with('error', 'No podés quitarte tu propio rol de admin');

@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\Licitacion;
 use App\Models\LicitacionArchivo;
+use App\Http\Requests\Admin\LicitacionRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 
 class LicitacionAdminController extends Controller
 {
@@ -54,9 +54,9 @@ class LicitacionAdminController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(LicitacionRequest $request)
     {
-        $data = $this->validar($request);
+        $data = $request->validated();
         $data['orden'] = (int) ($data['orden'] ?? 0);
         $data['link_externo'] = $data['link_externo'] ?? null;
 
@@ -86,9 +86,9 @@ class LicitacionAdminController extends Controller
         ]);
     }
 
-    public function update(Request $request, Licitacion $licitacion)
+    public function update(LicitacionRequest $request, Licitacion $licitacion)
     {
-        $data = $this->validar($request);
+        $data = $request->validated();
         $data['orden'] = (int) ($data['orden'] ?? 0);
         $data['link_externo'] = $data['link_externo'] ?? null;
 
@@ -137,31 +137,6 @@ class LicitacionAdminController extends Controller
         return redirect()
             ->back()
             ->with('ok', 'Archivo adjunto eliminado correctamente.');
-    }
-
-    private function validar(Request $request): array
-    {
-        $categoria = Licitacion::normalizarCategoria($request->input('categoria'));
-        $esBoton = $categoria === Licitacion::CATEGORIA_BOTONES_ARCHIVOS_LINKS;
-
-        return $request->validate([
-            'categoria' => ['required', Rule::in(array_keys(Licitacion::CATEGORIAS))],
-            'titulo' => ['required', 'string', 'max:255'],
-            'descripcion' => ['nullable', 'string'],
-            'tipo' => ['required', 'in:publica,privada'],
-            'estado' => ['required', 'in:activa,finalizada'],
-            'numero_expediente' => ['nullable', 'string', 'max:255'],
-            'anio' => ['nullable', 'integer'],
-            'fecha_publicacion' => ['nullable', 'date'],
-            'link_externo' => ['nullable', 'url', 'max:2048'],
-            'orden' => ['nullable', 'integer', 'min:0', 'max:999'],
-            'archivos.*' => [
-                'nullable',
-                'file',
-                $esBoton ? 'mimes:pdf,doc,docx,xls,xlsx' : 'mimes:pdf',
-                'max:10240',
-            ],
-        ]);
     }
 
     private function guardarArchivos(Request $request, Licitacion $documento): void

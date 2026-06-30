@@ -136,6 +136,22 @@
             </div>
         @endif
 
+        {{-- Video --}}
+        @if($item->video_url && video_embed_url($item->video_url))
+            <div class="video-embed">
+                <h3 class="video-embed__titulo">
+                    <i class="fa-brands fa-youtube"></i>
+                    Video
+                </h3>
+                <div class="video-embed__wrap">
+                    <iframe src="{{ video_embed_url($item->video_url) }}"
+                            title="Video de {{ $item->titulo }}"
+                            allowfullscreen
+                            loading="lazy"></iframe>
+                </div>
+            </div>
+        @endif
+
         {{-- Archivos adjuntos --}}
         @if($item->archivos->count())
             <div class="turismo-adjuntos">

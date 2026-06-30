@@ -50,6 +50,7 @@ class TurismoItem extends Model
         'destacado',
         'mostrar_detalle',
         'orden',
+        'video_url',
     ];
 
     protected $casts = [

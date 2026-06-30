@@ -24,6 +24,17 @@
                     <input type="password" name="password" id="password" required>
                 </div>
 
+                <div class="auth-group">
+                    <label for="captcha">
+                        ¿Cuánto es <span class="captcha-pregunta">{{ $captcha_pregunta }}</span>?
+                    </label>
+                    <input type="number" name="captcha" id="captcha" min="0" max="18"
+                           autocomplete="off" required inputmode="numeric">
+                    @error('captcha')
+                        <small class="auth-error">{{ $message }}</small>
+                    @enderror
+                </div>
+
                 <button type="submit" class="btn btn-primary">Ingresar</button>
             </form>
         </div>

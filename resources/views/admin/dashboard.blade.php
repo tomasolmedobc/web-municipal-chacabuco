@@ -63,6 +63,14 @@
                 Baile de Egresados
             </a>
 
+            <a href="{{ route('admin.popup.index') }}" class="btn btn-secondary">
+                Popup anuncio
+            </a>
+
+            <a href="{{ route('admin.telefonos-utiles.index') }}" class="btn btn-secondary">
+                Teléfonos Útiles
+            </a>
+
             @if(auth()->user()->rol === 'admin')
                 <a href="{{ route('admin.audit-log.index') }}" class="btn btn-secondary">
                     Auditoría

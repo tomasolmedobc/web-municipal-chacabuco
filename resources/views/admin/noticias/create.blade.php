@@ -121,6 +121,17 @@
             </div>
 
             <div class="admin-form-group full">
+                <label for="video_url">Video <small class="fecha">(YouTube o Vimeo — opcional)</small></label>
+                <input type="text"
+                       name="video_url"
+                       id="video_url"
+                       value="{{ old('video_url') }}"
+                       placeholder="https://www.youtube.com/watch?v=... o https://youtu.be/...">
+                <small class="fecha">Pegá el link del video. No es necesario subir el archivo — se embebe directamente.</small>
+                @error('video_url') <small class="auth-error">{{ $message }}</small> @enderror
+            </div>
+
+            <div class="admin-form-group full">
                 <label for="archivos">Archivos adjuntos</label>
                 <input type="file" name="archivos[]" id="archivos" multiple accept=".pdf,.doc,.docx,.xls,.xlsx">
                 @error('archivos.*') <small class="auth-error">{{ $message }}</small> @enderror

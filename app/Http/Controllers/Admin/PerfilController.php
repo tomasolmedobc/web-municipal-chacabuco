@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\PerfilRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -15,14 +16,11 @@ class PerfilController extends Controller
         return view('admin.perfil.edit', compact('usuario'));
     }
 
-    public function update(Request $request)
+    public function update(PerfilRequest $request)
     {
         $usuario = auth()->user();
 
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'password' => ['nullable', 'string', 'min:6', 'confirmed'],
-        ]);
+        $data = $request->validated();
 
         $usuario->name = $data['name'];
 

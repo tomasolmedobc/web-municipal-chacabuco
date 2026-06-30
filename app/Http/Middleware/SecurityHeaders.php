@@ -24,6 +24,8 @@ class SecurityHeaders
             "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; " .
             "font-src 'self' https://cdnjs.cloudflare.com; " .
             "img-src 'self' data: blob:; " .
+            "connect-src 'self' https://api.open-meteo.com; " .
+            "frame-src 'self' https://www.youtube.com https://player.vimeo.com; " .
             "frame-ancestors 'self'; " .
             "object-src 'none';"
         );

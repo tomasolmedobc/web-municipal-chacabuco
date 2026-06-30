@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\BaileUsuario;
+use App\Http\Requests\Admin\BaileUsuarioRequest;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class BaileUsuariosAdminController extends Controller
 {
@@ -33,9 +33,9 @@ class BaileUsuariosAdminController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(BaileUsuarioRequest $request)
     {
-        $data = $this->validar($request);
+        $data = $request->validated();
         $usuario = BaileUsuario::create($data);
 
         AuditLog::registrar('crear', 'BaileUsuario', $usuario->id, "Usuario baile creado: {$usuario->nombre_completo} (DNI: {$usuario->dni})");
@@ -51,9 +51,9 @@ class BaileUsuariosAdminController extends Controller
         ]);
     }
 
-    public function update(Request $request, BaileUsuario $usuario)
+    public function update(BaileUsuarioRequest $request, BaileUsuario $usuario)
     {
-        $data = $this->validar($request, $usuario);
+        $data = $request->validated();
         $usuario->fill($data)->save();
 
         AuditLog::registrar('editar', 'BaileUsuario', $usuario->id, "Usuario baile editado: {$usuario->nombre_completo}");
@@ -69,13 +69,4 @@ class BaileUsuariosAdminController extends Controller
         return redirect()->route('admin.baile.usuarios.index')->with('ok', 'Usuario eliminado correctamente.');
     }
 
-    private function validar(Request $request, ?BaileUsuario $usuario = null): array
-    {
-        return $request->validate([
-            'nombre_completo' => ['required', 'string', 'max:255'],
-            'dni'             => ['required', 'digits_between:7,9', Rule::unique('baile_usuarios', 'dni')->ignore($usuario?->id)],
-            'codigo'          => ['required', 'string', 'size:8'],
-            'disponibles'     => ['required', 'integer', 'min:0', 'max:10'],
-        ]);
-    }
 }

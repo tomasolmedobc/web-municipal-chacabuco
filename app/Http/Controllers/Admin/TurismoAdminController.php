@@ -10,8 +10,8 @@ use App\Models\TurismoItemArchivo;
 use App\Models\TurismoItemImagen;
 use App\Support\ImageUploader;
 use Illuminate\Support\Facades\File;
+use App\Http\Requests\Admin\TurismoItemRequest;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class TurismoAdminController extends Controller
 {
@@ -68,9 +68,9 @@ class TurismoAdminController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(TurismoItemRequest $request)
     {
-        $data = $this->validar($request);
+        $data = $request->validated();
         unset($data['imagen'], $data['galeria'], $data['adjuntos']);
         $data['orden'] = (int) ($data['orden'] ?? 0);
         $data['destacado'] = $request->boolean('destacado');
@@ -99,9 +99,9 @@ class TurismoAdminController extends Controller
         ]);
     }
 
-    public function update(Request $request, TurismoItem $turismo)
+    public function update(TurismoItemRequest $request, TurismoItem $turismo)
     {
-        $data = $this->validar($request);
+        $data = $request->validated();
         unset($data['imagen'], $data['galeria'], $data['adjuntos']);
         $data['orden'] = (int) ($data['orden'] ?? 0);
         $data['destacado'] = $request->boolean('destacado');
@@ -165,33 +165,6 @@ class TurismoAdminController extends Controller
         return redirect()
             ->route('admin.turismo.index', ['tipo' => $tipo])
             ->with('ok', 'Registro eliminado correctamente');
-    }
-
-    private function validar(Request $request): array
-    {
-        $tipo = TurismoItem::normalizarTipo($request->input('tipo'));
-        $esEvento = $tipo === TurismoItem::TIPO_EVENTO;
-
-        return $request->validate([
-            'tipo' => ['required', Rule::in(array_keys(TurismoItem::TIPOS))],
-            'localidad_id' => ['required', 'exists:localidades,id'],
-            'titulo' => ['required', 'string', 'max:255'],
-            'descripcion' => ['nullable', 'string'],
-            'categoria' => ['nullable', 'string', 'max:255'],
-            'direccion' => ['nullable', 'string', 'max:255'],
-            'telefono' => ['nullable', 'string', 'max:50'],
-            'link_externo' => ['nullable', 'url', 'max:2048'],
-            'fecha_inicio' => [$esEvento ? 'required' : 'nullable', 'date'],
-            'fecha_fin' => ['nullable', 'date', 'after_or_equal:fecha_inicio'],
-            'hora_inicio' => ['nullable', 'date_format:H:i'],
-            'estado' => ['required', 'in:visible,oculto'],
-            'orden' => ['nullable', 'integer', 'min:0', 'max:999'],
-            'imagen'     => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
-            'galeria'    => ['nullable', 'array'],
-            'galeria.*'  => ['image', 'mimes:jpg,jpeg,png,webp', 'max:8192'],
-            'adjuntos'   => ['nullable', 'array'],
-            'adjuntos.*' => ['file', 'mimes:pdf,doc,docx,xls,xlsx,zip', 'max:20480'],
-        ]);
     }
 
     private function guardarImagen(Request $request, TurismoItem $item): void

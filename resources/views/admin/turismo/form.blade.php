@@ -164,6 +164,17 @@
         </div>
 
         <div class="admin-form-group full">
+            <label for="video_url">Video <small class="fecha">(YouTube o Vimeo — opcional)</small></label>
+            <input type="text"
+                   name="video_url"
+                   id="video_url"
+                   value="{{ old('video_url', $item->video_url) }}"
+                   placeholder="https://www.youtube.com/watch?v=... o https://youtu.be/...">
+            <small class="fecha">Pegá el link del video. Se embebe automáticamente en la página del detalle.</small>
+            @error('video_url') <small class="auth-error">{{ $message }}</small> @enderror
+        </div>
+
+        <div class="admin-form-group full">
             <label for="imagen">Imagen</label>
             <input type="file" name="imagen" id="imagen" accept=".jpg,.jpeg,.png,.webp">
             <small class="fecha">Formatos: JPG, PNG, WEBP. Máximo 4MB.</small>

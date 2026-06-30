@@ -23,6 +23,7 @@ class Noticia extends Model
         'user_id',
         'destacada',
         'destacada_hasta',
+        'video_url',
     ];
 
     protected $casts = [

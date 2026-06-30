@@ -77,6 +77,68 @@
     </div>
 
 @include('partials.evento-reminder')
+@include('partials.chatbot')
+
+@if(request()->routeIs('home'))
+    @php
+        $__popupActivo = config_sistema('popup_activo') === '1';
+        $__popupImagen = config_sistema('popup_imagen');
+        $__popupBotonTexto = config_sistema('popup_boton_texto');
+        $__popupBotonUrl   = config_sistema('popup_boton_url');
+    @endphp
+    @if($__popupActivo && $__popupImagen)
+        <div id="anuncio-popup"
+             class="anuncio-popup"
+             hidden
+             role="dialog"
+             aria-modal="true"
+             aria-label="Anuncio del municipio">
+            <div class="anuncio-popup__dialog">
+                <button type="button" class="anuncio-popup__cerrar" id="anuncio-popup-cerrar" aria-label="Cerrar anuncio">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div class="anuncio-popup__imagen">
+                    <img src="{{ $__popupImagen }}" alt="Anuncio Municipalidad de Chacabuco">
+                </div>
+                @if($__popupBotonTexto)
+                    <div class="anuncio-popup__footer">
+                        <a href="{{ $__popupBotonUrl ?: '#' }}"
+                           class="btn btn-primary anuncio-popup__btn"
+                           {{ $__popupBotonUrl ? 'target="_blank" rel="noopener"' : '' }}>
+                            {{ $__popupBotonTexto }}
+                        </a>
+                    </div>
+                @endif
+            </div>
+        </div>
+        <script>
+        (function () {
+            const popup = document.getElementById('anuncio-popup');
+            if (!popup) return;
+
+            var cerrado = false;
+
+            var cerrar = function () {
+                cerrado = true;
+                popup.classList.remove('is-visible');
+                setTimeout(function () { popup.hidden = true; }, 280);
+            };
+
+            setTimeout(function () {
+                if (cerrado) return;
+                popup.hidden = false;
+                requestAnimationFrame(function () {
+                    requestAnimationFrame(function () { popup.classList.add('is-visible'); });
+                });
+            }, 900);
+
+            document.getElementById('anuncio-popup-cerrar').addEventListener('click', cerrar);
+            popup.addEventListener('click', function (e) { if (e.target === popup) cerrar(); });
+            document.addEventListener('keydown', function (e) { if (e.key === 'Escape') cerrar(); });
+        })();
+        </script>
+    @endif
+@endif
 
 <script src="{{ asset('js/theme.js') }}"></script>
 <script src="{{ asset('js/ui-feedback.js') }}"></script>
