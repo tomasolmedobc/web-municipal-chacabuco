@@ -28,6 +28,7 @@ Thumbs.db
 /public/storage
 /public/images
 /public/files/noticias
+/public/files/turismo
 /public/uploads_originales
 
 /storage/*.key
