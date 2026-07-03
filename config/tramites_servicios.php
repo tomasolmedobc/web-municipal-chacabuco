@@ -78,7 +78,7 @@ return [
             'titulo' => 'Direccion de Obras Particulares',
             'descripcion' => 'Gestiones, consultas y documentacion de obras particulares.',
             'icono' => 'fa-helmet-safety',
-            'url' => '#',
+            'url' => '/obras-particulares',
         ],
         [
             'titulo' => 'Oficios Judiciales',

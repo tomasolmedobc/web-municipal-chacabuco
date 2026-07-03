@@ -432,3 +432,182 @@
 @media (max-width: 600px) {
     .clima-widget { display: none !important; }
 }
+
+/* =========================
+   CONTROL DE TEMA (CLARO / OSCURO)
+========================= */
+.theme-control {
+    position: fixed;
+    top: 90px;
+    right: 18px;
+    z-index: 998;
+}
+
+.theme-control .theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--primary);
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.14);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: box-shadow 0.2s ease;
+    transform: none;
+}
+
+.theme-control .theme-toggle:hover {
+    box-shadow: 0 6px 28px rgba(0,0,0,.2);
+    transform: none;
+}
+
+@media (max-width: 600px) {
+    .theme-control { display: none !important; }
+}
+
+/* =========================
+   CONTROL DE TAMAÑO DE TEXTO
+========================= */
+.font-control {
+    position: fixed;
+    top: 150px;
+    right: 18px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--primary);
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.14);
+    z-index: 997;
+    user-select: none;
+    transition: box-shadow 0.2s ease;
+}
+
+.font-control:hover {
+    box-shadow: 0 6px 28px rgba(0,0,0,.2);
+}
+
+.font-control__label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding-right: 8px;
+    margin-right: 2px;
+    border-right: 1px solid var(--border);
+    white-space: nowrap;
+}
+
+.font-control__btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    color: var(--text);
+    cursor: pointer;
+    font-weight: 700;
+    line-height: 1;
+    padding: 4px 7px;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.font-control__btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.font-control__btn.is-active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+/* Zoom por nivel — solo CSS, cada usuario elige su preferencia */
+html.font-grande body { zoom: 1.15; }
+html.font-extra  body { zoom: 1.30; }
+
+@media (max-width: 600px) {
+    .font-control  { display: none !important; }
+    .theme-control { display: none !important; }
+}
+
+/* =========================
+   BARRA MOBILE UTILIDADES
+========================= */
+.mobile-util-bar {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--card);
+    border-top: 2px solid var(--primary);
+    box-shadow: 0 -4px 20px rgba(0,0,0,.14);
+    padding: 10px 24px;
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    user-select: none;
+}
+
+.mobile-util__sep {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+    margin: 0 8px;
+    flex-shrink: 0;
+}
+
+.mobile-util__label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-right: 2px;
+}
+
+.mobile-util__theme {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--text);
+    line-height: 1;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.15s;
+}
+
+.mobile-util__theme:hover {
+    border-color: var(--primary);
+}
+
+/* botones de fuente en barra mobile — toque más grande */
+.mobile-util__font-btn {
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 600px) {
+    .mobile-util-bar { display: flex; }
+    body { padding-bottom: 76px; }
+}

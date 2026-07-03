@@ -5,6 +5,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 7px;
     min-height: 46px;
     padding: 0 18px;
     border-radius: 12px;
@@ -87,6 +88,17 @@ body.dark .btn-estado-ocultar {
     background: rgba(154, 52, 18, 0.16);
     color: #fdba74;
     border-color: rgba(251, 146, 60, 0.35);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-outline:hover {
+    background: var(--primary);
+    color: #fff;
 }
 
 .leer-mas {

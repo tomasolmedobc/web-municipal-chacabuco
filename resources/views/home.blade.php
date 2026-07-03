@@ -225,7 +225,7 @@
     const widget = document.getElementById('clima-widget');
     if (!widget) return;
 
-    if (localStorage.getItem(STORAGE_KEY) === '1') return;
+    if (sessionStorage.getItem(STORAGE_KEY) === '1') return;
 
     const WMO = {
         0:'☀️', 1:'🌤️', 2:'⛅', 3:'☁️',
@@ -251,7 +251,7 @@
 
     document.getElementById('clima-cerrar').addEventListener('click', function () {
         widget.hidden = true;
-        localStorage.setItem(STORAGE_KEY, '1');
+        sessionStorage.setItem(STORAGE_KEY, '1');
     });
 })();
 </script>

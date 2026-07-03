@@ -71,6 +71,14 @@
                 Teléfonos Útiles
             </a>
 
+            <a href="{{ route('admin.obras.index') }}" class="btn btn-secondary">
+                Obras Particulares
+            </a>
+
+            <a href="{{ route('admin.tasas.index') }}" class="btn btn-secondary">
+                Tasas Municipales
+            </a>
+
             @if(auth()->user()->rol === 'admin')
                 <a href="{{ route('admin.audit-log.index') }}" class="btn btn-secondary">
                     Auditoría

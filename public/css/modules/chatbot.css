@@ -286,16 +286,22 @@
     background: var(--primary-hover);
 }
 
+@media (max-width: 600px) {
+    /* subir el chatbot por encima de la barra de utilidades mobile (≈76px) */
+    .chatbot-btn     { bottom: 88px; }
+    .chatbot-ventana { bottom: 154px; }
+}
+
 @media (max-width: 400px) {
     .chatbot-ventana {
         right: 10px;
         left: 10px;
         width: auto;
-        bottom: 86px;
+        bottom: 154px;
     }
 
     .chatbot-btn {
         right: 16px;
-        bottom: 16px;
+        bottom: 88px;
     }
 }

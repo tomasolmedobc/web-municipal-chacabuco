@@ -19,6 +19,8 @@ use App\Http\Controllers\TurismoController;
 use App\Http\Controllers\BaileEgresadosController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\TelefonoUtilController;
+use App\Http\Controllers\ObrasParticularesController;
+use App\Http\Controllers\TasasMunicipalesController;
 
 /* Admin Controllers */
 use App\Http\Controllers\AdminController;
@@ -37,6 +39,13 @@ use App\Http\Controllers\Admin\BaileAsientosAdminController;
 use App\Http\Controllers\Admin\BaileReservasAdminController;
 use App\Http\Controllers\Admin\PopupAdminController;
 use App\Http\Controllers\Admin\TelefonoUtilAdminController;
+use App\Http\Controllers\Admin\ObraParticularAdminController;
+use App\Http\Controllers\Admin\ObraNormativaAdminController;
+use App\Http\Controllers\Admin\ObraAnexoAdminController;
+use App\Http\Controllers\Admin\ObraProcedimientoAdminController;
+use App\Http\Controllers\Admin\TasasAdminController;
+use App\Http\Controllers\Admin\TasasGrupoAdminController;
+use App\Http\Controllers\Admin\TasasCuotaAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -139,6 +148,12 @@ Route::prefix('baile-egresados')->name('baile-egresados.')->group(function () {
 
 Route::get('/telefonos-utiles', [TelefonoUtilController::class, 'index'])
     ->name('telefonos-utiles.index');
+
+Route::get('/obras-particulares', [ObrasParticularesController::class, 'index'])
+    ->name('obras-particulares.index');
+
+Route::get('/tasas-municipales', [TasasMunicipalesController::class, 'index'])
+    ->name('tasas.index');
 
 Route::post('/chatbot', [ChatbotController::class, 'responder'])
     ->name('chatbot.responder');
@@ -404,6 +419,110 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
         Route::delete('/telefonos-utiles/{telefonoUtil}', [TelefonoUtilAdminController::class, 'destroy'])
             ->name('admin.telefonos-utiles.destroy');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Obras Particulares
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get('/obras-particulares', [ObraParticularAdminController::class, 'index'])
+            ->name('admin.obras.index');
+
+        Route::get('/obras-particulares/configuracion', [ObraParticularAdminController::class, 'editConfig'])
+            ->name('admin.obras.config.edit');
+
+        Route::put('/obras-particulares/configuracion', [ObraParticularAdminController::class, 'updateConfig'])
+            ->name('admin.obras.config.update');
+
+        Route::get('/obras-particulares/normativas', [ObraNormativaAdminController::class, 'index'])
+            ->name('admin.obras.normativas.index');
+
+        Route::get('/obras-particulares/normativas/crear', [ObraNormativaAdminController::class, 'create'])
+            ->name('admin.obras.normativas.create');
+
+        Route::post('/obras-particulares/normativas', [ObraNormativaAdminController::class, 'store'])
+            ->name('admin.obras.normativas.store');
+
+        Route::get('/obras-particulares/normativas/{normativa}/editar', [ObraNormativaAdminController::class, 'edit'])
+            ->name('admin.obras.normativas.edit');
+
+        Route::put('/obras-particulares/normativas/{normativa}', [ObraNormativaAdminController::class, 'update'])
+            ->name('admin.obras.normativas.update');
+
+        Route::delete('/obras-particulares/normativas/{normativa}', [ObraNormativaAdminController::class, 'destroy'])
+            ->name('admin.obras.normativas.destroy');
+
+        Route::get('/obras-particulares/anexos', [ObraAnexoAdminController::class, 'index'])
+            ->name('admin.obras.anexos.index');
+
+        Route::get('/obras-particulares/anexos/crear', [ObraAnexoAdminController::class, 'create'])
+            ->name('admin.obras.anexos.create');
+
+        Route::post('/obras-particulares/anexos', [ObraAnexoAdminController::class, 'store'])
+            ->name('admin.obras.anexos.store');
+
+        Route::get('/obras-particulares/anexos/{anexo}/editar', [ObraAnexoAdminController::class, 'edit'])
+            ->name('admin.obras.anexos.edit');
+
+        Route::put('/obras-particulares/anexos/{anexo}', [ObraAnexoAdminController::class, 'update'])
+            ->name('admin.obras.anexos.update');
+
+        Route::delete('/obras-particulares/anexos/{anexo}', [ObraAnexoAdminController::class, 'destroy'])
+            ->name('admin.obras.anexos.destroy');
+
+        Route::get('/obras-particulares/procedimientos', [ObraProcedimientoAdminController::class, 'index'])
+            ->name('admin.obras.procedimientos.index');
+
+        Route::get('/obras-particulares/procedimientos/{procedimiento}/editar', [ObraProcedimientoAdminController::class, 'edit'])
+            ->name('admin.obras.procedimientos.edit');
+
+        Route::put('/obras-particulares/procedimientos/{procedimiento}', [ObraProcedimientoAdminController::class, 'update'])
+            ->name('admin.obras.procedimientos.update');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Tasas Municipales
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get('/tasas', [TasasAdminController::class, 'index'])
+            ->name('admin.tasas.index');
+
+        Route::get('/tasas/configuracion', [TasasAdminController::class, 'editConfig'])
+            ->name('admin.tasas.config.edit');
+
+        Route::put('/tasas/configuracion', [TasasAdminController::class, 'updateConfig'])
+            ->name('admin.tasas.config.update');
+
+        Route::get('/tasas/grupos', [TasasGrupoAdminController::class, 'index'])
+            ->name('admin.tasas.grupos.index');
+
+        Route::get('/tasas/grupos/{grupo}/editar', [TasasGrupoAdminController::class, 'edit'])
+            ->name('admin.tasas.grupos.edit');
+
+        Route::put('/tasas/grupos/{grupo}', [TasasGrupoAdminController::class, 'update'])
+            ->name('admin.tasas.grupos.update');
+
+        Route::get('/tasas/cuotas', [TasasCuotaAdminController::class, 'index'])
+            ->name('admin.tasas.cuotas.index');
+
+        Route::get('/tasas/cuotas/crear', [TasasCuotaAdminController::class, 'create'])
+            ->name('admin.tasas.cuotas.create');
+
+        Route::post('/tasas/cuotas', [TasasCuotaAdminController::class, 'store'])
+            ->name('admin.tasas.cuotas.store');
+
+        Route::get('/tasas/cuotas/{cuota}/editar', [TasasCuotaAdminController::class, 'edit'])
+            ->name('admin.tasas.cuotas.edit');
+
+        Route::put('/tasas/cuotas/{cuota}', [TasasCuotaAdminController::class, 'update'])
+            ->name('admin.tasas.cuotas.update');
+
+        Route::delete('/tasas/cuotas/{cuota}', [TasasCuotaAdminController::class, 'destroy'])
+            ->name('admin.tasas.cuotas.destroy');
 
     });
 

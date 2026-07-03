@@ -19,6 +19,12 @@
     <script src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
 
     @stack('scripts_head')
+    <script>
+    (function () {
+        var s = localStorage.getItem('chacabuco_font_size');
+        if (s && s !== 'normal') document.documentElement.classList.add('font-' + s);
+    })();
+    </script>
 </head>
 <body>
     <div class="contenedor">
@@ -140,8 +146,80 @@
     @endif
 @endif
 
+<div class="theme-control">
+    <button type="button" id="theme-toggle" class="theme-toggle" title="Cambiar tema visual">
+        🌙 Oscuro
+    </button>
+</div>
+{{-- Barra de utilidades para móvil (≤600px) --}}
+<div class="mobile-util-bar" aria-label="Controles de accesibilidad">
+    <button type="button" id="mobile-theme-btn" class="mobile-util__theme" title="Cambiar tema">🌙</button>
+    <div class="mobile-util__sep"></div>
+    <span class="mobile-util__label">Texto</span>
+    <button type="button" class="font-control__btn mobile-util__font-btn" data-size="normal" title="Normal">A-</button>
+    <button type="button" class="font-control__btn mobile-util__font-btn" data-size="grande" title="Grande">A</button>
+    <button type="button" class="font-control__btn mobile-util__font-btn" data-size="extra"  title="Muy grande">A+</button>
+</div>
+
+<div id="font-control" class="font-control" aria-label="Ajustar tamaño de texto">
+    <span class="font-control__label">Texto</span>
+    <button type="button" class="font-control__btn" data-size="normal" title="Tamaño normal">A-</button>
+    <button type="button" class="font-control__btn" data-size="grande" title="Texto grande">A</button>
+    <button type="button" class="font-control__btn" data-size="extra"  title="Texto muy grande">A+</button>
+</div>
 <script src="{{ asset('js/theme.js') }}"></script>
 <script src="{{ asset('js/ui-feedback.js') }}"></script>
+<script>
+(function () {
+    var STORAGE_KEY = 'chacabuco_font_size';
+
+    function applySize(size) {
+        var html = document.documentElement;
+        html.classList.remove('font-grande', 'font-extra');
+        if (size !== 'normal') html.classList.add('font-' + size);
+    }
+
+    function markActive(size) {
+        document.querySelectorAll('.font-control__btn').forEach(function (btn) {
+            btn.classList.toggle('is-active', btn.dataset.size === size);
+        });
+    }
+
+    var current = localStorage.getItem(STORAGE_KEY) || 'normal';
+    applySize(current);
+    markActive(current);
+
+    document.querySelectorAll('.font-control__btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            current = btn.dataset.size;
+            applySize(current);
+            markActive(current);
+            localStorage.setItem(STORAGE_KEY, current);
+        });
+    });
+})();
+(function () {
+    var mobileBtn = document.getElementById('mobile-theme-btn');
+    if (!mobileBtn) return;
+
+    function syncIconMobile() {
+        mobileBtn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+    }
+
+    syncIconMobile();
+
+    mobileBtn.addEventListener('click', function () {
+        var desktop = document.getElementById('theme-toggle');
+        if (desktop) {
+            desktop.click();
+        } else {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        }
+        syncIconMobile();
+    });
+})();
+</script>
 <script>
 (function () {
     const ENDPOINT   = '/turismo/eventos-proximos';

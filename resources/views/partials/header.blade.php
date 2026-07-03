@@ -13,10 +13,6 @@
         </a>
 
         <div class="site-header__actions">
-            <button class="theme-toggle" id="theme-toggle" type="button">
-                Oscuro
-            </button>
-
             @auth
                 <div class="user-box">
                     <div class="user-box__info">
@@ -46,6 +42,7 @@
         <a href="{{ route('tramites-servicios.index') }}">Tramites y Servicios</a>
         <a href="{{ route('turismo.index') }}">Turismo</a>
         <a href="{{ route('telefonos-utiles.index') }}">Teléfonos Útiles</a>
+        <a href="{{ route('tasas.index') }}">Tasas Municipales</a>
         <a href="{{ route('acceso-municipal.index') }}">Acceso Municipal</a>
     </nav>
 </header>
