@@ -21,6 +21,8 @@ use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\TelefonoUtilController;
 use App\Http\Controllers\ObrasParticularesController;
 use App\Http\Controllers\TasasMunicipalesController;
+use App\Http\Controllers\RecaudacionController;
+use App\Http\Controllers\Admin\RecaudacionAdminController;
 
 /* Admin Controllers */
 use App\Http\Controllers\AdminController;
@@ -86,6 +88,9 @@ Route::get('/tramites-y-servicios', [TramitesServiciosController::class, 'index'
 
 Route::get('/tramites-y-servicios/salud-mental', [TramitesServiciosController::class, 'saludMental'])
     ->name('tramites-servicios.salud-mental');
+
+Route::get('/tramites-y-servicios/recaudacion', [RecaudacionController::class, 'index'])
+    ->name('recaudacion.index');
 
 Route::get('/tramites-y-servicios/expedientes', [ExpedienteConsultaController::class, 'index'])
     ->name('expedientes.index');
@@ -523,6 +528,17 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
         Route::delete('/tasas/cuotas/{cuota}', [TasasCuotaAdminController::class, 'destroy'])
             ->name('admin.tasas.cuotas.destroy');
+
+        // Recaudación
+        Route::get('/recaudacion',                              [RecaudacionAdminController::class, 'index'])      ->name('admin.recaudacion.index');
+        Route::get('/recaudacion/crear',                        [RecaudacionAdminController::class, 'create'])     ->name('admin.recaudacion.create');
+        Route::post('/recaudacion',                             [RecaudacionAdminController::class, 'store'])      ->name('admin.recaudacion.store');
+        Route::get('/recaudacion/tramite-online/editar',        [RecaudacionAdminController::class, 'editTramite'])->name('admin.recaudacion.tramite.edit');
+        Route::put('/recaudacion/tramite-online',               [RecaudacionAdminController::class, 'updateTramite'])->name('admin.recaudacion.tramite.update');
+        Route::get('/recaudacion/{documento}/editar',           [RecaudacionAdminController::class, 'edit'])       ->name('admin.recaudacion.edit');
+        Route::put('/recaudacion/{documento}',                  [RecaudacionAdminController::class, 'update'])     ->name('admin.recaudacion.update');
+        Route::delete('/recaudacion/{documento}',               [RecaudacionAdminController::class, 'destroy'])    ->name('admin.recaudacion.destroy');
+        Route::patch('/recaudacion/{documento}/toggle',         [RecaudacionAdminController::class, 'toggle'])     ->name('admin.recaudacion.toggle');
 
     });
 

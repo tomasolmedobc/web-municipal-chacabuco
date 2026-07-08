@@ -79,6 +79,10 @@
                 Tasas Municipales
             </a>
 
+            <a href="{{ route('admin.recaudacion.index') }}" class="btn btn-secondary">
+                Recaudación
+            </a>
+
             @if(auth()->user()->rol === 'admin')
                 <a href="{{ route('admin.audit-log.index') }}" class="btn btn-secondary">
                     Auditoría

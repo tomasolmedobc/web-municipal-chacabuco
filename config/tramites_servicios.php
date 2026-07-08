@@ -111,7 +111,7 @@ return [
             'titulo' => 'Recaudacion',
             'descripcion' => 'Acceso a gestiones y consultas del area de recaudacion.',
             'icono' => 'fa-cash-register',
-            'url' => '#',
+            'url' => '/tramites-y-servicios/recaudacion',
         ],
         [
             'titulo' => 'Tasas Municipales',

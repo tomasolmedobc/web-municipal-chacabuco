@@ -29,6 +29,7 @@ Thumbs.db
 /public/images
 /public/files/noticias
 /public/files/turismo
+/public/files/recaudacion
 /public/uploads_originales
 
 /storage/*.key

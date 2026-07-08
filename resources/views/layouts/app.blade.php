@@ -146,6 +146,15 @@
     @endif
 @endif
 
+<div id="clima-widget" class="clima-widget" hidden aria-label="Temperatura actual en Chacabuco">
+    <span class="clima-widget__icon" id="clima-icon">—</span>
+    <div class="clima-widget__data">
+        <span class="clima-widget__temp" id="clima-temp">--°</span>
+        <span class="clima-widget__lugar">Chacabuco, BA</span>
+    </div>
+    <button type="button" class="clima-widget__cerrar" id="clima-cerrar" aria-label="Cerrar widget de clima">×</button>
+</div>
+
 <div class="theme-control">
     <button type="button" id="theme-toggle" class="theme-toggle" title="Cambiar tema visual">
         🌙 Oscuro
@@ -168,6 +177,36 @@
     <button type="button" class="font-control__btn" data-size="extra"  title="Texto muy grande">A+</button>
 </div>
 <script src="{{ asset('js/theme.js') }}"></script>
+<script>
+(function () {
+    const STORAGE_KEY = 'chacabuco_clima_oculto';
+    const widget = document.getElementById('clima-widget');
+    if (!widget) return;
+    if (sessionStorage.getItem(STORAGE_KEY) === '1') return;
+    const WMO = {
+        0:'☀️', 1:'🌤️', 2:'⛅', 3:'☁️',
+        45:'🌫️', 48:'🌫️',
+        51:'🌦️', 53:'🌦️', 55:'🌦️',
+        61:'🌧️', 63:'🌧️', 65:'🌧️',
+        71:'🌨️', 73:'🌨️', 75:'🌨️', 77:'🌨️',
+        80:'🌦️', 81:'🌦️', 82:'🌦️',
+        85:'🌨️', 86:'🌨️',
+        95:'⛈️', 96:'⛈️', 99:'⛈️'
+    };
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=-34.6435&longitude=-60.4737&current=temperature_2m,weathercode&timezone=America%2FArgentina%2FBuenos_Aires&forecast_days=1')
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(data => {
+            document.getElementById('clima-temp').textContent = Math.round(data.current.temperature_2m) + '°C';
+            document.getElementById('clima-icon').textContent = WMO[data.current.weathercode] ?? '🌡️';
+            widget.hidden = false;
+        })
+        .catch(() => {});
+    document.getElementById('clima-cerrar').addEventListener('click', function () {
+        widget.hidden = true;
+        sessionStorage.setItem(STORAGE_KEY, '1');
+    });
+})();
+</script>
 <script src="{{ asset('js/ui-feedback.js') }}"></script>
 <script>
 (function () {
