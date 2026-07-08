@@ -561,8 +561,8 @@
     border-bottom: 1px solid var(--border);
 }
 
-/* Admin tabs */
-.admin-tabs {
+/* Admin tabs (obras-particulares — underline style, scoped) */
+.ops-admin-tabs {
     display: flex;
     flex-wrap: wrap;
     gap: 0;
@@ -570,7 +570,7 @@
     margin-bottom: 20px;
 }
 
-.admin-tab {
+.ops-admin-tab {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -584,16 +584,16 @@
     transition: color .15s, border-color .15s;
 }
 
-.admin-tab:hover {
+.ops-admin-tab:hover {
     color: var(--text);
 }
 
-.admin-tab--active {
+.ops-admin-tab--active {
     color: var(--primary);
     border-bottom-color: var(--primary);
 }
 
-.admin-tab__count {
+.ops-admin-tab__count {
     background: var(--border);
     color: var(--muted);
     font-size: .75rem;

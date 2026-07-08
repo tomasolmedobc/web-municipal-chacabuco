@@ -21,12 +21,12 @@
 @endif
 
 {{-- Tabs sección --}}
-<div class="admin-tabs">
+<div class="ops-admin-tabs">
     @foreach($secciones as $sec => $label)
         <a href="{{ route('admin.obras.normativas.index', ['seccion' => $sec]) }}"
-           class="admin-tab {{ $seccionActiva === $sec ? 'admin-tab--active' : '' }}">
+           class="ops-admin-tab {{ $seccionActiva === $sec ? 'ops-admin-tab--active' : '' }}">
             {{ $label }}
-            <span class="admin-tab__count">{{ $totales[$sec] ?? 0 }}</span>
+            <span class="ops-admin-tab__count">{{ $totales[$sec] ?? 0 }}</span>
         </a>
     @endforeach
 </div>

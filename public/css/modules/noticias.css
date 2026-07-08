@@ -512,10 +512,9 @@ body.dark .categoria-noticia {
     gap: 28px;
     background: linear-gradient(135deg, var(--primary-soft), var(--card));
     border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 36px;
     box-shadow: var(--shadow);
-
-
-    
 }
 
 .filtros-grid {

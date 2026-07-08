@@ -23,6 +23,8 @@ use App\Http\Controllers\ObrasParticularesController;
 use App\Http\Controllers\TasasMunicipalesController;
 use App\Http\Controllers\RecaudacionController;
 use App\Http\Controllers\Admin\RecaudacionAdminController;
+use App\Http\Controllers\CarnetController;
+use App\Http\Controllers\Admin\CarnetAdminController;
 
 /* Admin Controllers */
 use App\Http\Controllers\AdminController;
@@ -160,7 +162,11 @@ Route::get('/obras-particulares', [ObrasParticularesController::class, 'index'])
 Route::get('/tasas-municipales', [TasasMunicipalesController::class, 'index'])
     ->name('tasas.index');
 
+Route::get('/tramites-y-servicios/carnet-conducir', [CarnetController::class, 'index'])
+    ->name('carnet.index');
+
 Route::post('/chatbot', [ChatbotController::class, 'responder'])
+    ->middleware('throttle:20,1')
     ->name('chatbot.responder');
 
 Route::get('/acceso-municipal', [AccesoMunicipalController::class, 'show'])
@@ -528,6 +534,17 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
         Route::delete('/tasas/cuotas/{cuota}', [TasasCuotaAdminController::class, 'destroy'])
             ->name('admin.tasas.cuotas.destroy');
+
+        // Carnet de Conducir
+        Route::get('/carnet-conducir',                                    [CarnetAdminController::class, 'index'])          ->name('admin.carnet.index');
+        Route::get('/carnet-conducir/contenido/editar',                   [CarnetAdminController::class, 'editConfig'])     ->name('admin.carnet.config.edit');
+        Route::put('/carnet-conducir/contenido',                          [CarnetAdminController::class, 'updateConfig'])   ->name('admin.carnet.config.update');
+        Route::get('/carnet-conducir/materiales/crear',                   [CarnetAdminController::class, 'createMaterial']) ->name('admin.carnet.materiales.create');
+        Route::post('/carnet-conducir/materiales',                        [CarnetAdminController::class, 'storeMaterial'])  ->name('admin.carnet.materiales.store');
+        Route::get('/carnet-conducir/materiales/{material}/editar',       [CarnetAdminController::class, 'editMaterial'])   ->name('admin.carnet.materiales.edit');
+        Route::put('/carnet-conducir/materiales/{material}',              [CarnetAdminController::class, 'updateMaterial']) ->name('admin.carnet.materiales.update');
+        Route::delete('/carnet-conducir/materiales/{material}',           [CarnetAdminController::class, 'destroyMaterial'])->name('admin.carnet.materiales.destroy');
+        Route::patch('/carnet-conducir/materiales/{material}/toggle',     [CarnetAdminController::class, 'toggleMaterial']) ->name('admin.carnet.materiales.toggle');
 
         // Recaudación
         Route::get('/recaudacion',                              [RecaudacionAdminController::class, 'index'])      ->name('admin.recaudacion.index');

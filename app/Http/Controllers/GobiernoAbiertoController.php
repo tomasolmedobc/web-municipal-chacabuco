@@ -98,7 +98,11 @@ class GobiernoAbiertoController extends Controller
         $licitacion->load('archivos');
 
         if ($licitacion->link_externo) {
-            return redirect()->away($licitacion->link_externo);
+            $url = $licitacion->link_externo;
+            if (!in_array(parse_url($url, PHP_URL_SCHEME), ['http', 'https'])) {
+                abort(400);
+            }
+            return redirect()->away($url);
         }
 
         if ($licitacion->archivos->count() === 1) {

@@ -42,7 +42,7 @@ return [
             'titulo' => 'Carnet de Conducir',
             'descripcion' => 'Turnos, requisitos y consultas para obtener o renovar el carnet.',
             'icono' => 'fa-id-card',
-            'url' => '#',
+            'url' => '/tramites-y-servicios/carnet-conducir',
         ],
         [
             'titulo' => 'Tramitar el DNI',

@@ -54,8 +54,8 @@
     line-height: 1;
 }
 
-.baile-stat--disponible .baile-stat__numero { color: #16a34a; }
-.baile-stat--reservado  .baile-stat__numero { color: #dc2626; }
+.baile-stat--disponible .baile-stat__numero { color: var(--success); }
+.baile-stat--reservado  .baile-stat__numero { color: var(--danger); }
 
 .baile-stat__label {
     font-size: 13px;
@@ -154,7 +154,7 @@
 }
 
 .baile-requerido {
-    color: #dc2626;
+    color: var(--danger);
     font-weight: 700;
 }
 

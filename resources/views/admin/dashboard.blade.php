@@ -83,6 +83,10 @@
                 Recaudación
             </a>
 
+            <a href="{{ route('admin.carnet.index') }}" class="btn btn-secondary">
+                Carnet de Conducir
+            </a>
+
             @if(auth()->user()->rol === 'admin')
                 <a href="{{ route('admin.audit-log.index') }}" class="btn btn-secondary">
                     Auditoría

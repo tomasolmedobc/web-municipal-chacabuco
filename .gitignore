@@ -30,6 +30,7 @@ Thumbs.db
 /public/files/noticias
 /public/files/turismo
 /public/files/recaudacion
+/public/files/carnet
 /public/uploads_originales
 
 /storage/*.key

@@ -2,7 +2,7 @@
 Destacada
 ========================= */
 .check-destacada {
-    display: flex !important;
+    display: flex;
     align-items: center;
     gap: 14px;
     width: 100%;
@@ -20,9 +20,9 @@ Destacada
 }
 
 .check-destacada input {
-    width: 18px !important;
-    height: 18px !important;
-    min-height: auto !important;
+    width: 18px;
+    height: 18px;
+    min-height: auto;
     accent-color: var(--primary);
 }
 
@@ -270,10 +270,16 @@ Destacada
     font: inherit;
 }
 
-.admin-form-group input,
-.admin-form-group select {
+.admin-form-group input:not([type=checkbox]):not([type=radio]),
+.admin-form-group select:not([multiple]) {
     min-height: 46px;
     padding: 0 14px;
+}
+
+.admin-form-group select[multiple] {
+    min-height: 140px;
+    height: auto;
+    padding: 10px 12px;
 }
 
 .admin-form-group textarea {
@@ -296,15 +302,15 @@ Destacada
 }
 
 .estado-warning {
-    background: #fff7ed;
-    color: #9a3412;
-    border: 1px solid #fdba74;
+    background: var(--warning-bg);
+    color: var(--warning-dark);
+    border: 1px solid var(--warning-border);
 }
 
 .estado-success {
-    background: #ecfdf5;
-    color: #166534;
-    border: 1px solid #86efac;
+    background: var(--success-bg);
+    color: var(--success-dark);
+    border: 1px solid var(--success-border);
 }
 
 body.dark .estado-warning {
@@ -335,8 +341,7 @@ body.dark .estado-success {
 }
 
 .badge-estado,
-.badge-categoria,
-.categoria-noticia {
+.badge-categoria {
     display: inline-flex;
     align-items: center;
     width: fit-content;
@@ -344,27 +349,26 @@ body.dark .estado-success {
     border-radius: 999px;
     font-size: 12px;
     font-weight: 700;
-    background: #e0f2fe;
-    color: #0369a1;
-    border: 1px solid #7dd3fc;
+    background: var(--info-bg);
+    color: var(--info);
+    border: 1px solid var(--info-border);
     margin-bottom: 0;
 }
 
 .badge-estado {
-    padding: 5px 10px;
     color: inherit;
 }
 
 .badge-publicado {
-    background: #dcfce7;
-    color: #166534;
-    border: 1px solid #86efac;
+    background: var(--success-bg);
+    color: var(--success-dark);
+    border: 1px solid var(--success-border);
 }
 
 .badge-oculto {
-    background: #fff7ed;
-    color: #9a3412;
-    border: 1px solid #fdba74;
+    background: var(--warning-bg);
+    color: var(--warning-dark);
+    border: 1px solid var(--warning-border);
 }
 
 body.dark .badge-publicado {
@@ -379,22 +383,7 @@ body.dark .badge-oculto {
     border-color: rgba(251, 146, 60, 0.4);
 }
 
-.badge-categoria,
-.categoria-noticia {
-    padding: 4px 10px;
-    background: #e0f2fe;
-    color: #0369a1;
-    border: 1px solid #7dd3fc;
-}
-
-.categoria-noticia {
-    width: fit-content;
-    margin-bottom: 8px;
-    padding: 5px 10px;
-}
-
-body.dark .badge-categoria,
-body.dark .categoria-noticia {
+body.dark .badge-categoria {
     background: rgba(3, 105, 161, 0.2);
     color: #7dd3fc;
     border-color: rgba(125, 211, 252, 0.4);
@@ -415,8 +404,6 @@ body.dark .categoria-noticia {
 
 .categorias-select {
     min-height: 140px;
-    height: auto !important;
-    padding: 10px 12px !important;
 }
 
 .preview-imagen-admin {
@@ -427,40 +414,39 @@ body.dark .categoria-noticia {
 }
 
 .badge-rol.admin {
-    background: #dc2626;
+    background: var(--danger);
     color: #fff;
     padding: 4px 10px;
-    border: 1px solid #dc2626;
+    border: 1px solid var(--danger);
     border-radius: 999px;
-
 }
 
 .badge-rol.editor {
-    background: #2563eb;
+    background: var(--primary);
     color: #fff;
     padding: 4px 10px;
-    border: 1px solid #2563eb;
+    border: 1px solid var(--primary);
     border-radius: 999px;
 }
 
 .config-remove {
-    display: inline-flex !important;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
     margin-top: 8px;
     font-size: 13px;
-    color: #b91c1c;
+    color: var(--danger-dark);
     font-weight: 700;
     width: fit-content;
 }
 
 .config-remove input {
-    width: 16px !important;
-    height: 16px !important;
-    min-height: auto !important;
-    padding: 0 !important;
+    width: 16px;
+    height: 16px;
+    min-height: auto;
+    padding: 0;
     margin: 0;
-    accent-color: #dc2626;
+    accent-color: var(--danger);
 }
 
 .config-preview {

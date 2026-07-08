@@ -37,7 +37,7 @@ class TasasAdminController extends Controller
             'texto_plan_facilidades'     => ['nullable', 'string'],
             'texto_info_bancaria'        => ['nullable', 'string'],
             'banner_url'                 => ['nullable', 'url', 'max:500'],
-            'banner_imagen'              => ['nullable', 'file', 'image', 'max:5120'],
+            'banner_imagen'              => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'btn_consulta_tipo'          => ['required', 'in:url,archivo'],
             'btn_consulta_url'           => ['nullable', 'url', 'max:500'],
             'btn_consulta_archivo'       => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:51200'],

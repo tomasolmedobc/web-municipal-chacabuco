@@ -25,11 +25,11 @@
 }
 
 .app-toast.success {
-    background: #16a34a;
+    background: var(--success);
 }
 
 .app-toast.error {
-    background: #dc2626;
+    background: var(--danger);
 }
 
 .app-confirm-dialog {
