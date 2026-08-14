@@ -40,15 +40,18 @@ class InfraccionesController extends Controller
         try {
             $infracciones = $this->buscarInfracciones($criterio, $valor);
 
+            $cedulas = $criterio === 'dni' ? $this->buscarCedulas($valor)->all() : [];
+
             return redirect()
                 ->route('infracciones.index')
                 ->with([
-                    'infracciones_criterio' => $criterio,
-                    'infracciones_valor' => $valor,
-                    'infracciones_resultados' => $infracciones->all(),
-                    'infracciones_cedulas' => $criterio === 'dni' ? $this->buscarCedulas($valor)->all() : [],
-                    'infracciones_consultado' => true,
-                    'infracciones_mensaje' => null,
+                    'infracciones_criterio'    => $criterio,
+                    'infracciones_valor'       => $valor,
+                    'infracciones_resultados'  => $infracciones->all(),
+                    'infracciones_cedulas'     => $cedulas,
+                    'infracciones_cedulas_ids' => collect($cedulas)->pluck('id_falta')->map(fn ($id) => (int) $id)->toArray(),
+                    'infracciones_consultado'  => true,
+                    'infracciones_mensaje'     => null,
                 ]);
         } catch (QueryException $exception) {
             return redirect()
@@ -66,6 +69,8 @@ class InfraccionesController extends Controller
 
     public function cedula(int $falta): Response
     {
+        abort_unless(in_array($falta, session('infracciones_cedulas_ids', []), true), 403);
+
         $cedula = DB::connection('juzgado')
             ->table('faltas as f')
             ->leftJoin('infractores as i', 'i.id_infractor', '=', 'f.id_infractor')

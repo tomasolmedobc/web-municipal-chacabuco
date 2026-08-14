@@ -4,6 +4,11 @@
 @section('meta_description', 'Requisitos, pasos y materiales para obtener o renovar el carnet de conducir en Chacabuco.')
 
 @section('content')
+<x-breadcrumb :items="[
+    ['label' => 'Inicio',              'url' => route('home')],
+    ['label' => 'Trámites y Servicios','url' => route('tramites-servicios.index')],
+    ['label' => 'Carnet de Conducir'],
+]" />
 
 <section class="carnet-hero">
     <div>

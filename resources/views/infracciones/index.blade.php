@@ -3,6 +3,11 @@
 @section('title', 'Consulta de Infracciones')
 
 @section('content')
+<x-breadcrumb :items="[
+    ['label' => 'Inicio',              'url' => route('home')],
+    ['label' => 'Trámites y Servicios','url' => route('tramites-servicios.index')],
+    ['label' => 'Infracciones'],
+]" />
 <section class="inf-hero">
     <span class="section-badge">Tramites</span>
     <h1>Consulta de Infracciones</h1>

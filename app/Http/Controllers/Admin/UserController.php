@@ -29,10 +29,11 @@ class UserController extends Controller
         $data = $request->validated();
 
         $nuevoUsuario = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
+            'name'     => $data['name'],
+            'apellido' => $data['apellido'],
+            'email'    => $data['email'],
             'password' => Hash::make($data['password']),
-            'rol' => $data['rol'],
+            'rol'      => $data['rol'],
         ]);
 
         AuditLog::registrar('crear', 'User', $nuevoUsuario->id, "Usuario creado: \"{$data['name']}\" ({$data['email']}) — rol: {$data['rol']}");
@@ -55,9 +56,10 @@ class UserController extends Controller
             return back()->with('error', 'No podés quitarte tu propio rol de admin');
         }
 
-        $usuario->name = $data['name'];
-        $usuario->email = $data['email'];
-        $usuario->rol = $data['rol'];
+        $usuario->name     = $data['name'];
+        $usuario->apellido = $data['apellido'];
+        $usuario->email    = $data['email'];
+        $usuario->rol      = $data['rol'];
 
         if (!empty($data['password'])) {
             $usuario->password = Hash::make($data['password']);

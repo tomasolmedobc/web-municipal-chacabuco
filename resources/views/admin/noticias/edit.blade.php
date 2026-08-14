@@ -111,16 +111,22 @@
 
             <div class="admin-form-group full">
                 <label for="imagen_destacada">Imagen destacada</label>
-                <input type="file" name="imagen_destacada" id="imagen_destacada" accept=".jpg,.jpeg,.png,.webp">
+                <div class="file-upload-zone {{ $noticia->imagen_destacada ? 'has-preview' : '' }}" id="zona-imagen">
+                    <input type="file" name="imagen_destacada" id="imagen_destacada" accept=".jpg,.jpeg,.png,.webp" class="file-upload-zone__input">
+                    <img class="file-upload-zone__preview"
+                         src="{{ $noticia->imagen_destacada_url ?? '' }}"
+                         alt="{{ $noticia->titulo }}"
+                         @if(!$noticia->imagen_destacada) hidden @endif>
+                    <div class="file-upload-zone__body">
+                        <i class="fa-solid fa-image file-upload-zone__icon"></i>
+                        <span class="file-upload-zone__label">
+                            {{ $noticia->imagen_destacada ? 'Cambiar imagen' : 'Hacé clic o arrastrá una imagen' }}
+                        </span>
+                        <span class="file-upload-zone__hint">JPG, PNG o WEBP</span>
+                    </div>
+                </div>
                 @error('imagen_destacada') <small class="auth-error">{{ $message }}</small> @enderror
             </div>
-
-            @if ($noticia->imagen_destacada)
-                <div class="admin-form-group full">
-                    <label>Imagen actual</label>
-                    <img src="{{ $noticia->imagen_destacada }}" alt="{{ $noticia->titulo }}" class="preview-imagen-admin">
-                </div>
-            @endif
 
             <div class="admin-form-group full">
                 <label for="contenido">Contenido</label>
@@ -141,7 +147,15 @@
 
             <div class="admin-form-group full">
                 <label for="archivos">Archivos adjuntos</label>
-                <input type="file" name="archivos[]" id="archivos" multiple accept=".pdf,.doc,.docx,.xls,.xlsx">
+                <div class="file-upload-zone file-upload-zone--files" id="zona-archivos">
+                    <input type="file" name="archivos[]" id="archivos" multiple accept=".pdf,.doc,.docx,.xls,.xlsx" class="file-upload-zone__input">
+                    <div class="file-upload-zone__body">
+                        <i class="fa-solid fa-paperclip file-upload-zone__icon"></i>
+                        <span class="file-upload-zone__label">Agregar archivos</span>
+                        <span class="file-upload-zone__hint">PDF, DOC, XLS — podés elegir varios</span>
+                    </div>
+                    <ul class="file-upload-zone__list" hidden></ul>
+                </div>
                 @error('archivos.*') <small class="auth-error">{{ $message }}</small> @enderror
             </div>
         </div>

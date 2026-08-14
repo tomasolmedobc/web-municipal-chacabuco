@@ -3,6 +3,11 @@
 @section('title', $documento->titulo)
 
 @section('content')
+<x-breadcrumb :items="[
+    ['label' => 'Inicio',          'url' => route('home')],
+    ['label' => 'Gobierno Abierto','url' => route('gobierno-abierto.index')],
+    ['label' => $documento->titulo],
+]" />
 <section class="noticias-hero">
     <div>
         <span class="section-badge">Gobierno abierto</span>

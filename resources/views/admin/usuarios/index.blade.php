@@ -38,11 +38,7 @@
                 <code id="nueva-password">{{ session('password_generada') }}</code>
             </div>
             <div style="display:flex; gap:8px; align-items:center; flex-shrink:0;">
-                <button type="button" class="btn btn-secondary" onclick="
-                    navigator.clipboard.writeText(document.getElementById('nueva-password').innerText);
-                    this.textContent = '¡Copiado!';
-                    setTimeout(() => this.textContent = 'Copiar', 2000);
-                ">Copiar</button>
+                <button type="button" class="btn btn-secondary" onclick="copiarPassword(this)">Copiar</button>
                 <button type="button" class="btn btn-secondary" onclick="document.getElementById('password-reset-banner').remove()">Cerrar</button>
             </div>
         </div>
@@ -61,7 +57,7 @@
         @foreach($usuarios as $usuario)
             <article class="admin-list-item">
                 <div>
-                    <h3>{{ $usuario->name }}</h3>
+                    <h3>{{ $usuario->full_name }}</h3>
 
                     <div class="meta-noticia">
                         <span>{{ $usuario->email }}</span>

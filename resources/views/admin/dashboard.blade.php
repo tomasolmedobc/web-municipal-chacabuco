@@ -36,65 +36,101 @@
 </div>
 
     <section class="admin-header">
-        
         <div>
             <h2 class="seccion-titulo">Panel de administración</h2>
-            <p class="admin-subtitle">Gestioná noticias, buscá posteos y administrá su estado.</p>
-        </div>
-
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <a href="{{ route('admin.noticias.create') }}" class="btn btn-primary">
-                Nueva noticia
-            </a>
-
-            <a href="{{ route('admin.gobierno-abierto.index') }}" class="btn btn-secondary">
-                Gobierno abierto
-            </a>
-
-            <a href="{{ route('admin.habilitaciones.index') }}" class="btn btn-secondary">
-                Habilitaciones
-            </a>
-
-            <a href="{{ route('admin.turismo.index') }}" class="btn btn-secondary">
-                Turismo
-            </a>
-
-            <a href="{{ route('admin.baile.usuarios.index') }}" class="btn btn-secondary">
-                Baile de Egresados
-            </a>
-
-            <a href="{{ route('admin.popup.index') }}" class="btn btn-secondary">
-                Popup anuncio
-            </a>
-
-            <a href="{{ route('admin.telefonos-utiles.index') }}" class="btn btn-secondary">
-                Teléfonos Útiles
-            </a>
-
-            <a href="{{ route('admin.obras.index') }}" class="btn btn-secondary">
-                Obras Particulares
-            </a>
-
-            <a href="{{ route('admin.tasas.index') }}" class="btn btn-secondary">
-                Tasas Municipales
-            </a>
-
-            <a href="{{ route('admin.recaudacion.index') }}" class="btn btn-secondary">
-                Recaudación
-            </a>
-
-            <a href="{{ route('admin.carnet.index') }}" class="btn btn-secondary">
-                Carnet de Conducir
-            </a>
-
-            @if(auth()->user()->rol === 'admin')
-                <a href="{{ route('admin.audit-log.index') }}" class="btn btn-secondary">
-                    Auditoría
-                </a>
-            @endif
-
+            <p class="admin-subtitle">Gestioná el contenido y la configuración del sitio municipal.</p>
         </div>
     </section>
+
+    <div class="admin-modules">
+
+        <section class="admin-module-group">
+            <h3 class="admin-module-group__title"><i class="fa-solid fa-newspaper"></i> Contenido</h3>
+            <div class="admin-module-grid">
+                <a href="{{ route('admin.noticias.create') }}" class="admin-module-card admin-module-card--primary">
+                    <span class="admin-module-card__icon"><i class="fa-solid fa-file-pen"></i></span>
+                    <span class="admin-module-card__label">Nueva noticia</span>
+                    <span class="admin-module-card__desc">Publicá un comunicado o novedad municipal</span>
+                </a>
+                <a href="{{ route('admin.gobierno-abierto.index') }}" class="admin-module-card">
+                    <span class="admin-module-card__icon"><i class="fa-solid fa-landmark"></i></span>
+                    <span class="admin-module-card__label">Gobierno abierto</span>
+                    <span class="admin-module-card__desc">Licitaciones, nóminas y documentos institucionales</span>
+                </a>
+                <a href="{{ route('admin.turismo.index') }}" class="admin-module-card">
+                    <span class="admin-module-card__icon"><i class="fa-solid fa-map-location-dot"></i></span>
+                    <span class="admin-module-card__label">Turismo</span>
+                    <span class="admin-module-card__desc">Localidades y eventos del municipio</span>
+                </a>
+                <a href="{{ route('admin.baile.usuarios.index') }}" class="admin-module-card">
+                    <span class="admin-module-card__icon"><i class="fa-solid fa-champagne-glasses"></i></span>
+                    <span class="admin-module-card__label">Baile de Egresados</span>
+                    <span class="admin-module-card__desc">Inscripciones y gestión del evento</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="admin-module-group">
+            <h3 class="admin-module-group__title"><i class="fa-solid fa-folder-open"></i> Gestión</h3>
+            <div class="admin-module-grid">
+                <a href="{{ route('admin.habilitaciones.index') }}" class="admin-module-card">
+                    <span class="admin-module-card__icon"><i class="fa-solid fa-store"></i></span>
+                    <span class="admin-module-card__label">Habilitaciones</span>
+                    <span class="admin-module-card__desc">Permisos y habilitaciones comerciales</span>
+                </a>
+                <a href="{{ route('admin.obras.index') }}" class="admin-module-card">
+                    <span class="admin-module-card__icon"><i class="fa-solid fa-helmet-safety"></i></span>
+                    <span class="admin-module-card__label">Obras Particulares</span>
+                    <span class="admin-module-card__desc">Solicitudes de obras y planos</span>
+                </a>
+                <a href="{{ route('admin.tasas.index') }}" class="admin-module-card">
+                    <span class="admin-module-card__icon"><i class="fa-solid fa-file-invoice-dollar"></i></span>
+                    <span class="admin-module-card__label">Tasas Municipales</span>
+                    <span class="admin-module-card__desc">Información y vencimientos de tasas</span>
+                </a>
+                <a href="{{ route('admin.recaudacion.index') }}" class="admin-module-card">
+                    <span class="admin-module-card__icon"><i class="fa-solid fa-chart-line"></i></span>
+                    <span class="admin-module-card__label">Recaudación</span>
+                    <span class="admin-module-card__desc">Estadísticas y datos de recaudación</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="admin-module-group">
+            <h3 class="admin-module-group__title"><i class="fa-solid fa-sliders"></i> Configuración del sitio</h3>
+            <div class="admin-module-grid">
+                <a href="{{ route('admin.popup.index') }}" class="admin-module-card">
+                    <span class="admin-module-card__icon"><i class="fa-solid fa-bullhorn"></i></span>
+                    <span class="admin-module-card__label">Popup anuncio</span>
+                    <span class="admin-module-card__desc">Cartel de anuncio en la página principal</span>
+                </a>
+                <a href="{{ route('admin.telefonos-utiles.index') }}" class="admin-module-card">
+                    <span class="admin-module-card__icon"><i class="fa-solid fa-phone"></i></span>
+                    <span class="admin-module-card__label">Teléfonos Útiles</span>
+                    <span class="admin-module-card__desc">Contactos de emergencia y dependencias</span>
+                </a>
+                <a href="{{ route('admin.carnet.index') }}" class="admin-module-card">
+                    <span class="admin-module-card__icon"><i class="fa-solid fa-id-card"></i></span>
+                    <span class="admin-module-card__label">Carnet de Conducir</span>
+                    <span class="admin-module-card__desc">Materiales y documentación para tramitar el carnet</span>
+                </a>
+            </div>
+        </section>
+
+        @if(auth()->user()->rol === 'admin')
+        <section class="admin-module-group">
+            <h3 class="admin-module-group__title"><i class="fa-solid fa-shield-halved"></i> Sistema</h3>
+            <div class="admin-module-grid">
+                <a href="{{ route('admin.audit-log.index') }}" class="admin-module-card">
+                    <span class="admin-module-card__icon"><i class="fa-solid fa-clipboard-list"></i></span>
+                    <span class="admin-module-card__label">Auditoría</span>
+                    <span class="admin-module-card__desc">Registro de todas las acciones en el sistema</span>
+                </a>
+            </div>
+        </section>
+        @endif
+
+    </div>
 
     <form method="GET" action="{{ route('admin.dashboard') }}" class="filtros">
         <input

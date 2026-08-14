@@ -23,6 +23,7 @@
                     <div class="user-box__actions">
                         <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary btn-sm">Panel</a>
                         <a href="{{ route('admin.perfil.edit') }}" class="btn btn-secondary btn-sm">Perfil</a>
+                        <a href="{{ route('acceso-municipal.index') }}" class="btn btn-secondary btn-sm">Acceso</a>
 
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
@@ -30,19 +31,28 @@
                         </form>
                     </div>
                 </div>
+            @else
+                <a href="{{ route('acceso-municipal.index') }}" class="btn btn-secondary btn-sm">Acceso Empleados</a>
             @endauth
 
         </div>
     </div>
 
+    @php
+        $navTramites = request()->routeIs(
+            'tramites-servicios.*', 'infracciones.*', 'expedientes.*',
+            'habilitaciones.*', 'reclamos.*', 'omic.*', 'recaudacion.*'
+        );
+        $navGobierno = request()->routeIs(
+            'gobierno-abierto.*', 'licitaciones.*', 'gastos-recursos-balance.*', 'proveedores.*'
+        );
+    @endphp
     <nav class="site-nav">
-        <a href="{{ url('/') }}">Inicio</a>
-        <a href="{{ route('noticias.index') }}">Noticias</a>
-        <a href="{{ route('gobierno-abierto.index') }}">Gobierno Abierto</a>
-        <a href="{{ route('tramites-servicios.index') }}">Tramites y Servicios</a>
-        <a href="{{ route('turismo.index') }}">Turismo</a>
-        <a href="{{ route('telefonos-utiles.index') }}">Teléfonos Útiles</a>
-        <a href="{{ route('tasas.index') }}">Tasas Municipales</a>
-        <a href="{{ route('acceso-municipal.index') }}">Acceso Municipal</a>
+        <a href="{{ url('/') }}"                          @class(['is-active' => request()->routeIs('home')])>Inicio</a>
+        <a href="{{ route('noticias.index') }}"           @class(['is-active' => request()->routeIs('noticias.*')])>Noticias</a>
+        <a href="{{ route('gobierno-abierto.index') }}"   @class(['is-active' => $navGobierno])>Gobierno Abierto</a>
+        <a href="{{ route('tramites-servicios.index') }}" @class(['is-active' => $navTramites])>Trámites y Servicios</a>
+        <a href="{{ route('turismo.index') }}"            @class(['is-active' => request()->routeIs('turismo.*')])>Turismo</a>
+        <a href="{{ route('tasas.index') }}"             @class(['is-active' => request()->routeIs('tasas.*')])>Tasas Municipales</a>
     </nav>
 </header>

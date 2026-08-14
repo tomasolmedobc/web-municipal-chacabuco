@@ -3,6 +3,11 @@
 @section('title', 'Gestion de Reclamos')
 
 @section('content')
+<x-breadcrumb :items="[
+    ['label' => 'Inicio',              'url' => route('home')],
+    ['label' => 'Trámites y Servicios','url' => route('tramites-servicios.index')],
+    ['label' => 'Reclamos'],
+]" />
 <section class="rec-hero">
     <span class="section-badge">Tramites</span>
     <h1>Gestion de Reclamos</h1>

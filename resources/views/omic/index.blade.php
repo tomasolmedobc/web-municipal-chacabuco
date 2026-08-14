@@ -3,6 +3,11 @@
 @section('title', 'OMIC')
 
 @section('content')
+<x-breadcrumb :items="[
+    ['label' => 'Inicio',              'url' => route('home')],
+    ['label' => 'Trámites y Servicios','url' => route('tramites-servicios.index')],
+    ['label' => 'OMIC'],
+]" />
 <section class="omic-hero">
     <span class="section-badge">Servicios</span>
     <h1>OMIC</h1>

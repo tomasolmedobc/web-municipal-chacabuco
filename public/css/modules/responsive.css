@@ -4,8 +4,7 @@
 @media (max-width: 980px) {
     .municipal-hero,
     .hero,
-    .info-strip__grid,
-    .site-footer__grid {
+    .info-strip__grid {
         grid-template-columns: 1fr;
     }
 
@@ -146,6 +145,23 @@
     }
 }
 
+@media (max-width: 800px) {
+    /* nav: scroll horizontal desde tablet para evitar 2 filas con 6 ítems */
+    .site-nav {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        gap: 20px;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    .site-nav::-webkit-scrollbar { display: none; }
+    .site-nav a {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+}
+
 @media (max-width: 640px) {
     body {
         padding: 18px 14px 32px;
@@ -227,6 +243,15 @@
     .site-nav a {
         white-space: nowrap;
         flex-shrink: 0;
+    }
+
+    /* user-box: apilar info + botones verticalmente en móvil */
+    .user-box {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .user-box__actions {
+        flex-wrap: wrap;
     }
 }
 

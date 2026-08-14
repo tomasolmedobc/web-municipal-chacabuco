@@ -3,6 +3,11 @@
 @section('title', 'Guía de Trámites de Recaudación')
 
 @section('content')
+<x-breadcrumb :items="[
+    ['label' => 'Inicio',              'url' => route('home')],
+    ['label' => 'Trámites y Servicios','url' => route('tramites-servicios.index')],
+    ['label' => 'Recaudación'],
+]" />
 
 <section class="rc-hero">
     <div>

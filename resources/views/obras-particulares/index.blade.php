@@ -4,6 +4,11 @@
 @section('meta_description', 'Información sobre obras particulares, balcones gastronómicos, mensura y subdivisión de tierras. Municipalidad de Chacabuco.')
 
 @section('content')
+<x-breadcrumb :items="[
+    ['label' => 'Inicio',              'url' => route('home')],
+    ['label' => 'Trámites y Servicios','url' => route('tramites-servicios.index')],
+    ['label' => 'Obras Particulares'],
+]" />
 
 {{-- Hero --}}
 <section class="ops-hero">

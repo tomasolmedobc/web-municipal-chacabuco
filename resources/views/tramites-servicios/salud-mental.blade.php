@@ -3,6 +3,11 @@
 @section('title', 'Salud Mental — Salones de Contención')
 
 @section('content')
+<x-breadcrumb :items="[
+    ['label' => 'Inicio',              'url' => route('home')],
+    ['label' => 'Trámites y Servicios','url' => route('tramites-servicios.index')],
+    ['label' => 'Salud Mental'],
+]" />
 
 <section class="ga-hero">
     <div>

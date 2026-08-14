@@ -3,6 +3,11 @@
 @section('title', 'Compras y Proveedores')
 
 @section('content')
+<x-breadcrumb :items="[
+    ['label' => 'Inicio',          'url' => route('home')],
+    ['label' => 'Gobierno Abierto','url' => route('gobierno-abierto.index')],
+    ['label' => 'Compras y Proveedores'],
+]" />
 
 <section class="noticias-hero proveedores-hero">
     <div>
@@ -96,7 +101,7 @@
                     <li>Certificado de inscripción en Ingresos Brutos.</li>
                     <li>Copia del contrato social, si corresponde.</li>
                     <li>Copia del certificado de habilitación municipal.</li>
-                    <li>Sellado de inscripción: $46.400,00.</li>
+                    <li>Sellado de inscripción: $48.000,00.</li>
                     <li>Certificado de exención, si corresponde.</li>
                     <li>Constancia de Libre Deuda Alimentario emitida por el Registro de Deudores Morosos Alimentarios.</li>
                 </ul>

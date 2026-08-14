@@ -28,7 +28,11 @@
             </p>
 
             <div style="display:flex; gap:12px; flex-wrap:wrap;">
-                <a href="{{ route('admin.usuarios.index') }}" class="btn btn-primary">
+                <a href="{{ route('admin.usuarios.create') }}" class="btn btn-primary">
+                    Crear usuario
+                </a>
+
+                <a href="{{ route('admin.usuarios.index') }}" class="btn btn-secondary">
                     Gestionar usuarios
                 </a>
 

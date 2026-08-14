@@ -110,7 +110,15 @@
 
             <div class="admin-form-group full">
                 <label for="imagen_destacada">Imagen destacada</label>
-                <input type="file" name="imagen_destacada" id="imagen_destacada" accept=".jpg,.jpeg,.png,.webp">
+                <div class="file-upload-zone" id="zona-imagen">
+                    <input type="file" name="imagen_destacada" id="imagen_destacada" accept=".jpg,.jpeg,.png,.webp" class="file-upload-zone__input">
+                    <img class="file-upload-zone__preview" src="" alt="" hidden>
+                    <div class="file-upload-zone__body">
+                        <i class="fa-solid fa-image file-upload-zone__icon"></i>
+                        <span class="file-upload-zone__label">Hacé clic o arrastrá una imagen</span>
+                        <span class="file-upload-zone__hint">JPG, PNG o WEBP</span>
+                    </div>
+                </div>
                 @error('imagen_destacada') <small class="auth-error">{{ $message }}</small> @enderror
             </div>
 
@@ -133,7 +141,15 @@
 
             <div class="admin-form-group full">
                 <label for="archivos">Archivos adjuntos</label>
-                <input type="file" name="archivos[]" id="archivos" multiple accept=".pdf,.doc,.docx,.xls,.xlsx">
+                <div class="file-upload-zone file-upload-zone--files" id="zona-archivos">
+                    <input type="file" name="archivos[]" id="archivos" multiple accept=".pdf,.doc,.docx,.xls,.xlsx" class="file-upload-zone__input">
+                    <div class="file-upload-zone__body">
+                        <i class="fa-solid fa-paperclip file-upload-zone__icon"></i>
+                        <span class="file-upload-zone__label">Seleccionar archivos</span>
+                        <span class="file-upload-zone__hint">PDF, DOC, XLS — podés elegir varios</span>
+                    </div>
+                    <ul class="file-upload-zone__list" hidden></ul>
+                </div>
                 @error('archivos.*') <small class="auth-error">{{ $message }}</small> @enderror
             </div>
         </div>

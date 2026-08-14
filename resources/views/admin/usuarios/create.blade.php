@@ -16,10 +16,16 @@
         @csrf
 
         <div class="admin-form-grid">
-            <div class="admin-form-group full">
+            <div class="admin-form-group">
                 <label for="name">Nombre</label>
                 <input type="text" name="name" id="name" value="{{ old('name') }}" required>
                 @error('name') <small class="auth-error">{{ $message }}</small> @enderror
+            </div>
+
+            <div class="admin-form-group">
+                <label for="apellido">Apellido</label>
+                <input type="text" name="apellido" id="apellido" value="{{ old('apellido') }}" required>
+                @error('apellido') <small class="auth-error">{{ $message }}</small> @enderror
             </div>
 
             <div class="admin-form-group full">

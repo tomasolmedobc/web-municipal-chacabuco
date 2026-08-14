@@ -4,6 +4,10 @@
 @section('meta_description', 'Directorio de teléfonos y contactos útiles de la Municipalidad de Chacabuco y organismos locales.')
 
 @section('content')
+<x-breadcrumb :items="[
+    ['label' => 'Inicio',          'url' => route('home')],
+    ['label' => 'Teléfonos Útiles'],
+]" />
 
 <section class="tel-hero">
     <div class="tel-hero__inner">

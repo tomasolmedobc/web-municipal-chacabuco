@@ -8,6 +8,7 @@ use App\Models\CarnetConfiguracion;
 use App\Models\CarnetMaterial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class CarnetAdminController extends Controller
 {
@@ -109,7 +110,7 @@ class CarnetAdminController extends Controller
         unset($data['pdf']);
 
         if ($request->hasFile('pdf')) {
-            $this->eliminarPdfAnterior($material->id);
+            $this->eliminarPdfAnterior($material->url);
             $data['url'] = $this->guardarPdf($request->file('pdf'), $material->id);
         }
 
@@ -123,7 +124,7 @@ class CarnetAdminController extends Controller
 
     public function destroyMaterial(CarnetMaterial $material)
     {
-        $this->eliminarPdfAnterior($material->id);
+        $this->eliminarPdfAnterior($material->url);
 
         $titulo = $material->titulo;
         $id     = $material->id;
@@ -150,15 +151,19 @@ class CarnetAdminController extends Controller
         $directorio = public_path(self::PDF_DIR);
         File::ensureDirectoryExists($directorio);
 
-        $nombreFinal = "carnet_material_{$id}.pdf";
+        $nombreFinal = "carnet_material_{$id}_" . Str::random(12) . '.pdf';
         $archivo->move($directorio, $nombreFinal);
 
         return '/' . self::PDF_DIR . '/' . $nombreFinal;
     }
 
-    private function eliminarPdfAnterior(int $id): void
+    private function eliminarPdfAnterior(?string $urlActual): void
     {
-        $ruta = public_path(self::PDF_DIR . "/carnet_material_{$id}.pdf");
+        if (! $urlActual || ! str_starts_with($urlActual, '/' . self::PDF_DIR . '/')) {
+            return;
+        }
+
+        $ruta = public_path(self::PDF_DIR . '/' . basename($urlActual));
         if (File::exists($ruta)) {
             File::delete($ruta);
         }

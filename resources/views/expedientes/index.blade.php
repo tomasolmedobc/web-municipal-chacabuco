@@ -3,6 +3,11 @@
 @section('title', 'Consulta de Expedientes')
 
 @section('content')
+<x-breadcrumb :items="[
+    ['label' => 'Inicio',              'url' => route('home')],
+    ['label' => 'Trámites y Servicios','url' => route('tramites-servicios.index')],
+    ['label' => 'Expedientes Municipales'],
+]" />
 <section class="exp-hero">
     <span class="section-badge">Tramites</span>
     <h1>Consulta de Expedientes</h1>

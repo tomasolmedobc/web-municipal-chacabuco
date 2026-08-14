@@ -98,6 +98,7 @@ Route::get('/tramites-y-servicios/expedientes', [ExpedienteConsultaController::c
     ->name('expedientes.index');
 
 Route::post('/tramites-y-servicios/expedientes', [ExpedienteConsultaController::class, 'consultar'])
+    ->middleware('throttle:10,1')
     ->name('expedientes.consultar');
 
 Route::get('/tramites-y-servicios/habilitaciones', [HabilitacionesController::class, 'index'])
@@ -107,6 +108,7 @@ Route::get('/tramites-y-servicios/infracciones', [InfraccionesController::class,
     ->name('infracciones.index');
 
 Route::post('/tramites-y-servicios/infracciones', [InfraccionesController::class, 'consultar'])
+    ->middleware('throttle:10,1')
     ->name('infracciones.consultar');
 
 Route::get('/tramites-y-servicios/infracciones/cedula/{falta}', [InfraccionesController::class, 'cedula'])
@@ -114,21 +116,25 @@ Route::get('/tramites-y-servicios/infracciones/cedula/{falta}', [InfraccionesCon
     ->name('infracciones.cedula');
 
 Route::post('/tramites-y-servicios/infracciones/libre-deuda', [InfraccionesController::class, 'libreDeuda'])
+    ->middleware('throttle:5,1')
     ->name('infracciones.libre-deuda');
 
 Route::get('/tramites-y-servicios/reclamos', [ReclamosController::class, 'index'])
     ->name('reclamos.index');
 
 Route::post('/tramites-y-servicios/reclamos', [ReclamosController::class, 'store'])
+    ->middleware('throttle:5,1')
     ->name('reclamos.store');
 
 Route::post('/tramites-y-servicios/reclamos/consulta', [ReclamosController::class, 'consultar'])
+    ->middleware('throttle:10,1')
     ->name('reclamos.consultar');
 
 Route::get('/tramites-y-servicios/omic', [OmicController::class, 'index'])
     ->name('omic.index');
 
 Route::post('/tramites-y-servicios/omic', [OmicController::class, 'store'])
+    ->middleware('throttle:3,1')
     ->name('omic.store');
 
 Route::get('/turismo/eventos-proximos', [TurismoController::class, 'eventosProximos'])

@@ -3,6 +3,11 @@
 @section('title', $localidad->nombre . ' - Turismo')
 
 @section('content')
+<x-breadcrumb :items="[
+    ['label' => 'Inicio', 'url' => route('home')],
+    ['label' => 'Turismo','url' => route('turismo.index')],
+    ['label' => $localidad->nombre],
+]" />
 <section class="turismo-show-hero" style="background-image: linear-gradient(135deg, rgba(15,23,42,.55), rgba(15,23,42,.35)), url('{{ $localidad->imagen_portada_url }}');">
     <div>
         <span class="section-badge">{{ $localidad->es_cabecera ? 'Ciudad cabecera' : 'Delegación' }}</span>

@@ -50,10 +50,10 @@
                 <p>Accedé a gestiones y trámites municipales.</p>
             </a>
 
-            <a href="{{ route('tramites-servicios.index') }}" class="quick-card">
-                <span class="quick-card__icon">🛠️</span>
-                <h3>Servicios</h3>
-                <p>Información útil para vecinos y vecinas.</p>
+            <a href="{{ route('turismo.index') }}" class="quick-card">
+                <span class="quick-card__icon">🗺️</span>
+                <h3>Turismo</h3>
+                <p>Localidades, eventos y atractivos del partido de Chacabuco.</p>
             </a>
 
             <a href="{{ route('gobierno-abierto.index') }}" class="quick-card">
@@ -87,8 +87,7 @@
         <section class="home-featured">
             <div class="section-heading section-heading--between">
                 <div>
-                    <span class="section-badge">Noticia destacada</span>
-                    <h2>Información destacada</h2>
+                    <h2>Noticia destacada</h2>
                     <p>El comunicado principal seleccionado por el municipio.</p>
                 </div>
             </div>
@@ -101,7 +100,6 @@
                 <div class="hero-body">
                     <div class="hero-top">
                         <span class="badge-destacada">DESTACADA</span>
-                        <span class="hero-badge">Principal</span>
                     </div>
 
                     @if ($noticiaDestacada->categorias->count())

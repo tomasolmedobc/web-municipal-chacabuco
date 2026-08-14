@@ -3,6 +3,11 @@
 @section('title', $contenido['titulo'] ?? 'Habilitaciones')
 
 @section('content')
+<x-breadcrumb :items="[
+    ['label' => 'Inicio',              'url' => route('home')],
+    ['label' => 'Trámites y Servicios','url' => route('tramites-servicios.index')],
+    ['label' => 'Habilitaciones Comerciales'],
+]" />
 <section class="hab-hero">
     <div>
         <span class="section-badge">Tramites</span>

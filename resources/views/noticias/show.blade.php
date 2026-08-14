@@ -4,7 +4,11 @@
 @section('og_image', $noticia->imagen_destacada_url)
 @section('content')
     <div class="detalle">
-        <a href="{{ url('/noticias') }}" class="volver">← Volver al listado</a>
+        <x-breadcrumb :items="[
+            ['label' => 'Inicio',  'url' => route('home')],
+            ['label' => 'Noticias','url' => route('noticias.index')],
+            ['label' => $noticia->titulo],
+        ]" />
 
         <h1>{{ $noticia->titulo }}</h1>
 

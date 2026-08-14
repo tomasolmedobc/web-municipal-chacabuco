@@ -27,7 +27,7 @@ class PopupAdminController extends Controller
         $request->validate([
             'popup_imagen'      => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
             'popup_boton_texto' => ['nullable', 'string', 'max:60'],
-            'popup_boton_url'   => ['nullable', 'string', 'max:2048'],
+            'popup_boton_url'   => ['nullable', 'url:http,https', 'max:2048'],
         ]);
 
         $this->guardarClave('popup_activo', $request->boolean('popup_activo') ? '1' : '0');

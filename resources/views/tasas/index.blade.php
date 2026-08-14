@@ -4,6 +4,10 @@
 @section('meta_description', 'Información sobre tasas municipales, fechas de vencimiento, formas de pago y ordenanzas impositivas. Municipalidad de Chacabuco.')
 
 @section('content')
+<x-breadcrumb :items="[
+    ['label' => 'Inicio',            'url' => route('home')],
+    ['label' => 'Tasas Municipales'],
+]" />
 
 {{-- Hero --}}
 <div class="tasas-hero">

@@ -84,12 +84,14 @@
     transition: width 0.22s ease;
 }
 
-.site-nav a:hover {
+.site-nav a:hover,
+.site-nav a.is-active {
     color: var(--primary);
     opacity: 1;
 }
 
-.site-nav a:hover::after {
+.site-nav a:hover::after,
+.site-nav a.is-active::after {
     width: 100%;
 }
 

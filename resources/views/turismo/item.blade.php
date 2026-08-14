@@ -3,6 +3,12 @@
 @section('title', $item->titulo . ' — Turismo')
 
 @section('content')
+<x-breadcrumb :items="[
+    ['label' => 'Inicio', 'url' => route('home')],
+    ['label' => 'Turismo','url' => route('turismo.index')],
+    ['label' => $localidad->nombre, 'url' => route('turismo.show', $localidad->slug)],
+    ['label' => $item->titulo],
+]" />
 @php
     $imagenHeader = $item->galeria->firstWhere('es_header', true);
     $heroUrl = $imagenHeader

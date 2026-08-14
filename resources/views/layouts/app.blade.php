@@ -40,27 +40,39 @@
                     <h3>Municipalidad de Chacabuco</h3>
                     <p>
                         Portal oficial del municipio. Información institucional, noticias, trámites y servicios
-                        para la comunidad.
+                        para la comunidad de Chacabuco, Buenos Aires.
                     </p>
                 </div>
 
                 <div>
                     <h4>Contacto</h4>
-                    <p>Reconquista 26, Chacabuco</p>
-                    <p>02352 470300</p>
+                    <p>Reconquista 26, Chacabuco, BA</p>
+                    <p>(02352) 470300</p>
                     <p>contacto@chacabuco.gob.ar</p>
+                    <p>Lunes a viernes, 7:00 a 13:00 hs</p>
                 </div>
 
                 <div>
-                    <h4>Enlaces útiles</h4>
+                    <h4>Navegación</h4>
                     <p><a href="{{ route('noticias.index') }}">Noticias</a></p>
-                    <p><a href="{{ route('tramites-servicios.index') }}">Tramites</a></p>
-                    <p><a href="{{ route('tramites-servicios.index') }}">Servicios</a></p>
+                    <p><a href="{{ route('gobierno-abierto.index') }}">Gobierno Abierto</a></p>
+                    <p><a href="{{ route('tramites-servicios.index') }}">Trámites y Servicios</a></p>
+                    <p><a href="{{ route('turismo.index') }}">Turismo</a></p>
+                    <p><a href="{{ route('baile-egresados.index') }}">Baile de Egresados</a></p>
+                </div>
+
+                <div>
+                    <h4>Servicios rápidos</h4>
+                    <p><a href="{{ route('telefonos-utiles.index') }}">Teléfonos Útiles</a></p>
+                    <p><a href="{{ route('tasas.index') }}">Tasas Municipales</a></p>
+                    <p><a href="{{ route('habilitaciones.index') }}">Habilitaciones</a></p>
+                    <p><a href="{{ route('carnet.index') }}">Carnet de Conducir</a></p>
+                    <p><a href="{{ route('proveedores.index') }}">Proveedores</a></p>
                 </div>
             </div>
 
             <div class="site-footer__bottom">
-                © {{ date('Y') }} Municipalidad de Chacabuco - Todos los derechos reservados
+                © {{ date('Y') }} Municipalidad de Chacabuco — Todos los derechos reservados
             </div>
         </footer>
     </div>
@@ -282,20 +294,38 @@
     function mostrar(eventos) {
         if (!eventos.length) return;
 
-        body.innerHTML = eventos.map(ev => {
+        body.replaceChildren(...eventos.map(ev => {
             const fecha = formatFecha(ev.fecha_inicio, ev.fecha_fin);
             const hora  = ev.hora_inicio ? ev.hora_inicio + ' hs' : '';
-            const href  = '/turismo/' + (ev.slug_localidad || '') + '?tipo=evento';
-            return `<a href="${href}" class="evento-reminder__item">
-                        <span class="evento-reminder__nombre">${ev.titulo}</span>
-                        <span class="evento-reminder__meta">
-                            <span class="evento-reminder__localidad">
-                                <i class="fa-solid fa-location-dot"></i> ${ev.localidad}
-                            </span>
-                            ${fecha ? `<span class="evento-reminder__fecha">${hora ? hora + ' · ' : ''}${fecha}</span>` : (hora ? `<span class="evento-reminder__fecha">${hora}</span>` : '')}
-                        </span>
-                    </a>`;
-        }).join('');
+
+            const a = document.createElement('a');
+            a.href      = '/turismo/' + encodeURIComponent(ev.slug_localidad || '') + '?tipo=evento';
+            a.className = 'evento-reminder__item';
+
+            const nombre = document.createElement('span');
+            nombre.className   = 'evento-reminder__nombre';
+            nombre.textContent = ev.titulo;
+
+            const meta = document.createElement('span');
+            meta.className = 'evento-reminder__meta';
+
+            const loc  = document.createElement('span');
+            loc.className = 'evento-reminder__localidad';
+            const icon = document.createElement('i');
+            icon.className = 'fa-solid fa-location-dot';
+            loc.append(icon, ' ', String(ev.localidad || ''));
+            meta.appendChild(loc);
+
+            if (fecha || hora) {
+                const fechaSpan = document.createElement('span');
+                fechaSpan.className   = 'evento-reminder__fecha';
+                fechaSpan.textContent = hora ? hora + (fecha ? ' · ' + fecha : '') : fecha;
+                meta.appendChild(fechaSpan);
+            }
+
+            a.append(nombre, meta);
+            return a;
+        }));
 
         card.hidden = false;
         requestAnimationFrame(() => {
