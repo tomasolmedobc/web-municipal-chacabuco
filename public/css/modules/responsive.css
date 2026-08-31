@@ -230,21 +230,6 @@
         font-size: 17px;
     }
 
-    /* nav: scroll horizontal en lugar de apilar filas */
-    .site-nav {
-        overflow-x: auto;
-        flex-wrap: nowrap;
-        gap: 18px;
-        padding-bottom: 4px;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-    }
-    .site-nav::-webkit-scrollbar { display: none; }
-    .site-nav a {
-        white-space: nowrap;
-        flex-shrink: 0;
-    }
-
     /* user-box: apilar info + botones verticalmente en móvil */
     .user-box {
         flex-direction: column;

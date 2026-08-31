@@ -94,7 +94,8 @@ class ImageUploader
         $anio = now()->format('Y');
         $mes  = now()->format('m');
 
-        $directorioOriginal = public_path("uploads_originales/{$carpeta}/{$anio}/{$mes}");
+        // Originales fuera de public/ — no accesibles por URL directa
+        $directorioOriginal = storage_path("app/private/uploads_originales/{$carpeta}/{$anio}/{$mes}");
         $directorioWebp     = public_path("images/{$carpeta}/{$anio}/{$mes}");
 
         File::ensureDirectoryExists($directorioOriginal);

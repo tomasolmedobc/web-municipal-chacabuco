@@ -59,6 +59,9 @@ class LicitacionAdminController extends Controller
         $data = $request->validated();
         $data['orden'] = (int) ($data['orden'] ?? 0);
         $data['link_externo'] = $data['link_externo'] ?? null;
+        if (empty($data['anio']) && ! empty($data['fecha_publicacion'])) {
+            $data['anio'] = date('Y', strtotime($data['fecha_publicacion']));
+        }
 
         $documento = new Licitacion();
         $documento->fill($data);
@@ -91,6 +94,9 @@ class LicitacionAdminController extends Controller
         $data = $request->validated();
         $data['orden'] = (int) ($data['orden'] ?? 0);
         $data['link_externo'] = $data['link_externo'] ?? null;
+        if (empty($data['anio']) && ! empty($data['fecha_publicacion'])) {
+            $data['anio'] = date('Y', strtotime($data['fecha_publicacion']));
+        }
 
         $licitacion->fill($data);
         $licitacion->save();

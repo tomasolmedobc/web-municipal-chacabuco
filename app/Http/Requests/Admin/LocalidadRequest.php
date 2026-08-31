@@ -14,6 +14,7 @@ class LocalidadRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'nombre'         => ['sometimes', 'required', 'string', 'max:255'],
             'historia'       => ['nullable', 'string'],
             'descripcion'    => ['nullable', 'string', 'max:1000'],
             'imagen_portada' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],

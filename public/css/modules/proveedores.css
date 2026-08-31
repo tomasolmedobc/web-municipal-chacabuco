@@ -44,7 +44,7 @@
 }
 
 .accordion-item {
-    background: var(--card-soft);
+    background: var(--bg);
     border: 1px solid var(--border);
     border-radius: 16px;
     overflow: hidden;

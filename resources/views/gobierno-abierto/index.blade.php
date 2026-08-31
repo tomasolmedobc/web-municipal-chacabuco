@@ -56,7 +56,7 @@
 @endsection
 
 @push('scripts')
-<script>
+<script @nonce>
 document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('ga-search');
     const cards = document.querySelectorAll('.ga-card');

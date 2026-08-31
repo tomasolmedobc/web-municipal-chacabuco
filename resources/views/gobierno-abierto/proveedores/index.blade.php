@@ -287,10 +287,17 @@
     </div>
 </div>
 
+<section class="volver-ts">
+    <a href="{{ route('gobierno-abierto.index') }}" class="btn btn-secondary">
+        <i class="fa-solid fa-arrow-left"></i>
+        Volver a Gobierno Abierto
+    </a>
+</section>
+
 @endsection
 
 @push('scripts')
-<script>
+<script @nonce>
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('proveedores-image-modal');
     const modalImage = document.getElementById('proveedores-modal-image');

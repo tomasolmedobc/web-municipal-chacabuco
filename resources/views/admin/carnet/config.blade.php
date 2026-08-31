@@ -126,7 +126,7 @@
 @endsection
 
 @push('scripts_head')
-<script>
+<script @nonce>
 document.addEventListener('DOMContentLoaded', function () {
     if (typeof tinymce === 'undefined') return;
 
@@ -140,7 +140,6 @@ document.addEventListener('DOMContentLoaded', function () {
     ids.forEach(function (id) {
         tinymce.init({
             selector: '#' + id,
-            license_key: 'gpl',
             language: 'es',
             height: id === 'licencia_digital_contenido' ? 400 : 320,
             plugins: 'lists link table',
@@ -158,7 +157,6 @@ document.addEventListener('DOMContentLoaded', function () {
     idsSimples.forEach(function (id) {
         tinymce.init({
             selector: '#' + id,
-            license_key: 'gpl',
             language: 'es',
             height: 120,
             plugins: 'link',

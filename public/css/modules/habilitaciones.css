@@ -7,26 +7,6 @@
     justify-content: space-between;
     gap: 22px;
     align-items: flex-end;
-    background: linear-gradient(135deg, var(--primary-soft), var(--card));
-    border: 1px solid var(--border);
-    border-radius: 22px;
-    padding: 36px;
-    box-shadow: var(--shadow);
-}
-
-.hab-hero h1 {
-    margin: 0 0 14px;
-    font-size: clamp(34px, 5vw, 48px);
-    font-weight: 900;
-    line-height: 1.05;
-}
-
-.hab-hero p {
-    max-width: 780px;
-    margin: 0;
-    color: var(--muted);
-    font-size: 18px;
-    line-height: 1.7;
 }
 
 .hab-hero .btn {
@@ -158,7 +138,7 @@
 .hab-collapse {
     border: 1px solid var(--border);
     border-radius: 14px;
-    background: var(--card-soft);
+    background: var(--bg);
     overflow: hidden;
 }
 
@@ -366,6 +346,54 @@
     .hab-file-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
+}
+
+/* Normativas Vigentes — lista estilo web antigua */
+.hab-normativas-lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.hab-normativas-item {
+    margin: 0;
+}
+
+.hab-normativas-link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 6px 4px;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: .95rem;
+    border-radius: 4px;
+    transition: background .15s;
+}
+
+.hab-normativas-link:hover {
+    background: var(--primary-light, rgba(0,90,200,.07));
+    text-decoration: underline;
+}
+
+.hab-normativas-link--sin-archivo {
+    color: var(--text-muted);
+    cursor: default;
+}
+
+.hab-normativas-link i {
+    font-size: .85rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.hab-normativas-codigo {
+    color: var(--text-muted);
+    font-size: .85rem;
+    margin-left: 2px;
 }
 
 @media (max-width: 780px) {

@@ -19,9 +19,9 @@ class HabilitacionDocumento extends Model
             'icono' => 'fa-file-pdf',
         ],
         self::SECCION_ORDENANZAS => [
-            'titulo' => 'Ordenanzas',
-            'singular' => 'ordenanza',
-            'descripcion' => 'Normativa de referencia para rubros y habilitaciones.',
+            'titulo' => 'Normativas Vigentes',
+            'singular' => 'normativa',
+            'descripcion' => 'Ordenanzas, leyes y disposiciones vigentes vinculadas a habilitaciones comerciales.',
             'icono' => 'fa-scale-balanced',
         ],
     ];

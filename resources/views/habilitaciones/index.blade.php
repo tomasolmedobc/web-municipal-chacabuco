@@ -130,62 +130,69 @@
     </div>
 </section>
 
-<section class="hab-ordinances">
+<section class="hab-ordinances" id="normativas">
     <div class="section-heading">
-        <h2>Listado de ordenanzas de referencia</h2>
-        <p>Normativa vinculada a rubros y actividades comerciales.</p>
+        <h2>Normativas Vigentes</h2>
+        <p>Ordenanzas, leyes y disposiciones vinculadas a habilitaciones comerciales.</p>
     </div>
 
-    <form method="GET" action="{{ route('habilitaciones.index') }}#ordenanzas" class="hab-ordinances-search" id="ordenanzas">
+    <form method="GET" action="{{ route('habilitaciones.index') }}#normativas" class="hab-ordinances-search">
         <label>
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="search"
                    name="ordenanza"
                    value="{{ $busquedaOrdenanzas }}"
-                   placeholder="Buscar por nombre, numero o año">
+                   placeholder="Buscar normativa...">
         </label>
 
         <button type="submit" class="btn btn-primary">Buscar</button>
 
         @if($busquedaOrdenanzas)
-            <a href="{{ route('habilitaciones.index') }}#ordenanzas" class="btn btn-secondary">
+            <a href="{{ route('habilitaciones.index') }}#normativas" class="btn btn-secondary">
                 Limpiar
             </a>
         @endif
     </form>
 
     @if($ordenanzasAdmin->count())
-        <div class="hab-ordinances-grid">
-            @foreach($ordenanzasAdmin as $ordenanza)
-                <a href="{{ $ordenanza->archivo_ruta ?: $ordenanza->link_externo }}"
-                   class="hab-ordinance-card"
-                   target="_blank"
-                   rel="noopener">
-                    <span class="hab-ordinance-card__number">
-                        {{ $ordenanza->numero }}
-                    </span>
-
-                    <strong>{{ $ordenanza->titulo }}</strong>
-
-                    <span>
-                        {{ $ordenanza->categoria ?: 'Ordenanza' }}
-                        @if($ordenanza->anio)
-                            - {{ $ordenanza->anio }}
-                        @endif
-                    </span>
-                </a>
+        <ul class="hab-normativas-lista">
+            @foreach($ordenanzasAdmin as $normativa)
+                @php $href = $normativa->archivo_ruta ?: $normativa->link_externo; @endphp
+                <li class="hab-normativas-item">
+                    @if($href)
+                        <a href="{{ $href }}" target="_blank" rel="noopener" class="hab-normativas-link">
+                            <i class="fa-regular fa-file-pdf"></i>
+                            <span>{{ $normativa->titulo }}@if($normativa->numero) <span class="hab-normativas-codigo">({{ $normativa->numero }})</span>@endif</span>
+                        </a>
+                    @else
+                        <span class="hab-normativas-link hab-normativas-link--sin-archivo">
+                            <i class="fa-regular fa-file-pdf"></i>
+                            <span>{{ $normativa->titulo }}@if($normativa->numero) <span class="hab-normativas-codigo">({{ $normativa->numero }})</span>@endif</span>
+                        </span>
+                    @endif
+                </li>
             @endforeach
-        </div>
+        </ul>
     @elseif($busquedaOrdenanzas)
-        <div class="hab-empty">
-            No se encontraron ordenanzas con esa busqueda.
-        </div>
+        <div class="hab-empty">No se encontraron normativas con esa búsqueda.</div>
     @else
-        <ul>
-            @foreach($contenido['ordenanzas'] as $ordenanza)
-                <li>{{ $ordenanza }}</li>
+        <ul class="hab-normativas-lista">
+            @foreach($contenido['ordenanzas'] as $ord)
+                <li class="hab-normativas-item">
+                    <span class="hab-normativas-link hab-normativas-link--sin-archivo">
+                        <i class="fa-regular fa-file-pdf"></i>
+                        <span>{{ $ord }}</span>
+                    </span>
+                </li>
             @endforeach
         </ul>
     @endif
+</section>
+
+<section class="volver-ts">
+    <a href="{{ route('tramites-servicios.index') }}" class="btn btn-secondary">
+        <i class="fa-solid fa-arrow-left"></i>
+        Volver a Trámites y Servicios
+    </a>
 </section>
 @endsection

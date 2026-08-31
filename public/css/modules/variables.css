@@ -2,8 +2,10 @@
     VARIABLES
 ========================= */
 :root {
+    --font-body: 'Lato', system-ui, -apple-system, Arial, sans-serif;
+    --font-display: 'Lato', system-ui, -apple-system, Arial, sans-serif;
+
     --bg: #f3f4f6;
-    --bg-2: #f3f4f6;
 
     --card: #ffffff;
     --card-soft: #f8fafc;
@@ -42,6 +44,10 @@
 
     --border: #e2e8f0;
 
+    /* Aliases de compatibilidad */
+    --text-muted: var(--muted);
+    --primary-light: var(--primary-soft);
+
     --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
     --shadow-hover: 0 14px 30px rgba(15,23,42,.10);
     --shadow-hero: 0 18px 38px rgba(15,23,42,.12);
@@ -51,7 +57,6 @@
 
 body.dark {
     --bg: #0b1220;
-    --bg-2: #4e5c76;
     --card: #111827;
     --card-soft: #1f2937;
     --hover: #1f2937;

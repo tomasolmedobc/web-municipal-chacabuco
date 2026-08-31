@@ -17,6 +17,10 @@
             Nuevo {{ $config['singular'] }}
         </a>
 
+        <a href="{{ route('admin.habilitaciones.config') }}" class="btn btn-secondary">
+            Configuración
+        </a>
+
         <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">
             Volver
         </a>
@@ -52,7 +56,7 @@
 </form>
 
 @if(session('ok'))
-    <script>
+    <script @nonce>
         document.addEventListener('DOMContentLoaded', function () {
             showToast(@json(session('ok')), 'success');
         });

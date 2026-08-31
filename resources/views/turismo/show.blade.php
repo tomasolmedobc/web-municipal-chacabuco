@@ -130,7 +130,7 @@
 </section>
 
 @push('scripts')
-<script>
+<script @nonce>
 (function () {
     const tabs   = document.querySelectorAll('.js-turismo-tab');
     const grupos = document.querySelectorAll('.js-turismo-grupo');

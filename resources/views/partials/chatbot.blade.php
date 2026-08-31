@@ -29,7 +29,7 @@
     </form>
 </div>
 
-<script>
+<script @nonce>
 (function () {
     const ENDPOINT = '{{ route("chatbot.responder") }}';
     const TOKEN    = document.querySelector('meta[name="csrf-token"]').getAttribute('content');

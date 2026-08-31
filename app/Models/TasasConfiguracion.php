@@ -2,11 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\SanitizesRichText;
 use Illuminate\Database\Eloquent\Model;
 
 class TasasConfiguracion extends Model
 {
+    use SanitizesRichText;
+
     protected $table = 'tasas_configuracion';
+
+    protected array $richTextFields = [
+        'texto_pago_anual', 'texto_plan_facilidades', 'texto_info_bancaria',
+    ];
 
     protected $fillable = [
         'texto_pago_anual', 'texto_plan_facilidades', 'texto_info_bancaria',

@@ -40,18 +40,32 @@ class TasasCuotaAdminController extends Controller
     {
         $data = $request->validate([
             'grupo_id'          => ['required', 'exists:tasas_grupos,id'],
-            'cuota_label'       => ['required', 'string', 'max:100'],
+            'cuota_label'       => ['nullable', 'string', 'max:100'],
             'fecha_vencimiento' => ['required', 'date'],
-            'orden'             => ['required', 'integer', 'min:0', 'max:999'],
             'estado'            => ['required', 'in:visible,oculto'],
         ]);
+
+        // Auto-orden: siguiente al máximo existente para el grupo
+        $data['orden'] = (TasasCuota::where('grupo_id', $data['grupo_id'])->max('orden') ?? -1) + 1;
+
+        // Auto-etiqueta si el usuario no la escribió
+        if (empty($data['cuota_label'])) {
+            $year  = date('Y', strtotime($data['fecha_vencimiento']));
+            $nth   = TasasCuota::where('grupo_id', $data['grupo_id'])
+                        ->whereYear('fecha_vencimiento', $year)
+                        ->count() + 1;
+            $data['cuota_label'] = "Cuota {$nth}/{$year}";
+        }
 
         $cuota = TasasCuota::create($data);
 
         AuditLog::registrar('crear', 'TasasCuota', $cuota->id, "Cuota creada: {$cuota->cuota_label}");
 
-        return redirect()->route('admin.tasas.cuotas.index', ['grupo_id' => $cuota->grupo_id])
-            ->with('ok', 'Cuota creada correctamente.');
+        $fromGrupo = $request->boolean('_from_grupo');
+
+        return $fromGrupo
+            ? redirect()->route('admin.tasas.grupos.show', $cuota->grupo_id)->with('ok', 'Vencimiento agregado.')
+            : redirect()->route('admin.tasas.cuotas.index', ['grupo_id' => $cuota->grupo_id])->with('ok', 'Cuota creada correctamente.');
     }
 
     public function edit(TasasCuota $cuota)
@@ -76,8 +90,8 @@ class TasasCuotaAdminController extends Controller
 
         AuditLog::registrar('editar', 'TasasCuota', $cuota->id, "Cuota editada: {$cuota->cuota_label}");
 
-        return redirect()->route('admin.tasas.cuotas.index', ['grupo_id' => $cuota->grupo_id])
-            ->with('ok', 'Cuota actualizada correctamente.');
+        return redirect()->route('admin.tasas.grupos.show', $cuota->grupo_id)
+            ->with('ok', 'Vencimiento actualizado.');
     }
 
     public function destroy(TasasCuota $cuota)
@@ -89,7 +103,7 @@ class TasasCuotaAdminController extends Controller
         AuditLog::registrar('eliminar', 'TasasCuota', $id, "Cuota eliminada: {$label}");
         $cuota->delete();
 
-        return redirect()->route('admin.tasas.cuotas.index', ['grupo_id' => $grupoId])
-            ->with('ok', "Cuota \"{$label}\" eliminada.");
+        return redirect()->route('admin.tasas.grupos.show', $grupoId)
+            ->with('ok', "Vencimiento \"{$label}\" eliminado.");
     }
 }

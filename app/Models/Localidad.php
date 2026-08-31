@@ -2,11 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\SanitizesRichText;
 use Illuminate\Database\Eloquent\Model;
 
 class Localidad extends Model
 {
+    use SanitizesRichText;
+
     protected $table = 'localidades';
+
+    protected array $richTextFields = ['historia'];
 
     protected $fillable = [
         'nombre',

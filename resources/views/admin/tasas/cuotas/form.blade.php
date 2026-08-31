@@ -8,7 +8,11 @@
         <h2 class="seccion-titulo">{{ $cuota ? 'Editar cuota' : 'Nueva cuota' }}</h2>
         <p class="admin-subtitle">Fecha de vencimiento para un grupo de tasa.</p>
     </div>
-    <a href="{{ route('admin.tasas.cuotas.index') }}" class="btn btn-secondary">Volver</a>
+    @if($cuota)
+        <a href="{{ route('admin.tasas.grupos.show', $cuota->grupo_id) }}" class="btn btn-secondary">Volver</a>
+    @else
+        <a href="{{ route('admin.tasas.grupos.index') }}" class="btn btn-secondary">Volver</a>
+    @endif
 </section>
 
 @if($errors->any())
@@ -24,6 +28,7 @@
       class="admin-form-card">
     @csrf
     @if($cuota) @method('PUT') @endif
+    <input type="hidden" name="orden" value="{{ $cuota?->orden ?? 0 }}">
 
     <div class="admin-form-grid">
         <div class="admin-form-group full">
@@ -54,13 +59,6 @@
                    value="{{ old('fecha_vencimiento', $cuota?->fecha_vencimiento?->format('Y-m-d')) }}"
                    required class="campo-input">
             @error('fecha_vencimiento') <small class="auth-error">{{ $message }}</small> @enderror
-        </div>
-
-        <div class="admin-form-group">
-            <label class="campo-label" for="orden">Orden</label>
-            <input type="number" name="orden" id="orden" min="0" max="999"
-                   value="{{ old('orden', $cuota?->orden ?? 0) }}" class="campo-input">
-            @error('orden') <small class="auth-error">{{ $message }}</small> @enderror
         </div>
 
         <div class="admin-form-group">

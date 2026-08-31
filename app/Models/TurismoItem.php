@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\SanitizesRichText;
 use Illuminate\Database\Eloquent\Model;
 
 class TurismoItem extends Model
 {
+    use SanitizesRichText;
+
+    protected array $richTextFields = ['descripcion'];
     protected $table = 'turismo_items';
 
     public const TIPO_ATRACTIVO = 'atractivo';

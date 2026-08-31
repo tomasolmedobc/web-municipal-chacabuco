@@ -33,7 +33,7 @@ class LicitacionRequest extends FormRequest
                 'nullable',
                 'file',
                 $esBoton ? 'mimes:pdf,doc,docx,xls,xlsx' : 'mimes:pdf',
-                'max:10240',
+                'max:51200',
             ],
         ];
     }

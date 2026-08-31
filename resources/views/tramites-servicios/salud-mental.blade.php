@@ -112,7 +112,7 @@
 @endsection
 
 @push('scripts')
-<script>
+<script @nonce>
 document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('sm-search');
     const cards = document.querySelectorAll('#sm-grid .sm-card');

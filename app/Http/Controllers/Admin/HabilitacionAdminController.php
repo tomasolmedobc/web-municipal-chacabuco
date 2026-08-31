@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
+use App\Models\Configuracion;
 use App\Models\HabilitacionDocumento;
 use App\Http\Requests\Admin\HabilitacionRequest;
 use Illuminate\Http\Request;
@@ -104,6 +105,42 @@ class HabilitacionAdminController extends Controller
             ->with('ok', ucfirst(HabilitacionDocumento::configSeccion($habilitacion->seccion)['singular']) . ' actualizado correctamente');
     }
 
+    public function config()
+    {
+        return view('admin.habilitaciones.config', [
+            'url_prefactibilidad' => config_sistema('hab_tramite_prefactibilidad_url', ''),
+            'url_habilitacion'    => config_sistema('hab_tramite_habilitacion_url', ''),
+        ]);
+    }
+
+    public function configUpdate(Request $request)
+    {
+        $request->validate([
+            'url_prefactibilidad' => ['nullable', 'string', 'max:2048', 'regex:/^(https?:\/\/|\/)/'],
+            'url_habilitacion'    => ['nullable', 'string', 'max:2048', 'regex:/^(https?:\/\/|\/)/'],
+        ], [
+            'url_prefactibilidad.regex' => 'Debe ser una URL completa (https://...) o una ruta interna (/pagina).',
+            'url_habilitacion.regex'    => 'Debe ser una URL completa (https://...) o una ruta interna (/pagina).',
+        ]);
+
+        $this->guardarClave('hab_tramite_prefactibilidad_url', trim($request->input('url_prefactibilidad', '')));
+        $this->guardarClave('hab_tramite_habilitacion_url',    trim($request->input('url_habilitacion', '')));
+
+        AuditLog::registrar('editar', 'Habilitaciones', null, 'URLs de trámites online de habilitaciones actualizadas');
+
+        return back()->with('ok', 'URLs actualizadas correctamente');
+    }
+
+    private function guardarClave(string $clave, string $valor): void
+    {
+        if ($valor !== '') {
+            Configuracion::updateOrCreate(['clave' => $clave], ['valor' => $valor]);
+        } else {
+            Configuracion::where('clave', $clave)->delete();
+        }
+        config_sistema_flush($clave);
+    }
+
     public function destroy(HabilitacionDocumento $habilitacion)
     {
         $seccion = $habilitacion->seccion;
@@ -151,7 +188,7 @@ class HabilitacionAdminController extends Controller
         }
 
         if (($data['seccion'] ?? null) === HabilitacionDocumento::SECCION_ORDENANZAS) {
-            return 'Ordenanza de referencia vinculada a tramites y requisitos de habilitaciones.';
+            return 'Normativa vigente vinculada a habilitaciones comerciales.';
         }
 
         return 'Documento disponible para consultar, descargar o utilizar en tramites de habilitaciones.';

@@ -31,14 +31,14 @@
         <label class="ops-radio-label">
             <input type="radio" name="registro_tipo" value="url"
                 {{ old('registro_tipo', $config->registro_tipo) === 'url' ? 'checked' : '' }}
-                onchange="toggleConfigType(this.value)">
+            >
             Enlace externo (URL)
         </label>
 
         <label class="ops-radio-label" style="margin-top:8px;">
             <input type="radio" name="registro_tipo" value="archivo"
                 {{ old('registro_tipo', $config->registro_tipo) === 'archivo' ? 'checked' : '' }}
-                onchange="toggleConfigType(this.value)">
+            >
             Archivo PDF
         </label>
     </fieldset>
@@ -73,11 +73,14 @@
 @endsection
 
 @push('scripts')
-<script>
+<script @nonce>
 function toggleConfigType(val) {
     document.getElementById('cfg-url').style.display    = val === 'url'     ? '' : 'none';
     document.getElementById('cfg-archivo').style.display = val === 'archivo' ? '' : 'none';
 }
+document.querySelectorAll('input[name="registro_tipo"]').forEach(function (r) {
+    r.addEventListener('change', function () { toggleConfigType(this.value); });
+});
 // Inicializar al cargar
 toggleConfigType(document.querySelector('input[name="registro_tipo"]:checked')?.value ?? 'url');
 </script>

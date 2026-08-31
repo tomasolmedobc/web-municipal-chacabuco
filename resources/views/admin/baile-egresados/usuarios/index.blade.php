@@ -26,7 +26,7 @@
 </form>
 
 @if(session('ok'))
-    <script>document.addEventListener('DOMContentLoaded', () => showToast(@json(session('ok')), 'success'));</script>
+    <script @nonce>document.addEventListener('DOMContentLoaded', () => showToast(@json(session('ok')), 'success'));</script>
 @endif
 
 @if($usuarios->count() === 0)
@@ -50,6 +50,12 @@
             </div>
 
             <div class="admin-actions">
+                @if($usuario->reservas_count > 0)
+                    <a href="{{ route('admin.baile.reservas.index', ['q' => $usuario->nombre_completo]) }}"
+                       class="btn btn-secondary">
+                        Ver reservas ({{ $usuario->reservas_count }})
+                    </a>
+                @endif
                 <a href="{{ route('admin.baile.usuarios.edit', $usuario) }}" class="btn btn-secondary">Editar</a>
 
                 <form action="{{ route('admin.baile.usuarios.destroy', $usuario) }}"

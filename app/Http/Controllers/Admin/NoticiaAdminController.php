@@ -19,25 +19,26 @@ class NoticiaAdminController extends Controller
 {
     public function index(Request $request)
     {
-        $busqueda = $request->get('q');
+        $busqueda   = $request->get('q');
+        $estado     = $request->get('estado');
+        $categoriaId = $request->get('categoria_id');
 
-        $query = Noticia::with('categorias');
-
-        if ($busqueda) {
-            $query->where(function ($q) use ($busqueda) {
-                $q->where('titulo', 'like', '%' . $busqueda . '%')
-                    ->orWhere('contenido', 'like', '%' . $busqueda . '%')
-                    ->orWhere('slug', 'like', '%' . $busqueda . '%')
-                    ->orWhere('autor', 'like', '%' . $busqueda . '%');
-            });
-        }
-
-        $noticias = $query
+        $noticias = Noticia::with('categorias')
+            ->when($busqueda, fn ($q) => $q->where(fn ($q) => $q
+                ->where('titulo', 'like', "%{$busqueda}%")
+                ->orWhere('contenido', 'like', "%{$busqueda}%")
+                ->orWhere('slug', 'like', "%{$busqueda}%")
+                ->orWhere('autor', 'like', "%{$busqueda}%")
+            ))
+            ->when($estado, fn ($q) => $q->where('estado', $estado))
+            ->when($categoriaId, fn ($q) => $q->whereHas('categorias', fn ($q) => $q->where('categorias.id', $categoriaId)))
             ->orderBy('fecha', 'desc')
-            ->paginate(15)
+            ->paginate(20)
             ->appends($request->query());
 
-        return view('admin.noticias.index', compact('noticias', 'busqueda'));
+        $categorias = Categoria::orderBy('nombre')->get();
+
+        return view('admin.noticias.index', compact('noticias', 'busqueda', 'estado', 'categoriaId', 'categorias'));
     }
 
     public function create()
@@ -93,7 +94,7 @@ class NoticiaAdminController extends Controller
         AuditLog::registrar('crear', 'Noticia', $noticia->id, "Noticia creada: \"{$noticia->titulo}\"");
 
         return redirect()
-            ->route('admin.dashboard')
+            ->route('admin.noticias.index')
             ->with('ok', 'Noticia creada correctamente.');
     }
 
@@ -151,7 +152,7 @@ class NoticiaAdminController extends Controller
         AuditLog::registrar('editar', 'Noticia', $noticia->id, "Noticia editada: \"{$noticia->titulo}\"");
 
         return redirect()
-            ->route('admin.dashboard')
+            ->route('admin.noticias.index')
             ->with('ok', 'Noticia actualizada correctamente.');
     }
 
@@ -170,7 +171,7 @@ class NoticiaAdminController extends Controller
         $noticia->delete();
 
         return redirect()
-            ->route('admin.dashboard')
+            ->route('admin.noticias.index')
             ->with('ok', 'Noticia eliminada correctamente.');
     }
 

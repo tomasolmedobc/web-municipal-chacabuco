@@ -19,7 +19,7 @@
     <script src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
 
     @stack('scripts_head')
-    <script>
+    <script @nonce>
     (function () {
         var s = localStorage.getItem('chacabuco_font_size');
         if (s && s !== 'normal') document.documentElement.classList.add('font-' + s);
@@ -129,7 +129,7 @@
                 @endif
             </div>
         </div>
-        <script>
+        <script @nonce>
         (function () {
             const popup = document.getElementById('anuncio-popup');
             if (!popup) return;
@@ -189,7 +189,7 @@
     <button type="button" class="font-control__btn" data-size="extra"  title="Texto muy grande">A+</button>
 </div>
 <script src="{{ asset('js/theme.js') }}"></script>
-<script>
+<script @nonce>
 (function () {
     const STORAGE_KEY = 'chacabuco_clima_oculto';
     const widget = document.getElementById('clima-widget');
@@ -220,7 +220,7 @@
 })();
 </script>
 <script src="{{ asset('js/ui-feedback.js') }}"></script>
-<script>
+<script @nonce>
 (function () {
     var STORAGE_KEY = 'chacabuco_font_size';
 
@@ -271,7 +271,7 @@
     });
 })();
 </script>
-<script>
+<script @nonce>
 (function () {
     const ENDPOINT   = '/turismo/eventos-proximos';
     const INTERVALO  = 5 * 60 * 1000;

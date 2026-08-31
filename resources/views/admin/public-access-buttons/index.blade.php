@@ -15,7 +15,7 @@
 </section>
 
 @if(session('ok'))
-    <script>
+    <script @nonce>
         document.addEventListener('DOMContentLoaded', function () {
             showToast(@json(session('ok')), 'success');
         });
@@ -97,7 +97,7 @@
 @endsection
 
 @push('scripts')
-<script>
+<script @nonce>
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.visibility-switch input').forEach((input) => {
         input.addEventListener('change', () => {

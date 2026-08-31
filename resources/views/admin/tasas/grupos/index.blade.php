@@ -6,13 +6,16 @@
 <section class="admin-header">
     <div>
         <h2 class="seccion-titulo">Grupos de tasas</h2>
-        <p class="admin-subtitle">Los 5 grupos son fijos. Solo podés editar su nombre, orden y visibilidad.</p>
+        <p class="admin-subtitle">Administrá los grupos de tasas municipales.</p>
     </div>
-    <a href="{{ route('admin.tasas.index') }}" class="btn btn-secondary">Volver</a>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a href="{{ route('admin.tasas.grupos.create') }}" class="btn btn-primary">Nuevo grupo</a>
+        <a href="{{ route('admin.tasas.index') }}" class="btn btn-secondary">Volver</a>
+    </div>
 </section>
 
 @if(session('ok'))
-    <script>document.addEventListener('DOMContentLoaded', () => showToast(@json(session('ok')), 'success'));</script>
+    <script @nonce>document.addEventListener('DOMContentLoaded', () => showToast(@json(session('ok')), 'success'));</script>
 @endif
 
 <div class="admin-list">
@@ -29,8 +32,8 @@
             </div>
         </div>
         <div class="admin-actions">
-            <a href="{{ route('admin.tasas.cuotas.index', ['grupo_id' => $grupo->id]) }}" class="btn btn-secondary">
-                Ver cuotas
+            <a href="{{ route('admin.tasas.grupos.show', $grupo) }}" class="btn btn-primary">
+                Gestionar vencimientos
             </a>
             <a href="{{ route('admin.tasas.grupos.edit', $grupo) }}" class="btn btn-secondary">Editar</a>
         </div>

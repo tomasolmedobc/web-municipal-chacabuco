@@ -251,7 +251,7 @@
 @endsection
 
 @push('scripts')
-<script>
+<script @nonce>
 (function () {
     const modal   = document.getElementById('turismo-lightbox');
     const overlay = document.getElementById('turismo-lightbox-overlay');

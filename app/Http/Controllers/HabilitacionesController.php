@@ -10,6 +10,21 @@ class HabilitacionesController extends Controller
     public function index(Request $request)
     {
         $contenido = config('habilitaciones');
+
+        $urlPrefactibilidad = config_sistema('hab_tramite_prefactibilidad_url');
+        $urlHabilitacion    = config_sistema('hab_tramite_habilitacion_url');
+
+        if ($urlPrefactibilidad || $urlHabilitacion) {
+            $tramites = $contenido['tramites_online'];
+            if ($urlPrefactibilidad) {
+                $tramites[0]['url'] = $urlPrefactibilidad;
+            }
+            if ($urlHabilitacion) {
+                $tramites[1]['url'] = $urlHabilitacion;
+            }
+            $contenido['tramites_online'] = $tramites;
+        }
+
         $busquedaOrdenanzas = trim((string) $request->get('ordenanza'));
 
         $archivosAdmin = HabilitacionDocumento::visible()

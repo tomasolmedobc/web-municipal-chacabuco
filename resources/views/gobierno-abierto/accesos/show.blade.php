@@ -62,4 +62,11 @@
         @endforelse
     </div>
 </section>
+
+<section class="volver-ts">
+    <a href="{{ route('gobierno-abierto.index') }}" class="btn btn-secondary">
+        <i class="fa-solid fa-arrow-left"></i>
+        Volver a Gobierno Abierto
+    </a>
+</section>
 @endsection

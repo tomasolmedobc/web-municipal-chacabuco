@@ -19,6 +19,7 @@
         <p>{{ $stats['noticias_ocultas'] }}</p>
     </div>
 
+    @if(auth()->user()->rol === 'admin')
     <div class="admin-stat-card">
         <h3>Gobierno abierto</h3>
         <p>{{ $stats['gobierno_abierto_total'] }}</p>
@@ -33,6 +34,7 @@
         <h3>Usuarios</h3>
         <p>{{ $stats['usuarios_total'] }}</p>
     </div>
+    @endif
 </div>
 
     <section class="admin-header">
@@ -47,29 +49,39 @@
         <section class="admin-module-group">
             <h3 class="admin-module-group__title"><i class="fa-solid fa-newspaper"></i> Contenido</h3>
             <div class="admin-module-grid">
-                <a href="{{ route('admin.noticias.create') }}" class="admin-module-card admin-module-card--primary">
+                <a href="{{ route('admin.noticias.index') }}" class="admin-module-card admin-module-card--primary">
+                    <span class="admin-module-card__icon"><i class="fa-solid fa-newspaper"></i></span>
+                    <span class="admin-module-card__label">Noticias</span>
+                    <span class="admin-module-card__desc">Listado, filtros y gestión de noticias</span>
+                </a>
+                <a href="{{ route('admin.noticias.create') }}" class="admin-module-card">
                     <span class="admin-module-card__icon"><i class="fa-solid fa-file-pen"></i></span>
                     <span class="admin-module-card__label">Nueva noticia</span>
                     <span class="admin-module-card__desc">Publicá un comunicado o novedad municipal</span>
                 </a>
+                @if(auth()->user()->rol === 'admin')
                 <a href="{{ route('admin.gobierno-abierto.index') }}" class="admin-module-card">
                     <span class="admin-module-card__icon"><i class="fa-solid fa-landmark"></i></span>
                     <span class="admin-module-card__label">Gobierno abierto</span>
                     <span class="admin-module-card__desc">Licitaciones, nóminas y documentos institucionales</span>
                 </a>
+                @endif
                 <a href="{{ route('admin.turismo.index') }}" class="admin-module-card">
                     <span class="admin-module-card__icon"><i class="fa-solid fa-map-location-dot"></i></span>
                     <span class="admin-module-card__label">Turismo</span>
                     <span class="admin-module-card__desc">Localidades y eventos del municipio</span>
                 </a>
+                @if(auth()->user()->rol === 'admin')
                 <a href="{{ route('admin.baile.usuarios.index') }}" class="admin-module-card">
                     <span class="admin-module-card__icon"><i class="fa-solid fa-champagne-glasses"></i></span>
                     <span class="admin-module-card__label">Baile de Egresados</span>
                     <span class="admin-module-card__desc">Inscripciones y gestión del evento</span>
                 </a>
+                @endif
             </div>
         </section>
 
+        @if(auth()->user()->rol === 'admin')
         <section class="admin-module-group">
             <h3 class="admin-module-group__title"><i class="fa-solid fa-folder-open"></i> Gestión</h3>
             <div class="admin-module-grid">
@@ -95,25 +107,30 @@
                 </a>
             </div>
         </section>
+        @endif
 
         <section class="admin-module-group">
             <h3 class="admin-module-group__title"><i class="fa-solid fa-sliders"></i> Configuración del sitio</h3>
             <div class="admin-module-grid">
+                @if(auth()->user()->rol === 'admin')
                 <a href="{{ route('admin.popup.index') }}" class="admin-module-card">
                     <span class="admin-module-card__icon"><i class="fa-solid fa-bullhorn"></i></span>
                     <span class="admin-module-card__label">Popup anuncio</span>
                     <span class="admin-module-card__desc">Cartel de anuncio en la página principal</span>
                 </a>
+                @endif
                 <a href="{{ route('admin.telefonos-utiles.index') }}" class="admin-module-card">
                     <span class="admin-module-card__icon"><i class="fa-solid fa-phone"></i></span>
                     <span class="admin-module-card__label">Teléfonos Útiles</span>
                     <span class="admin-module-card__desc">Contactos de emergencia y dependencias</span>
                 </a>
+                @if(auth()->user()->rol === 'admin')
                 <a href="{{ route('admin.carnet.index') }}" class="admin-module-card">
                     <span class="admin-module-card__icon"><i class="fa-solid fa-id-card"></i></span>
                     <span class="admin-module-card__label">Carnet de Conducir</span>
                     <span class="admin-module-card__desc">Materiales y documentación para tramitar el carnet</span>
                 </a>
+                @endif
             </div>
         </section>
 
@@ -146,7 +163,7 @@
     </form>
 
     @if(session('ok'))
-        <script>
+        <script @nonce>
             document.addEventListener('DOMContentLoaded', function () {
                 showToast(@json(session('ok')), 'success');
             });

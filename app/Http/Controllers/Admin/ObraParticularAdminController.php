@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\ObraAnexo;
+use App\Models\ObraCategoria;
 use App\Models\ObraConfiguracion;
 use App\Models\ObraNormativa;
 use App\Models\ObraProcedimiento;
@@ -16,6 +17,7 @@ class ObraParticularAdminController extends Controller
     public function index()
     {
         return view('admin.obras-particulares.index', [
+            'totalCategorias'     => ObraCategoria::count(),
             'totalNormativas'     => ObraNormativa::count(),
             'totalAnexos'         => ObraAnexo::count(),
             'totalProcedimientos' => ObraProcedimiento::count(),

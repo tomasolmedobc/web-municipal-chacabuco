@@ -10,6 +10,10 @@
         </div>
 
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <a href="{{ route('admin.turismo.localidades.create') }}" class="btn btn-primary">
+                Crear localidad
+            </a>
+
             <a href="{{ route('admin.turismo.index') }}" class="btn btn-secondary">
                 Turismo
             </a>
@@ -21,7 +25,7 @@
     </section>
 
     @if(session('ok'))
-        <script>
+        <script @nonce>
             document.addEventListener('DOMContentLoaded', function () {
                 showToast(@json(session('ok')), 'success');
             });
@@ -53,6 +57,9 @@
                 </div>
 
                 <div class="admin-actions">
+                    <a href="{{ route('admin.turismo.index', ['localidad_id' => $localidad->id]) }}" class="btn btn-secondary">
+                        Ver atractivos
+                    </a>
                     <a href="{{ route('admin.turismo.localidades.edit', $localidad) }}" class="btn btn-secondary">
                         Editar
                     </a>

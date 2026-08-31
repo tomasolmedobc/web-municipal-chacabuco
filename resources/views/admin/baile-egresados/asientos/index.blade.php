@@ -48,13 +48,74 @@
 </form>
 
 @if(session('ok'))
-    <script>document.addEventListener('DOMContentLoaded', () => showToast(@json(session('ok')), 'success'));</script>
+    <script @nonce>document.addEventListener('DOMContentLoaded', () => showToast(@json(session('ok')), 'success'));</script>
 @endif
 
-@if($asientos->count() === 0)
+{{-- ── Carga masiva ──────────────────────────────────────────────────── --}}
+<details class="masivo-panel">
+    <summary class="masivo-panel__toggle">
+        <i class="fa-solid fa-layer-group"></i> Carga masiva de asientos
+    </summary>
+
+    <form method="POST" action="{{ route('admin.baile.asientos.masivo') }}" class="masivo-form">
+        @csrf
+
+        @if($errors->hasAny(['color','fila_desde','fila_hasta','num_desde','num_hasta']))
+            <div class="alert-error" style="margin-bottom:14px;">
+                <ul style="margin:0;padding-left:18px;">
+                    @foreach($errors->only(['color','fila_desde','fila_hasta','num_desde','num_hasta']) as $e)
+                        <li>{{ $e }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <div class="masivo-grid">
+            <div class="admin-form-group">
+                <label class="campo-label">Color / Sector</label>
+                <input type="text" name="color" class="campo-input"
+                       value="{{ old('color') }}" placeholder="Ej: Rojo" required>
+            </div>
+
+            <div class="admin-form-group">
+                <label class="campo-label">Fila desde</label>
+                <input type="text" name="fila_desde" class="campo-input"
+                       value="{{ old('fila_desde') }}" placeholder="A" maxlength="1" required style="text-transform:uppercase;">
+            </div>
+
+            <div class="admin-form-group">
+                <label class="campo-label">Fila hasta</label>
+                <input type="text" name="fila_hasta" class="campo-input"
+                       value="{{ old('fila_hasta') }}" placeholder="H" maxlength="1" required style="text-transform:uppercase;">
+            </div>
+
+            <div class="admin-form-group">
+                <label class="campo-label">Número desde</label>
+                <input type="number" name="num_desde" class="campo-input"
+                       value="{{ old('num_desde', 1) }}" min="1" max="999" required>
+            </div>
+
+            <div class="admin-form-group">
+                <label class="campo-label">Número hasta</label>
+                <input type="number" name="num_hasta" class="campo-input"
+                       value="{{ old('num_hasta') }}" min="1" max="999" required>
+            </div>
+
+            <div class="admin-form-group" style="align-self:flex-end;">
+                <button type="submit" class="btn btn-primary" style="width:100%;">Crear asientos</button>
+            </div>
+        </div>
+
+        <p class="masivo-hint">
+            Genera todos los asientos del bloque seleccionado. Los que ya existen se omiten sin error.
+        </p>
+    </form>
+</details>
+
+@if($asientos->count() === 0 && !request()->hasAny(['q','disponible']))
     <div class="admin-empty">
         <h3>No hay asientos cargados</h3>
-        <p>Creá el primero desde el botón superior.</p>
+        <p>Usá "Carga masiva" para cargar un bloque completo, o "Nuevo asiento" para agregar uno individual.</p>
     </div>
 @endif
 

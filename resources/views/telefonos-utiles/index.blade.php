@@ -123,7 +123,7 @@
 @endsection
 
 @push('scripts')
-<script>
+<script @nonce>
 (function () {
     const catBtns = document.querySelectorAll('.tel-cat-btn');
     const hidden  = document.getElementById('tel-cat-hidden');

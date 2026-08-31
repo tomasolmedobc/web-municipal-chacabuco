@@ -12,20 +12,22 @@
     </div>
 
     <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <a href="{{ route('admin.turismo.create', ['tipo' => $tipoActivo]) }}"
+        <a href="{{ route('admin.turismo.create', array_filter(['tipo' => $tipoActivo, 'localidad_id' => $localidadId])) }}"
            class="btn btn-primary">
             Nuevo {{ $config['singular'] }}
         </a>
 
-        <a href="{{ route('admin.turismo.localidades.index') }}" class="btn btn-secondary">
-            Localidades
-        </a>
-
-        <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">
+<a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">
             Volver
         </a>
     </div>
 </section>
+
+<div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
+    <a href="{{ route('admin.turismo.localidades.index') }}" class="btn btn-secondary btn-sm">
+        <i class="fa-solid fa-map-pin"></i> Gestionar localidades
+    </a>
+</div>
 
 <nav class="admin-tabs" aria-label="Tipos de Turismo">
     @foreach($tipos as $tipo => $item)
@@ -65,7 +67,7 @@
 </form>
 
 @if(session('ok'))
-    <script>
+    <script @nonce>
         document.addEventListener('DOMContentLoaded', function () {
             showToast(@json(session('ok')), 'success');
         });

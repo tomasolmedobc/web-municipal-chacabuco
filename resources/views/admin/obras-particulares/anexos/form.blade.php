@@ -40,6 +40,7 @@
             <label for="orden">Orden</label>
             <input type="number" name="orden" id="orden" min="0" max="999"
                    value="{{ old('orden', $anexo->orden ?? 0) }}">
+            <small class="fecha">Número menor aparece antes. Usá 0 para que quede al principio.</small>
             @error('orden') <small class="auth-error">{{ $message }}</small> @enderror
         </div>
 

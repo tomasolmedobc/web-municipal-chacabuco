@@ -207,7 +207,13 @@ class InfraccionesController extends Controller
 
     private function logoPdfPath(): string
     {
-        return 'file:///' . str_replace('\\', '/', public_path('images/infracciones/chacabuco.jpg'));
+        $path = public_path('images/infracciones/chacabuco.jpg');
+
+        if (! file_exists($path)) {
+            return '';
+        }
+
+        return 'data:image/jpeg;base64,' . base64_encode(file_get_contents($path));
     }
 
     private function nombreArchivo(string $prefijo, string $nombre): string

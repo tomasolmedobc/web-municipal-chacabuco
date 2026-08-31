@@ -116,4 +116,10 @@
     </div>
 @endif
 
+<section class="volver-ts">
+    <a href="{{ route('tramites-servicios.index') }}" class="btn btn-secondary">
+        <i class="fa-solid fa-arrow-left"></i>
+        Volver a Trámites y Servicios
+    </a>
+</section>
 @endsection

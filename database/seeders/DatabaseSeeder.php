@@ -15,11 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Los datos iniciales se cargan mediante migraciones de seed individuales.
+        // No ejecutar db:seed en producción sin especificar --class=NombreSeeder.
     }
 }

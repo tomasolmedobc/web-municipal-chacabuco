@@ -75,13 +75,13 @@
         <label class="tasas-radio-label">
             <input type="radio" name="btn_consulta_tipo" value="url"
                 {{ old('btn_consulta_tipo', $config->btn_consulta_tipo) === 'url' ? 'checked' : '' }}
-                onchange="toggleBtn('consulta', this.value)">
+            >
             Enlace externo (URL)
         </label>
         <label class="tasas-radio-label" style="margin-top:8px;">
             <input type="radio" name="btn_consulta_tipo" value="archivo"
                 {{ old('btn_consulta_tipo', $config->btn_consulta_tipo) === 'archivo' ? 'checked' : '' }}
-                onchange="toggleBtn('consulta', this.value)">
+            >
             Archivo PDF
         </label>
     </fieldset>
@@ -111,13 +111,13 @@
         <label class="tasas-radio-label">
             <input type="radio" name="btn_ordenanza_tipo" value="url"
                 {{ old('btn_ordenanza_tipo', $config->btn_ordenanza_tipo) === 'url' ? 'checked' : '' }}
-                onchange="toggleBtn('ordenanza', this.value)">
+            >
             Enlace externo (URL)
         </label>
         <label class="tasas-radio-label" style="margin-top:8px;">
             <input type="radio" name="btn_ordenanza_tipo" value="archivo"
                 {{ old('btn_ordenanza_tipo', $config->btn_ordenanza_tipo) === 'archivo' ? 'checked' : '' }}
-                onchange="toggleBtn('ordenanza', this.value)">
+            >
             Archivo PDF
         </label>
     </fieldset>
@@ -145,7 +145,7 @@
 @endsection
 
 @push('scripts_head')
-<script>
+<script @nonce>
 function toggleBtn(btn, val) {
     var urlPanel     = document.getElementById('btn-' + btn + '-url');
     var archivoPanel = document.getElementById('btn-' + btn + '-archivo');
@@ -163,6 +163,9 @@ function toggleBtn(btn, val) {
 }
 document.addEventListener('DOMContentLoaded', function () {
     ['consulta', 'ordenanza'].forEach(function (btn) {
+        document.querySelectorAll('input[name="btn_' + btn + '_tipo"]').forEach(function (r) {
+            r.addEventListener('change', function () { toggleBtn(btn, this.value); });
+        });
         var checked = document.querySelector('input[name="btn_' + btn + '_tipo"]:checked');
         if (checked) toggleBtn(btn, checked.value);
     });
@@ -171,7 +174,6 @@ document.addEventListener('DOMContentLoaded', function () {
     ['texto_pago_anual', 'texto_plan_facilidades', 'texto_info_bancaria'].forEach(function (id) {
         tinymce.init({
             selector: '#' + id,
-            license_key: 'gpl',
             language: 'es',
             height: 320,
             plugins: 'lists link',

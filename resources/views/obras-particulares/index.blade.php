@@ -15,7 +15,7 @@
     <div>
         <span class="section-badge">Trámites</span>
         <h1>Dirección de Obras Particulares</h1>
-        <p>Gestiones, consultas y requisitos para obras, balcones gastronómicos, mensura y libre deuda.</p>
+        <p>Gestiones, consultas y requisitos para obras particulares en el partido de Chacabuco.</p>
     </div>
 </section>
 
@@ -32,7 +32,7 @@
                 <li>Inspección de obras.</li>
                 <li>Visado y aprobación de los proyectos.</li>
             </ul>
-            <p>Junto con las distintas direcciones que integran la secretaría se analizan los proyectos urbanísticos y nuevos desarrollos. Para estos trámites también se deberá cumplir con una serie de requisitos enumerados en la sección de Mensura y Subdivisión.</p>
+            <p>Junto con las distintas direcciones que integran la secretaría se analizan los proyectos urbanísticos y nuevos desarrollos.</p>
         </div>
 
         <div class="ops-intro__sidebar">
@@ -84,23 +84,32 @@
         </div>
     </div>
 
-    {{-- Navegación de secciones --}}
+    {{-- Navegación de categorías (dinámica) --}}
+    @if($categorias->isNotEmpty())
     <nav class="ops-seccion-nav" aria-label="Secciones de Obras Particulares">
-        <a href="#obras" class="ops-seccion-nav__item">Obras</a>
-        <a href="#balcones" class="ops-seccion-nav__item">Balcones Gastronómicos</a>
-        <a href="#mensura" class="ops-seccion-nav__item">Mensura y Subdivisión</a>
-        <a href="#libre-deuda" class="ops-seccion-nav__item">Libre Deuda</a>
+        @foreach($categorias as $categoria)
+            <a href="#cat-{{ $categoria->id }}" class="ops-seccion-nav__item">
+                {{ $categoria->nombre }}
+            </a>
+        @endforeach
     </nav>
+    @endif
 
-    {{-- ===================== SECTION: OBRAS ===================== --}}
-    <section id="obras" class="ops-seccion">
-        <h2 class="ops-seccion__titulo"><i class="fa-solid fa-file-pdf"></i> Ordenanzas PDF</h2>
+    {{-- Secciones dinámicas por categoría --}}
+    @foreach($categorias as $categoria)
+    <section id="cat-{{ $categoria->id }}" class="ops-seccion">
+        <h2 class="ops-seccion__titulo">{{ $categoria->nombre }}</h2>
 
-        @if($normativasObras->isNotEmpty())
+        @if($categoria->descripcion)
+            <p style="color:var(--text-muted);margin-bottom:16px;">{{ $categoria->descripcion }}</p>
+        @endif
+
+        {{-- Normativas de esta categoría --}}
+        @if($categoria->normativas->isNotEmpty())
             <div class="ops-normativas">
                 <h3 class="ops-normativas__subtitulo">Normativa vigente</h3>
                 <div class="ops-normativas__lista">
-                    @foreach($normativasObras as $normativa)
+                    @foreach($categoria->normativas as $normativa)
                         @if($normativa->archivo_ruta)
                             <a href="{{ $normativa->archivo_ruta }}" target="_blank" rel="noopener" class="ops-normativa-item">
                                 <i class="fa-regular fa-file-pdf"></i>
@@ -119,66 +128,18 @@
             </div>
         @endif
 
-        @if($procedimientosObras->isNotEmpty())
-            <h3 class="ops-subseccion__titulo"><i class="fa-solid fa-building"></i> Obras</h3>
+        {{-- Procedimientos (acordeones) de esta categoría --}}
+        @if($categoria->procedimientos->isNotEmpty())
             <div class="ops-accordion">
-                @foreach($procedimientosObras as $proc)
+                @foreach($categoria->procedimientos as $proc)
                     <details class="ops-accordion__item">
                         <summary class="ops-accordion__summary">
-                            <span><strong>{{ $proc->codigo }}</strong> — {{ $proc->titulo }}</span>
-                            <i class="fa-solid fa-chevron-down ops-accordion__icon"></i>
-                        </summary>
-                        <div class="ops-accordion__content">
-                            {!! $proc->contenido !!}
-                        </div>
-                    </details>
-                @endforeach
-            </div>
-        @endif
-
-        @if($notasObras)
-            <div class="ops-notas-box">
-                <h4 class="ops-notas-box__titulo">
-                    <i class="fa-solid fa-circle-exclamation"></i> {{ $notasObras->titulo }}
-                </h4>
-                {!! $notasObras->contenido !!}
-            </div>
-        @endif
-    </section>
-
-    {{-- ================ SECTION: BALCONES ==================== --}}
-    <section id="balcones" class="ops-seccion">
-        <h2 class="ops-seccion__titulo"><i class="fa-solid fa-store"></i> Balcones Gastronómicos</h2>
-
-        @if($normativasBalcones->isNotEmpty())
-            <div class="ops-normativas">
-                <h3 class="ops-normativas__subtitulo">Normativa vigente</h3>
-                <div class="ops-normativas__lista">
-                    @foreach($normativasBalcones as $normativa)
-                        @if($normativa->archivo_ruta)
-                            <a href="{{ $normativa->archivo_ruta }}" target="_blank" rel="noopener" class="ops-normativa-item">
-                                <i class="fa-regular fa-file-pdf"></i>
-                                <span>{{ $normativa->nombre }}</span>
-                                <i class="fa-solid fa-download fa-xs"></i>
-                            </a>
-                        @else
-                            <div class="ops-normativa-item ops-normativa-item--pending">
-                                <i class="fa-regular fa-file-pdf"></i>
-                                <span>{{ $normativa->nombre }}</span>
-                                <span class="ops-pronto">Próximamente</span>
-                            </div>
-                        @endif
-                    @endforeach
-                </div>
-            </div>
-        @endif
-
-        @if($procedimientosBalcones->isNotEmpty())
-            <div class="ops-accordion">
-                @foreach($procedimientosBalcones as $proc)
-                    <details class="ops-accordion__item">
-                        <summary class="ops-accordion__summary">
-                            <span>{{ $proc->titulo }}</span>
+                            <span>
+                                @if($proc->codigo)
+                                    <strong>{{ $proc->codigo }}</strong> —
+                                @endif
+                                {{ $proc->titulo }}
+                            </span>
                             <i class="fa-solid fa-chevron-down ops-accordion__icon"></i>
                         </summary>
                         <div class="ops-accordion__content">
@@ -189,38 +150,7 @@
             </div>
         @endif
     </section>
-
-    {{-- ================ SECTION: MENSURA ==================== --}}
-    <section id="mensura" class="ops-seccion">
-        <h2 class="ops-seccion__titulo"><i class="fa-solid fa-map"></i> Mensura y Subdivisión de Tierras</h2>
-
-        @if($procedimientosMensura->isNotEmpty())
-            <div class="ops-accordion">
-                @foreach($procedimientosMensura as $proc)
-                    <details class="ops-accordion__item">
-                        <summary class="ops-accordion__summary">
-                            <span><strong>{{ $proc->codigo }}</strong> — {{ $proc->titulo }}</span>
-                            <i class="fa-solid fa-chevron-down ops-accordion__icon"></i>
-                        </summary>
-                        <div class="ops-accordion__content">
-                            {!! $proc->contenido !!}
-                        </div>
-                    </details>
-                @endforeach
-            </div>
-        @endif
-    </section>
-
-    {{-- ================ SECTION: LIBRE DEUDA ================ --}}
-    <section id="libre-deuda" class="ops-seccion">
-        <h2 class="ops-seccion__titulo"><i class="fa-solid fa-file-circle-check"></i> Libre Deuda</h2>
-
-        @if($libreDeuda)
-            <div class="ops-libre-deuda-box">
-                {!! $libreDeuda->contenido !!}
-            </div>
-        @endif
-    </section>
+    @endforeach
 
     {{-- Contacto --}}
     <div class="ops-contacto">
@@ -251,31 +181,34 @@
     </div>
 
 </div>
+
+<section class="volver-ts">
+    <a href="{{ route('tramites-servicios.index') }}" class="btn btn-secondary">
+        <i class="fa-solid fa-arrow-left"></i>
+        Volver a Trámites y Servicios
+    </a>
+</section>
 @endsection
 
 @push('scripts')
-<script>
+<script @nonce>
 (function () {
     const nav = document.querySelector('.ops-seccion-nav');
     if (!nav) return;
 
     const items = nav.querySelectorAll('.ops-seccion-nav__item');
-    const secciones = Array.from(items).map(a => ({
-        el: a,
-        target: document.querySelector(a.getAttribute('href')),
-    })).filter(x => x.target);
+    const secciones = Array.from(items).map(function (a) {
+        return { el: a, target: document.querySelector(a.getAttribute('href')) };
+    }).filter(function (x) { return x.target; });
 
     function actualizarActivo() {
         const scroll = window.scrollY + 120;
         let activo = null;
-
-        secciones.forEach(({ target }) => {
-            if (target.offsetTop <= scroll) activo = target.id;
+        secciones.forEach(function (s) {
+            if (s.target.offsetTop <= scroll) activo = s.target.id;
         });
-
-        items.forEach(a => {
-            const activa = a.getAttribute('href') === '#' + activo;
-            a.classList.toggle('is-active', activa);
+        items.forEach(function (a) {
+            a.classList.toggle('is-active', a.getAttribute('href') === '#' + activo);
         });
     }
 

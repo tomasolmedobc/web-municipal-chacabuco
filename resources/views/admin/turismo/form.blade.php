@@ -287,7 +287,7 @@
 @endsection
 
 @push('scripts')
-    <script>
+    <script @nonce>
         document.addEventListener('DOMContentLoaded', function () {
             if (typeof tinymce !== 'undefined' && document.getElementById('descripcion')) {
                 tinymce.init({
@@ -299,8 +299,6 @@
                     language: 'es',
                     language_url: '/js/tinymce/langs/es.js',
                     branding: false,
-                    promotion: false,
-                    license_key: 'gpl',
                     setup: (editor) => {
                         editor.on('change keyup', () => tinymce.triggerSave());
                     }

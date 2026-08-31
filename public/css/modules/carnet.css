@@ -1,26 +1,7 @@
 /* ── Carnet de Conducir — página pública ─────────────────────────────── */
 
 .carnet-hero {
-    background: linear-gradient(135deg, var(--primary-soft), var(--card));
-    border: 1px solid var(--border);
-    border-radius: 22px;
-    padding: 36px;
-    box-shadow: var(--shadow);
     margin-bottom: 28px;
-}
-
-.carnet-hero h1 {
-    margin: 0 0 14px;
-    font-size: 48px;
-    font-weight: 900;
-    letter-spacing: -1px;
-}
-
-.carnet-hero p {
-    max-width: 760px;
-    margin: 0;
-    color: var(--muted);
-    font-size: 18px;
 }
 
 /* Layout principal — dos columnas */

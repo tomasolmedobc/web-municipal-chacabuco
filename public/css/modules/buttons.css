@@ -136,3 +136,35 @@ body.dark .btn-estado-ocultar {
     color: var(--danger);
     border-color: #fecaca;
 }
+
+/* ── Tab pill — patrón estándar para nuevos módulos ─────────────── */
+.tab-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--card-soft);
+    color: var(--muted);
+    padding: 8px 18px;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color .2s ease, color .2s ease, background .2s ease;
+}
+
+.tab-pill:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.tab-pill.is-active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}
+
+.tab-pill.is-active:hover {
+    color: #fff;
+}

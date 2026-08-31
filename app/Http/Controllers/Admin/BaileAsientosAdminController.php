@@ -80,4 +80,44 @@ class BaileAsientosAdminController extends Controller
         return redirect()->route('admin.baile.asientos.index')->with('ok', 'Asiento eliminado correctamente.');
     }
 
+    public function storeMasivo(Request $request)
+    {
+        $data = $request->validate([
+            'color'      => ['required', 'string', 'max:50'],
+            'fila_desde' => ['required', 'string', 'max:10'],
+            'fila_hasta' => ['required', 'string', 'max:10'],
+            'num_desde'  => ['required', 'integer', 'min:1', 'max:999'],
+            'num_hasta'  => ['required', 'integer', 'min:1', 'max:999', 'gte:num_desde'],
+        ]);
+
+        $filas = range(strtoupper($data['fila_desde']), strtoupper($data['fila_hasta']));
+        $numeros = range((int) $data['num_desde'], (int) $data['num_hasta']);
+        $creados = 0;
+        $omitidos = 0;
+
+        foreach ($filas as $fila) {
+            foreach ($numeros as $numero) {
+                $existe = BaileLugar::where('fila', $fila)->where('numero', $numero)->exists();
+                if ($existe) {
+                    $omitidos++;
+                    continue;
+                }
+                BaileLugar::create([
+                    'color'     => $data['color'],
+                    'fila'      => $fila,
+                    'numero'    => $numero,
+                    'disponible' => true,
+                ]);
+                $creados++;
+            }
+        }
+
+        AuditLog::registrar('crear', 'BaileLugar', null, "Carga masiva: {$creados} asientos creados, {$omitidos} omitidos ({$data['color']}, filas {$data['fila_desde']}–{$data['fila_hasta']}, nros {$data['num_desde']}–{$data['num_hasta']})");
+
+        $msg = "{$creados} asiento(s) creado(s)";
+        if ($omitidos) $msg .= " ({$omitidos} ya existían y se omitieron)";
+
+        return redirect()->route('admin.baile.asientos.index')->with('ok', $msg . '.');
+    }
+
 }

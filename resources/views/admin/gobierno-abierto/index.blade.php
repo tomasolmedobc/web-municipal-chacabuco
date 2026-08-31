@@ -35,7 +35,7 @@
 </nav>
 
 @if(session('ok'))
-    <script>
+    <script @nonce>
         document.addEventListener('DOMContentLoaded', function () {
             showToast(@json(session('ok')), 'success');
         });

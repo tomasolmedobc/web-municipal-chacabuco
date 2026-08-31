@@ -16,7 +16,7 @@
     </section>
 
     @if(session('ok'))
-        <script>
+        <script @nonce>
             document.addEventListener('DOMContentLoaded', function () {
                 showToast(@json(session('ok')), 'success');
             });
@@ -24,7 +24,7 @@
     @endif
 
     @if(session('error'))
-        <script>
+        <script @nonce>
             document.addEventListener('DOMContentLoaded', function () {
                 showToast(@json(session('error')), 'error');
             });
@@ -38,10 +38,14 @@
                 <code id="nueva-password">{{ session('password_generada') }}</code>
             </div>
             <div style="display:flex; gap:8px; align-items:center; flex-shrink:0;">
-                <button type="button" class="btn btn-secondary" onclick="copiarPassword(this)">Copiar</button>
-                <button type="button" class="btn btn-secondary" onclick="document.getElementById('password-reset-banner').remove()">Cerrar</button>
+                <button type="button" class="btn btn-secondary" id="btn-copiar-password">Copiar</button>
+                <button type="button" class="btn btn-secondary" id="btn-cerrar-banner">Cerrar</button>
             </div>
         </div>
+        <script @nonce>
+            document.getElementById('btn-copiar-password').addEventListener('click', function () { copiarPassword(this); });
+            document.getElementById('btn-cerrar-banner').addEventListener('click', function () { document.getElementById('password-reset-banner').remove(); });
+        </script>
     @endif
 
     @if($usuarios->count() === 0)

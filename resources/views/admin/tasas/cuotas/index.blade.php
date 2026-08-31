@@ -15,11 +15,11 @@
 </section>
 
 @if(session('ok'))
-    <script>document.addEventListener('DOMContentLoaded', () => showToast(@json(session('ok')), 'success'));</script>
+    <script @nonce>document.addEventListener('DOMContentLoaded', () => showToast(@json(session('ok')), 'success'));</script>
 @endif
 
 <form method="GET" action="{{ route('admin.tasas.cuotas.index') }}" class="filtros">
-    <select name="grupo_id" class="filtro-input" onchange="this.form.submit()">
+    <select id="grupo-filter" name="grupo_id" class="filtro-input">
         <option value="">Todos los grupos</option>
         @foreach($grupos as $g)
             <option value="{{ $g->id }}" {{ (string)$grupoId === (string)$g->id ? 'selected' : '' }}>
@@ -63,3 +63,11 @@
 <div class="paginacion">{{ $cuotas->links('vendor.pagination.custom') }}</div>
 @endif
 @endsection
+
+@push('scripts')
+<script @nonce>
+document.getElementById('grupo-filter').addEventListener('change', function () {
+    this.form.submit();
+});
+</script>
+@endpush

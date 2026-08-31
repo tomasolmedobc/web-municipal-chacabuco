@@ -10,6 +10,10 @@ class SecurityHeaders
 {
     public function handle(Request $request, Closure $next): Response
     {
+        // Nonce generado antes del $next() para que las vistas puedan usarlo via view()->share()
+        $nonce = base64_encode(random_bytes(16));
+        view()->share('cspNonce', $nonce);
+
         $response = $next($request);
 
         $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
@@ -20,7 +24,7 @@ class SecurityHeaders
         $response->headers->set(
             'Content-Security-Policy',
             "default-src 'self'; " .
-            "script-src 'self' 'unsafe-inline'; " .
+            "script-src 'self' 'nonce-{$nonce}'; " .
             "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; " .
             "font-src 'self' https://cdnjs.cloudflare.com; " .
             "img-src 'self' data: blob:; " .
@@ -29,6 +33,14 @@ class SecurityHeaders
             "frame-ancestors 'self'; " .
             "object-src 'none';"
         );
+
+        // Solo activo en producción con HTTPS — protege contra downgrade attacks
+        if (app()->isProduction() && $request->isSecure()) {
+            $response->headers->set(
+                'Strict-Transport-Security',
+                'max-age=31536000; includeSubDomains'
+            );
+        }
 
         return $response;
     }

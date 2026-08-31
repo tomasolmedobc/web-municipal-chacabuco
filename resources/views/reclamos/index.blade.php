@@ -179,10 +179,17 @@
         @endforelse
     </section>
 @endif
+
+<section class="volver-ts">
+    <a href="{{ route('tramites-servicios.index') }}" class="btn btn-secondary">
+        <i class="fa-solid fa-arrow-left"></i>
+        Volver a Trámites y Servicios
+    </a>
+</section>
 @endsection
 
 @push('scripts')
-<script>
+<script @nonce>
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('[data-reclamos-form]');
     if (!form) return;

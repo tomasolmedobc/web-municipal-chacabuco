@@ -44,6 +44,7 @@ use App\Http\Controllers\Admin\BaileReservasAdminController;
 use App\Http\Controllers\Admin\PopupAdminController;
 use App\Http\Controllers\Admin\TelefonoUtilAdminController;
 use App\Http\Controllers\Admin\ObraParticularAdminController;
+use App\Http\Controllers\Admin\ObraCategoriaAdminController;
 use App\Http\Controllers\Admin\ObraNormativaAdminController;
 use App\Http\Controllers\Admin\ObraAnexoAdminController;
 use App\Http\Controllers\Admin\ObraProcedimientoAdminController;
@@ -277,6 +278,9 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::delete('/archivos/{archivo}', [NoticiaAdminController::class, 'destroyArchivo'])
             ->name('admin.noticias.archivos.destroy');
 
+    });
+
+    Route::middleware('role:admin')->group(function () {
 
         /*
         |--------------------------------------------------------------------------
@@ -334,6 +338,12 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::get('/habilitaciones', [HabilitacionAdminController::class, 'index'])
             ->name('admin.habilitaciones.index');
 
+        Route::get('/habilitaciones/config', [HabilitacionAdminController::class, 'config'])
+            ->name('admin.habilitaciones.config');
+
+        Route::put('/habilitaciones/config', [HabilitacionAdminController::class, 'configUpdate'])
+            ->name('admin.habilitaciones.config.update');
+
         Route::get('/habilitaciones/crear', [HabilitacionAdminController::class, 'create'])
             ->name('admin.habilitaciones.create');
 
@@ -367,6 +377,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             Route::get('/asientos', [BaileAsientosAdminController::class, 'index'])->name('asientos.index');
             Route::get('/asientos/crear', [BaileAsientosAdminController::class, 'create'])->name('asientos.create');
             Route::post('/asientos', [BaileAsientosAdminController::class, 'store'])->name('asientos.store');
+            Route::post('/asientos/masivo', [BaileAsientosAdminController::class, 'storeMasivo'])->name('asientos.masivo');
             Route::get('/asientos/{asiento}/editar', [BaileAsientosAdminController::class, 'edit'])->name('asientos.edit');
             Route::put('/asientos/{asiento}', [BaileAsientosAdminController::class, 'update'])->name('asientos.update');
             Route::delete('/asientos/{asiento}', [BaileAsientosAdminController::class, 'destroy'])->name('asientos.destroy');
@@ -376,8 +387,18 @@ Route::middleware('auth')->prefix('admin')->group(function () {
             Route::delete('/reservas/{reserva}', [BaileReservasAdminController::class, 'destroy'])->name('reservas.destroy');
         });
 
+    });
+
+    Route::middleware('role:admin,editor')->group(function () {
+
         Route::get('/turismo/localidades', [LocalidadAdminController::class, 'index'])
             ->name('admin.turismo.localidades.index');
+
+        Route::get('/turismo/localidades/crear', [LocalidadAdminController::class, 'create'])
+            ->name('admin.turismo.localidades.create');
+
+        Route::post('/turismo/localidades', [LocalidadAdminController::class, 'store'])
+            ->name('admin.turismo.localidades.store');
 
         Route::get('/turismo/localidades/{localidad}/editar', [LocalidadAdminController::class, 'edit'])
             ->name('admin.turismo.localidades.edit');
@@ -437,6 +458,9 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::delete('/telefonos-utiles/{telefonoUtil}', [TelefonoUtilAdminController::class, 'destroy'])
             ->name('admin.telefonos-utiles.destroy');
 
+    });
+
+    Route::middleware('role:admin')->group(function () {
 
         /*
         |--------------------------------------------------------------------------
@@ -489,14 +513,41 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::delete('/obras-particulares/anexos/{anexo}', [ObraAnexoAdminController::class, 'destroy'])
             ->name('admin.obras.anexos.destroy');
 
+        Route::get('/obras-particulares/categorias', [ObraCategoriaAdminController::class, 'index'])
+            ->name('admin.obras.categorias.index');
+
+        Route::get('/obras-particulares/categorias/crear', [ObraCategoriaAdminController::class, 'create'])
+            ->name('admin.obras.categorias.create');
+
+        Route::post('/obras-particulares/categorias', [ObraCategoriaAdminController::class, 'store'])
+            ->name('admin.obras.categorias.store');
+
+        Route::get('/obras-particulares/categorias/{categoria}/editar', [ObraCategoriaAdminController::class, 'edit'])
+            ->name('admin.obras.categorias.edit');
+
+        Route::put('/obras-particulares/categorias/{categoria}', [ObraCategoriaAdminController::class, 'update'])
+            ->name('admin.obras.categorias.update');
+
+        Route::delete('/obras-particulares/categorias/{categoria}', [ObraCategoriaAdminController::class, 'destroy'])
+            ->name('admin.obras.categorias.destroy');
+
         Route::get('/obras-particulares/procedimientos', [ObraProcedimientoAdminController::class, 'index'])
             ->name('admin.obras.procedimientos.index');
+
+        Route::get('/obras-particulares/procedimientos/crear', [ObraProcedimientoAdminController::class, 'create'])
+            ->name('admin.obras.procedimientos.create');
+
+        Route::post('/obras-particulares/procedimientos', [ObraProcedimientoAdminController::class, 'store'])
+            ->name('admin.obras.procedimientos.store');
 
         Route::get('/obras-particulares/procedimientos/{procedimiento}/editar', [ObraProcedimientoAdminController::class, 'edit'])
             ->name('admin.obras.procedimientos.edit');
 
         Route::put('/obras-particulares/procedimientos/{procedimiento}', [ObraProcedimientoAdminController::class, 'update'])
             ->name('admin.obras.procedimientos.update');
+
+        Route::delete('/obras-particulares/procedimientos/{procedimiento}', [ObraProcedimientoAdminController::class, 'destroy'])
+            ->name('admin.obras.procedimientos.destroy');
 
 
         /*
@@ -516,6 +567,15 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
         Route::get('/tasas/grupos', [TasasGrupoAdminController::class, 'index'])
             ->name('admin.tasas.grupos.index');
+
+        Route::get('/tasas/grupos/crear', [TasasGrupoAdminController::class, 'create'])
+            ->name('admin.tasas.grupos.create');
+
+        Route::post('/tasas/grupos', [TasasGrupoAdminController::class, 'store'])
+            ->name('admin.tasas.grupos.store');
+
+        Route::get('/tasas/grupos/{grupo}', [TasasGrupoAdminController::class, 'show'])
+            ->name('admin.tasas.grupos.show');
 
         Route::get('/tasas/grupos/{grupo}/editar', [TasasGrupoAdminController::class, 'edit'])
             ->name('admin.tasas.grupos.edit');

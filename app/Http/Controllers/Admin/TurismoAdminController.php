@@ -59,7 +59,7 @@ class TurismoAdminController extends Controller
         $tipo = TurismoItem::normalizarTipo($request->get('tipo'));
 
         return view('admin.turismo.form', [
-            'item' => new TurismoItem(['tipo' => $tipo, 'estado' => 'visible']),
+            'item' => new TurismoItem(['tipo' => $tipo, 'estado' => 'visible', 'localidad_id' => $request->get('localidad_id')]),
             'tipoActivo' => $tipo,
             'tipos' => TurismoItem::TIPOS,
             'config' => TurismoItem::configTipo($tipo),

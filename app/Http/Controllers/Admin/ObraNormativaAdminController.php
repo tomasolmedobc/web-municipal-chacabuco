@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
+use App\Models\ObraCategoria;
 use App\Models\ObraNormativa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -13,51 +14,54 @@ class ObraNormativaAdminController extends Controller
 {
     public function index(Request $request)
     {
-        $seccion  = $request->query('seccion', 'obras');
-        $seccion  = array_key_exists($seccion, ObraNormativa::SECCIONES) ? $seccion : 'obras';
+        $categorias = ObraCategoria::orderBy('orden')->orderBy('nombre')->get();
+        $categoriaId = (int) $request->query('categoria', 0);
+        $categoriaActiva = $categorias->firstWhere('id', $categoriaId) ?? $categorias->first();
         $busqueda = $request->query('q');
 
         $normativas = ObraNormativa::query()
-            ->seccion($seccion)
-            ->when($busqueda, fn ($q) => $q->where('nombre', 'like', "%{$busqueda}%"))
+            ->when($categoriaActiva, fn($q) => $q->where('categoria_id', $categoriaActiva->id))
+            ->when($busqueda, fn($q) => $q->where('nombre', 'like', "%{$busqueda}%"))
             ->orderBy('orden')
             ->orderBy('nombre')
             ->paginate(20)
             ->appends($request->query());
 
-        $totales = collect(ObraNormativa::SECCIONES)
-            ->mapWithKeys(fn ($_, $sec) => [$sec => ObraNormativa::seccion($sec)->count()]);
+        $totales = $categorias->mapWithKeys(fn($c) => [
+            $c->id => ObraNormativa::where('categoria_id', $c->id)->count(),
+        ]);
 
         return view('admin.obras-particulares.normativas.index', [
-            'normativas'    => $normativas,
-            'secciones'     => ObraNormativa::SECCIONES,
-            'seccionActiva' => $seccion,
-            'totales'       => $totales,
-            'busqueda'      => $busqueda,
+            'normativas'      => $normativas,
+            'categorias'      => $categorias,
+            'categoriaActiva' => $categoriaActiva,
+            'totales'         => $totales,
+            'busqueda'        => $busqueda,
         ]);
     }
 
     public function create(Request $request)
     {
-        $seccion = $request->query('seccion', 'obras');
-        $seccion = array_key_exists($seccion, ObraNormativa::SECCIONES) ? $seccion : 'obras';
+        $categorias = ObraCategoria::orderBy('orden')->orderBy('nombre')->get();
+        $categoriaId = (int) $request->query('categoria', 0);
+        $categoriaActiva = $categorias->firstWhere('id', $categoriaId) ?? $categorias->first();
 
         return view('admin.obras-particulares.normativas.form', [
-            'normativa'     => new ObraNormativa(['seccion' => $seccion, 'visible' => true]),
-            'seccionActiva' => $seccion,
-            'secciones'     => ObraNormativa::SECCIONES,
-            'modo'          => 'crear',
+            'normativa'       => new ObraNormativa(['categoria_id' => $categoriaActiva?->id, 'visible' => true]),
+            'categorias'      => $categorias,
+            'categoriaActiva' => $categoriaActiva,
+            'modo'            => 'crear',
         ]);
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'seccion' => ['required', 'in:obras,balcones'],
-            'nombre'  => ['required', 'string', 'max:255'],
-            'orden'   => ['nullable', 'integer', 'min:0', 'max:999'],
-            'visible' => ['nullable', 'boolean'],
-            'archivo' => ['required', 'file', 'mimes:pdf,doc,docx', 'max:51200'],
+            'categoria_id' => ['required', 'exists:obras_categorias,id'],
+            'nombre'       => ['required', 'string', 'max:255'],
+            'orden'        => ['nullable', 'integer', 'min:0', 'max:999'],
+            'visible'      => ['nullable', 'boolean'],
+            'archivo'      => ['required', 'file', 'mimes:pdf,doc,docx', 'max:51200'],
         ]);
 
         $data['visible'] = $request->boolean('visible', true);
@@ -69,28 +73,28 @@ class ObraNormativaAdminController extends Controller
         AuditLog::registrar('crear', 'ObraNormativa', $normativa->id, "Normativa creada: \"{$normativa->nombre}\"");
 
         return redirect()
-            ->route('admin.obras.normativas.index', ['seccion' => $normativa->seccion])
+            ->route('admin.obras.normativas.index', ['categoria' => $normativa->categoria_id])
             ->with('ok', 'Normativa creada correctamente.');
     }
 
     public function edit(ObraNormativa $normativa)
     {
         return view('admin.obras-particulares.normativas.form', [
-            'normativa'     => $normativa,
-            'seccionActiva' => $normativa->seccion,
-            'secciones'     => ObraNormativa::SECCIONES,
-            'modo'          => 'editar',
+            'normativa'       => $normativa,
+            'categorias'      => ObraCategoria::orderBy('orden')->orderBy('nombre')->get(),
+            'categoriaActiva' => $normativa->categoria,
+            'modo'            => 'editar',
         ]);
     }
 
     public function update(Request $request, ObraNormativa $normativa)
     {
         $data = $request->validate([
-            'seccion' => ['required', 'in:obras,balcones'],
-            'nombre'  => ['required', 'string', 'max:255'],
-            'orden'   => ['nullable', 'integer', 'min:0', 'max:999'],
-            'visible' => ['nullable', 'boolean'],
-            'archivo' => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:51200'],
+            'categoria_id' => ['required', 'exists:obras_categorias,id'],
+            'nombre'       => ['required', 'string', 'max:255'],
+            'orden'        => ['nullable', 'integer', 'min:0', 'max:999'],
+            'visible'      => ['nullable', 'boolean'],
+            'archivo'      => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:51200'],
         ]);
 
         $data['visible'] = $request->boolean('visible', true);
@@ -102,19 +106,21 @@ class ObraNormativaAdminController extends Controller
         AuditLog::registrar('editar', 'ObraNormativa', $normativa->id, "Normativa editada: \"{$normativa->nombre}\"");
 
         return redirect()
-            ->route('admin.obras.normativas.index', ['seccion' => $normativa->seccion])
+            ->route('admin.obras.normativas.index', ['categoria' => $normativa->categoria_id])
             ->with('ok', 'Normativa actualizada correctamente.');
     }
 
     public function destroy(ObraNormativa $normativa)
     {
-        $seccion = $normativa->seccion;
+        $categoriaId = $normativa->categoria_id;
+
         AuditLog::registrar('eliminar', 'ObraNormativa', $normativa->id, "Normativa eliminada: \"{$normativa->nombre}\"");
+
         $this->eliminarArchivoFisico($normativa->archivo_ruta);
         $normativa->delete();
 
         return redirect()
-            ->route('admin.obras.normativas.index', ['seccion' => $seccion])
+            ->route('admin.obras.normativas.index', ['categoria' => $categoriaId])
             ->with('ok', 'Normativa eliminada correctamente.');
     }
 
@@ -128,7 +134,7 @@ class ObraNormativaAdminController extends Controller
 
         $archivo   = $request->file('archivo');
         $extension = strtolower($archivo->getClientOriginalExtension());
-        $carpeta   = 'obras-particulares/normativas/' . $normativa->seccion;
+        $carpeta   = 'obras-particulares/normativas/' . $normativa->categoria_id;
         $base      = now()->format('dmY_Hi') . '_' . Str::slug(pathinfo($archivo->getClientOriginalName(), PATHINFO_FILENAME));
         $nombre    = $this->nombreUnico($carpeta, $base, $extension);
         $ruta      = $archivo->storeAs($carpeta, $nombre, 'public');

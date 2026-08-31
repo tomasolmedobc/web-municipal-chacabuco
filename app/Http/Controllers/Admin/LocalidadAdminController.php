@@ -20,6 +20,34 @@ class LocalidadAdminController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        return view('admin.turismo.localidades.create');
+    }
+
+    public function store(LocalidadRequest $request)
+    {
+        $data = $request->validated();
+        $data['nombre'] = $request->input('nombre');
+        $data['slug']   = \Illuminate\Support\Str::slug($data['nombre']);
+        $data['orden']  = (int) ($data['orden'] ?? 0);
+
+        if ($request->hasFile('imagen_portada')) {
+            $ruta = ImageUploader::guardarWebp($request->file('imagen_portada'), 'turismo/localidades');
+            if ($ruta) {
+                $data['imagen_portada'] = $ruta;
+            }
+        }
+
+        $localidad = Localidad::create($data);
+
+        AuditLog::registrar('crear', 'Localidad', $localidad->id, "Localidad creada: \"{$localidad->nombre}\"");
+
+        return redirect()
+            ->route('admin.turismo.localidades.index')
+            ->with('ok', 'Localidad creada correctamente');
+    }
+
     public function edit(Localidad $localidad)
     {
         return view('admin.turismo.localidades.form', [

@@ -225,4 +225,16 @@
 
 @push('scripts')
     <script src="{{ asset('js/admin-archivos.js') }}"></script>
+    <script @nonce>
+    (function () {
+        var fechaInput = document.getElementById('fecha_publicacion');
+        var anioInput  = document.getElementById('anio');
+        if (!fechaInput || !anioInput) return;
+
+        fechaInput.addEventListener('change', function () {
+            var d = new Date(this.value + 'T12:00:00');
+            if (!isNaN(d)) anioInput.value = d.getFullYear();
+        });
+    })();
+    </script>
 @endpush

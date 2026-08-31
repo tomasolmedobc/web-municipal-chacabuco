@@ -17,7 +17,7 @@
 </section>
 
 @if(session('ok'))
-    <script>document.addEventListener('DOMContentLoaded', () => showToast(@json(session('ok')), 'success'));</script>
+    <script @nonce>document.addEventListener('DOMContentLoaded', () => showToast(@json(session('ok')), 'success'));</script>
 @endif
 
 @if($anexos->isEmpty())

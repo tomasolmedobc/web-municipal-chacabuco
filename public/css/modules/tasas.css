@@ -22,6 +22,21 @@
     max-width: 960px;
     margin: 0 auto;
     padding: 32px 20px 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Card — encuadre de sección, igual que habilitaciones */
+.tasas-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
 /* Banner promocional */
@@ -46,7 +61,7 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 14px;
-    margin-bottom: 40px;
+    margin: 0;
 }
 
 .tasas-acciones .btn {
@@ -63,7 +78,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin-bottom: 12px;
+    margin: 0;
 }
 
 .tasas-accordion__item {
@@ -79,7 +94,7 @@
     padding: 16px 22px;
     cursor: pointer;
     list-style: none;
-    background: var(--card);
+    background: var(--bg);
     color: var(--text);
     font-size: .95rem;
     font-weight: 600;
@@ -112,6 +127,8 @@
     font-size: .9rem;
     line-height: 1.7;
     color: var(--text);
+    background-color: var(--card-soft);
+    border-top: 1px solid var(--border);
 }
 
 .tasas-accordion__content p  { margin: 0 0 10px; }
@@ -123,14 +140,14 @@
     font-size: 1.4rem;
     font-weight: 700;
     color: var(--text);
-    margin: 0 0 24px;
+    margin: 0;
 }
 
 .tasas-formas-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 12px;
-    margin-bottom: 40px;
+    margin: 0;
 }
 
 .tasas-forma-item {
@@ -160,8 +177,8 @@
     font-size: 1.4rem;
     font-weight: 700;
     color: var(--text);
-    margin: 0 0 20px;
-    padding-bottom: 10px;
+    margin: 0;
+    padding-bottom: 14px;
     border-bottom: 2px solid var(--primary);
 }
 
@@ -169,7 +186,7 @@
     border: 1px solid var(--border);
     border-radius: 10px;
     overflow: hidden;
-    margin-bottom: 10px;
+    margin: 0;
 }
 
 .tasas-grupo-summary {
@@ -179,7 +196,7 @@
     padding: 16px 22px;
     cursor: pointer;
     list-style: none;
-    background: var(--card);
+    background: var(--bg);
     color: var(--text);
     font-size: .95rem;
     font-weight: 600;
@@ -319,6 +336,8 @@
 /* Responsive */
 @media (max-width: 768px) {
     .tasas-hero { padding: 40px 16px; }
+    .tasas-container { gap: 14px; }
+    .tasas-card { padding: 16px; gap: 12px; }
     .tasas-acciones .btn { min-width: 100%; }
     .tasas-formas-grid { grid-template-columns: repeat(2, 1fr); }
     .tasas-accordion__summary { font-size: .875rem; padding: 14px 16px; }

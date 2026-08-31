@@ -52,7 +52,7 @@
             <textarea name="descripcion"
                       id="descripcion"
                       rows="4"
-                      placeholder="{{ $esOrdenanza ? 'Si lo dejas vacio se usara una descripcion generica para ordenanzas.' : 'Si lo dejas vacio se usara una descripcion generica para documentos de habilitaciones.' }}">{{ old('descripcion', $documento->descripcion) }}</textarea>
+                      placeholder="{{ $esOrdenanza ? 'Si lo dejas vacio se usara una descripcion generica para normativas.' : 'Si lo dejas vacio se usara una descripcion generica para documentos de habilitaciones.' }}">{{ old('descripcion', $documento->descripcion) }}</textarea>
             <small class="fecha">
                 Opcional. Si no completas este campo, se cargara una descripcion por defecto.
             </small>
@@ -71,13 +71,14 @@
 
         @if($esOrdenanza)
             <div class="admin-form-group">
-                <label for="numero">Numero de ordenanza</label>
+                <label for="numero">Código / Número</label>
                 <input type="text"
                        name="numero"
                        id="numero"
                        value="{{ old('numero', $documento->numero) }}"
-                       placeholder="Ej: 7427/17"
+                       placeholder="Ej: 001_Edificacion  o  7427/17"
                        required>
+                <small class="fecha">Se muestra entre paréntesis junto al nombre en la página pública.</small>
                 @error('numero') <small class="auth-error">{{ $message }}</small> @enderror
             </div>
         @endif
@@ -125,7 +126,7 @@
                    accept="{{ $esOrdenanza ? '.pdf' : '.pdf,.doc,.docx' }}"
                    {{ $esEdicion || old('link_externo', $documento->link_externo) ? '' : 'required' }}>
             <small class="fecha">
-                {{ $esOrdenanza ? 'Solo PDF.' : 'Formatos permitidos: PDF, DOC, DOCX.' }} Maximo 10MB. Tambien podes usar solo un link externo.
+                {{ $esOrdenanza ? 'Solo PDF.' : 'Formatos permitidos: PDF, DOC, DOCX.' }} Máximo 10MB. También podés usar solo un link externo.
             </small>
             @error('archivo') <small class="auth-error">{{ $message }}</small> @enderror
         </div>
@@ -174,7 +175,7 @@
 @endsection
 
 @push('scripts')
-    <script>
+    <script @nonce>
         document.addEventListener('DOMContentLoaded', function () {
             const archivo = document.getElementById('archivo');
             const link = document.getElementById('link_externo');

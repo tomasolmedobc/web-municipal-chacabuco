@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\SanitizesRichText;
 use Illuminate\Database\Eloquent\Model;
 
 class CarnetConfiguracion extends Model
 {
+    use SanitizesRichText;
+
     protected $table = 'carnet_configuracion';
 
     protected $fillable = [
@@ -14,6 +17,12 @@ class CarnetConfiguracion extends Model
         'paso2_titulo', 'paso2_contenido',
         'paso3_titulo', 'paso3_contenido',
         'paso4_titulo', 'paso4_contenido',
+        'licencia_digital_contenido',
+    ];
+
+    protected array $richTextFields = [
+        'intro_texto', 'alerta_info', 'aviso_ubicacion',
+        'paso1_contenido', 'paso2_contenido', 'paso3_contenido', 'paso4_contenido',
         'licencia_digital_contenido',
     ];
 

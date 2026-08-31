@@ -35,9 +35,14 @@
 
         <div class="admin-form-group">
             <label for="codigo">Código de validación <small class="fecha">(8 caracteres)</small></label>
-            <input type="text" name="codigo" id="codigo"
-                   value="{{ old('codigo', $usuario->codigo) }}"
-                   minlength="8" maxlength="8" required>
+            <div style="display:flex; gap:8px;">
+                <input type="text" name="codigo" id="codigo"
+                       value="{{ old('codigo', $usuario->codigo) }}"
+                       minlength="8" maxlength="8" required style="flex:1;">
+                <button type="button" id="btn-generar-codigo" class="btn btn-secondary" title="Generar código aleatorio">
+                    Generar
+                </button>
+            </div>
             @error('codigo') <small class="auth-error">{{ $message }}</small> @enderror
         </div>
 
@@ -55,3 +60,16 @@
     </button>
 </form>
 @endsection
+
+@push('scripts')
+<script @nonce>
+document.getElementById('btn-generar-codigo').addEventListener('click', function () {
+    var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    var code = '';
+    var arr = new Uint8Array(8);
+    crypto.getRandomValues(arr);
+    arr.forEach(function (b) { code += chars[b % chars.length]; });
+    document.getElementById('codigo').value = code;
+});
+</script>
+@endpush

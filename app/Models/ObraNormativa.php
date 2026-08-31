@@ -6,32 +6,24 @@ use Illuminate\Database\Eloquent\Model;
 
 class ObraNormativa extends Model
 {
-    const SECCION_OBRAS    = 'obras';
-    const SECCION_BALCONES = 'balcones';
-
-    const SECCIONES = [
-        'obras'    => 'Obras Particulares',
-        'balcones' => 'Balcones Gastronómicos',
-    ];
-
     protected $table = 'obras_normativas';
 
     protected $fillable = [
-        'seccion', 'nombre',
+        'categoria_id', 'nombre',
         'archivo_nombre', 'archivo_ruta', 'archivo_mime', 'archivo_peso',
         'orden', 'visible',
     ];
 
     protected $casts = ['visible' => 'boolean'];
 
+    public function categoria()
+    {
+        return $this->belongsTo(ObraCategoria::class, 'categoria_id');
+    }
+
     public function scopeVisible($query)
     {
         return $query->where('visible', true);
-    }
-
-    public function scopeSeccion($query, string $seccion)
-    {
-        return $query->where('seccion', $seccion);
     }
 
     public function getArchivoPesoLegibleAttribute(): string

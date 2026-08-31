@@ -2,13 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\SanitizesRichText;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\NoticiaArchivo;
 use App\Models\Categoria;
 
 class Noticia extends Model
 {
+    use SanitizesRichText;
+
     protected $table = 'noticias';
+
+    protected array $richTextFields = ['contenido'];
 
     protected $fillable = [
         'wp_id',
