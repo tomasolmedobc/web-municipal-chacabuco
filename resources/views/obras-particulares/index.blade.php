@@ -48,7 +48,7 @@
                         <span>Formulario de inscripción</span>
                     </a>
                 @else
-                    <span class="btn btn-primary" style="opacity:.5; cursor:default;">
+                    <span class="btn btn-primary btn--disabled">
                         <i class="fa-solid fa-pen-to-square"></i>
                         <span>Formulario de inscripción</span>
                     </span>
@@ -57,7 +57,7 @@
 
             {{-- Formularios (Anexos) --}}
             @if($anexos->isNotEmpty())
-            <div class="ops-registro-card" style="margin-top:16px;">
+            <div class="ops-registro-card mt-16">
                 <div class="ops-registro-card__header">
                     <i class="fa-solid fa-file-contract"></i>
                     <h3>Formularios (Anexos)</h3>
@@ -101,7 +101,7 @@
         <h2 class="ops-seccion__titulo">{{ $categoria->nombre }}</h2>
 
         @if($categoria->descripcion)
-            <p style="color:var(--text-muted);margin-bottom:16px;">{{ $categoria->descripcion }}</p>
+            <p>{{ $categoria->descripcion }}</p>
         @endif
 
         {{-- Normativas de esta categoría --}}

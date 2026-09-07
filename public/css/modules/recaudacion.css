@@ -163,6 +163,19 @@
     padding-top: 8px;
 }
 
+/* ── Admin views ──────────────────────────────────────────────────── */
+.rc-admin-row       { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 4px; }
+.rc-admin-name      { font-size: 15px; }
+.rc-admin-meta      { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+.rc-admin-link      { font-size: 12px; color: var(--primary); word-break: break-all; }
+.rc-admin-no-link   { font-size: 12px; color: var(--muted); }
+.rc-admin-section-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.rc-admin-section-h3 { margin: 0; font-size: 16px; font-weight: 700; }
+.rc-admin-count     { font-weight: 400; color: var(--muted); font-size: 13px; }
+.rc-admin-doc-row   { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.rc-admin-icon      { color: var(--primary); font-size: 18px; flex-shrink: 0; }
+.rc-admin-doc-info  { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
 /* --- Responsive --- */
 @media (max-width: 600px) {
     .rc-hero {

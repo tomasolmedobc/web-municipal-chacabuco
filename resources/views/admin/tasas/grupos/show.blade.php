@@ -14,7 +14,7 @@
             </span>
         </p>
     </div>
-    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <div class="admin-btn-bar">
         <a href="{{ route('admin.tasas.grupos.edit', $grupo) }}" class="btn btn-secondary">Editar grupo</a>
         <a href="{{ route('admin.tasas.grupos.index') }}" class="btn btn-secondary">← Grupos</a>
     </div>
@@ -25,22 +25,22 @@
 @endif
 
 @if($errors->any())
-    <div class="alert-error" style="margin-bottom:16px;">
-        <ul style="margin:0; padding-left:20px;">
+    <div class="alert-error">
+        <ul>
             @foreach($errors->all() as $e) <li>{{ $e }}</li> @endforeach
         </ul>
     </div>
 @endif
 
 {{-- ─── Tabla de cuotas ─────────────────────────────────────────────── --}}
-<div class="admin-form-card" style="padding:0; overflow:hidden;">
+<div class="admin-form-card cuotas-tabla-wrap">
     <table class="cuotas-tabla">
         <thead>
             <tr>
                 <th>Etiqueta</th>
                 <th>Vencimiento</th>
                 <th>Estado</th>
-                <th style="text-align:right;">Acciones</th>
+                <th class="text-right">Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -53,19 +53,19 @@
                         {{ $cuota->estado === 'visible' ? 'Visible' : 'Oculta' }}
                     </span>
                 </td>
-                <td style="text-align:right; white-space:nowrap;">
-                    <a href="{{ route('admin.tasas.cuotas.edit', $cuota) }}" class="btn btn-secondary" style="padding:4px 12px; font-size:.85rem;">Editar</a>
+                <td class="td-actions">
+                    <a href="{{ route('admin.tasas.cuotas.edit', $cuota) }}" class="btn btn-secondary btn-sm">Editar</a>
                     <form action="{{ route('admin.tasas.cuotas.destroy', $cuota) }}" method="POST"
-                          style="display:inline;"
+                          class="d-inline"
                           data-confirm="¿Eliminar la cuota «{{ $cuota->cuota_label }}»?">
                         @csrf @method('DELETE')
-                        <button type="submit" class="btn btn-secondary" style="padding:4px 12px; font-size:.85rem;">Eliminar</button>
+                        <button type="submit" class="btn btn-secondary btn-sm">Eliminar</button>
                     </form>
                 </td>
             </tr>
             @empty
             <tr>
-                <td colspan="4" style="text-align:center; color:#888; padding:24px 0;">
+                <td colspan="4" class="cuotas-tabla-empty">
                     Todavía no hay vencimientos cargados para este grupo.
                 </td>
             </tr>
@@ -81,24 +81,22 @@
 
         <input type="text"
                name="cuota_label"
-               class="campo-input"
+               class="campo-input qs-label"
                placeholder="Etiqueta (ej: Cuota 1/{{ date('Y') }})"
-               value="{{ old('cuota_label') }}"
-               style="flex:1; min-width:160px;">
+               value="{{ old('cuota_label') }}">
 
         <input type="date"
                name="fecha_vencimiento"
-               class="campo-input"
+               class="campo-input qs-fecha"
                value="{{ old('fecha_vencimiento') }}"
-               required
-               style="width:160px;">
+               required>
 
-        <select name="estado" class="campo-input" style="width:120px;">
+        <select name="estado" class="campo-input qs-estado">
             <option value="visible" {{ old('estado', 'visible') === 'visible' ? 'selected' : '' }}>Visible</option>
             <option value="oculto"  {{ old('estado') === 'oculto' ? 'selected' : '' }}>Oculta</option>
         </select>
 
-        <button type="submit" class="btn btn-primary" style="white-space:nowrap;">
+        <button type="submit" class="btn btn-primary ws-nowrap">
             + Agregar
         </button>
     </form>

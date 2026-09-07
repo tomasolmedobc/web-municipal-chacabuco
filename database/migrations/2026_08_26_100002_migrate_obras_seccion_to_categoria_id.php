@@ -54,16 +54,8 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::table('obras_procedimientos', function (Blueprint $table) {
-            $table->dropForeign(['categoria_id']);
-            $table->dropColumn('categoria_id');
-            $table->string('seccion', 30)->default('obras')->after('id')->index();
-        });
-
-        Schema::table('obras_normativas', function (Blueprint $table) {
-            $table->dropForeign(['categoria_id']);
-            $table->dropColumn('categoria_id');
-            $table->string('seccion', 30)->default('obras')->after('id')->index();
-        });
+        // Not safely reversible: the original per-row 'seccion' strings were dropped
+        // in up(). Rolling back would restore the column with a hardcoded default,
+        // losing the original data. Do not roll back in production.
     }
 };

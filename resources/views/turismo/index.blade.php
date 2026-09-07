@@ -20,7 +20,7 @@
     <div class="turismo-localidad-grid">
         @foreach($localidades as $localidad)
             <a href="{{ route('turismo.show', $localidad->slug) }}" class="turismo-localidad-card">
-                <img src="{{ $localidad->imagen_portada_url }}" alt="{{ $localidad->nombre }}">
+                <img src="{{ $localidad->imagen_portada_url }}" alt="{{ $localidad->nombre }}" loading="lazy">
 
                 <div class="turismo-localidad-card__body">
                     @if($localidad->es_cabecera)
@@ -54,7 +54,7 @@
                 @endphp
                 <a href="{{ $url }}" class="turismo-item-card">
                     <span class="turismo-item-card__badge">Destacado</span>
-                    <img src="{{ $item->imagen_url }}" alt="{{ $item->titulo }}">
+                    <img src="{{ $item->imagen_url }}" alt="{{ $item->titulo }}" loading="lazy">
 
                     <div class="turismo-item-card__body">
                         <span class="hero-badge">{{ \App\Models\TurismoItem::configTipo($item->tipo)['titulo'] }}</span>
@@ -95,7 +95,7 @@
                 @endphp
                 <a href="{{ $urlFin }}" class="turismo-item-card turismo-item-card--finalizado">
                     <span class="turismo-item-card__badge turismo-item-card__badge--finalizado">Finalizado</span>
-                    <img src="{{ $item->imagen_url }}" alt="{{ $item->titulo }}">
+                    <img src="{{ $item->imagen_url }}" alt="{{ $item->titulo }}" loading="lazy">
 
                     <div class="turismo-item-card__body">
                         <h3>{{ $item->titulo }}</h3>

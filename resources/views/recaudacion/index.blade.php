@@ -56,7 +56,7 @@
                 Ir a trámites
             </a>
         @else
-            <span class="btn btn-outline rc-online__btn" style="opacity:.5; cursor:default;">
+            <span class="btn btn-outline rc-online__btn btn--disabled">
                 Ir a trámites
             </span>
         @endif

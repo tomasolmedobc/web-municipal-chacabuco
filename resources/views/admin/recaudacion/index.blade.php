@@ -9,7 +9,7 @@
         <h2 class="seccion-titulo">Guía de Trámites de Recaudación</h2>
         <p class="admin-subtitle">Administrá los documentos PDF y el trámite online.</p>
     </div>
-    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <div class="admin-btn-bar">
         <a href="{{ route('admin.recaudacion.create') }}" class="btn btn-primary">
             <i class="fa-solid fa-plus"></i> Nuevo documento
         </a>
@@ -29,20 +29,17 @@
 @endif
 
 {{-- Trámite Online --}}
-<section class="admin-form-card" style="margin-bottom:24px;">
-    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:4px;">
+<section class="admin-form-card mb-24">
+    <div class="rc-admin-row">
         <div>
-            <strong style="font-size:15px;">Trámite Online</strong>
-            <p style="margin:4px 0 0; color:var(--muted); font-size:13px;">
-                {{ $tramite->titulo }}
-            </p>
+            <strong class="rc-admin-name">Trámite Online</strong>
+            <p class="rc-admin-meta">{{ $tramite->titulo }}</p>
             @if($tramite->url)
-                <a href="{{ $tramite->url }}" target="_blank" rel="noopener"
-                   style="font-size:12px; color:var(--primary); word-break:break-all;">
+                <a href="{{ $tramite->url }}" target="_blank" rel="noopener" class="rc-admin-link">
                     {{ $tramite->url }}
                 </a>
             @else
-                <span style="font-size:12px; color:var(--muted);">Sin link configurado</span>
+                <span class="rc-admin-no-link">Sin link configurado</span>
             @endif
         </div>
         <a href="{{ route('admin.recaudacion.tramite.edit') }}" class="btn btn-secondary">
@@ -52,34 +49,31 @@
 </section>
 
 {{-- Documentos PDF --}}
-<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-    <h3 style="margin:0; font-size:16px; font-weight:700;">
+<div class="rc-admin-section-hd">
+    <h3 class="rc-admin-section-h3">
         Documentos PDF
-        <span style="font-weight:400; color:var(--muted); font-size:13px;">
-            ({{ $documentos->count() }} en total)
-        </span>
+        <span class="rc-admin-count">({{ $documentos->count() }} en total)</span>
     </h3>
 </div>
 
 <div class="admin-list">
     @forelse($documentos as $doc)
         <div class="admin-list-item">
-            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                <i class="fa-solid fa-file-pdf" style="color:var(--primary); font-size:18px; flex-shrink:0;"></i>
+            <div class="rc-admin-doc-row">
+                <i class="fa-solid fa-file-pdf rc-admin-icon"></i>
                 <div>
-                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                    <div class="rc-admin-doc-info">
                         <strong>{{ $doc->titulo }}</strong>
                         @if(! $doc->activo)
                             <span class="badge-estado badge-oculto">⚠ Desactivado</span>
                         @endif
                     </div>
                     @if($doc->url)
-                        <a href="{{ $doc->url }}" target="_blank" rel="noopener"
-                           style="font-size:12px; color:var(--primary); word-break:break-all;">
+                        <a href="{{ $doc->url }}" target="_blank" rel="noopener" class="rc-admin-link">
                             {{ $doc->url }}
                         </a>
                     @else
-                        <span style="font-size:12px; color:var(--muted);">Sin link</span>
+                        <span class="rc-admin-no-link">Sin link</span>
                     @endif
                 </div>
             </div>
@@ -114,7 +108,7 @@
         </div>
     @empty
         <div class="admin-list-item">
-            <p style="color:var(--muted);">No hay documentos cargados todavía.</p>
+            <p class="text-muted">No hay documentos cargados todavía.</p>
         </div>
     @endforelse
 </div>

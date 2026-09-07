@@ -11,7 +11,7 @@
         </p>
     </div>
 
-    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <div class="admin-btn-bar">
         <a href="{{ route('admin.turismo.create', array_filter(['tipo' => $tipoActivo, 'localidad_id' => $localidadId])) }}"
            class="btn btn-primary">
             Nuevo {{ $config['singular'] }}
@@ -23,7 +23,7 @@
     </div>
 </section>
 
-<div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
+<div class="justify-end mb-10">
     <a href="{{ route('admin.turismo.localidades.index') }}" class="btn btn-secondary btn-sm">
         <i class="fa-solid fa-map-pin"></i> Gestionar localidades
     </a>
@@ -85,7 +85,7 @@
     @foreach($items as $item)
         <article class="admin-list-item">
             <div>
-                <div class="hero-top" style="margin-bottom:10px;">
+                <div class="hero-top">
                     <span class="licitacion-badge badge-{{ $item->estado === 'visible' ? 'activa' : 'finalizada' }}">
                         {{ ucfirst($item->estado) }}
                     </span>

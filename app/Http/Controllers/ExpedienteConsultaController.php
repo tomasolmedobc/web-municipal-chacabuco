@@ -6,6 +6,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ExpedienteConsultaController extends Controller
 {
@@ -98,6 +99,8 @@ class ExpedienteConsultaController extends Controller
 
     private function mensajeErrorConsulta(QueryException $exception): string
     {
+        Log::error('Expedientes DB error', ['exception' => $exception->getMessage()]);
+
         $mensaje = $exception->getMessage();
 
         if (str_contains($mensaje, '[2002]') || str_contains($mensaje, 'Connection refused') || str_contains($mensaje, 'deneg')) {

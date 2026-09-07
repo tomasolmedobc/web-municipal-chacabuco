@@ -12,8 +12,8 @@
 </section>
 
 @if($errors->any())
-    <div class="alert-error" style="margin-bottom:18px;">
-        <ul style="margin:0; padding-left:20px;">
+    <div class="alert-error">
+        <ul>
             @foreach($errors->all() as $e) <li>{{ $e }}</li> @endforeach
         </ul>
     </div>
@@ -30,7 +30,7 @@
 <form method="POST" action="{{ route('admin.habilitaciones.config.update') }}" class="admin-form-card">
     @csrf @method('PUT')
 
-    <div class="admin-form-group full" style="margin-bottom:28px;">
+    <div class="admin-form-group full mb-28">
         <label class="campo-label" for="url_prefactibilidad">
             URL — Trámite Online Prefactibilidad Comercial
         </label>
@@ -47,7 +47,7 @@
         </p>
     </div>
 
-    <div class="admin-form-group full" style="margin-bottom:28px;">
+    <div class="admin-form-group full mb-28">
         <label class="campo-label" for="url_habilitacion">
             URL — Trámite Online Habilitación en General
         </label>

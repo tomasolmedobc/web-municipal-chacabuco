@@ -19,35 +19,34 @@
 </section>
 
 @if($errors->any())
-    <div class="alert-error" style="margin-bottom:18px;">
-        <ul style="margin:0;padding-left:20px;">
+    <div class="alert-error">
+        <ul>
             @foreach($errors->all() as $e) <li>{{ $e }}</li> @endforeach
         </ul>
     </div>
 @endif
 
 @if($anexos->isNotEmpty())
-    <div class="ops-admin-tip" style="margin-bottom:20px;">
+    <div class="ops-admin-tip mb-20">
         <i class="fa-solid fa-circle-info"></i>
-        <div style="flex:1;min-width:0;">
+        <div class="flex-1 item-text">
             <strong>Formularios disponibles para vincular:</strong>
-            <small class="fecha" style="display:block;margin-bottom:10px;margin-top:2px;">
+            <small class="fecha d-block mb-10">
                 Hacé clic en "Copiar URL" y luego pegala como enlace dentro del editor de texto.
             </small>
-            <div style="display:flex;flex-direction:column;gap:6px;">
+            <div class="ops-anexos-list">
                 @foreach($anexos as $anexo)
-                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;">
-                        <span style="font-size:.85rem;font-weight:600;flex:1;min-width:120px;">{{ $anexo->nombre }}</span>
+                    <div class="ops-anexo-item">
+                        <span class="ops-anexo-name">{{ $anexo->nombre }}</span>
                         @if($anexo->archivo_ruta)
-                            <code style="font-size:.72rem;color:var(--text-muted);word-break:break-all;flex:2;min-width:0;">{{ $anexo->archivo_ruta }}</code>
+                            <code class="ops-anexo-url">{{ $anexo->archivo_ruta }}</code>
                             <button type="button"
-                                    class="btn btn-secondary btn-copiar-url"
-                                    data-copy-url="{{ $anexo->archivo_ruta }}"
-                                    style="font-size:.78rem;padding:3px 10px;white-space:nowrap;flex-shrink:0;">
+                                    class="btn btn-secondary btn-copiar-url ops-btn-copy"
+                                    data-copy-url="{{ $anexo->archivo_ruta }}">
                                 Copiar URL
                             </button>
                         @else
-                            <span style="font-size:.78rem;color:var(--text-muted);">Sin archivo cargado</span>
+                            <span class="ops-anexo-empty">Sin archivo cargado</span>
                         @endif
                     </div>
                 @endforeach
@@ -164,6 +163,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     tinymce.init({
         selector: '#contenido',
+        nonce: '{{ $cspNonce }}',
         language: 'es',
         height: 420,
         plugins: 'lists link',

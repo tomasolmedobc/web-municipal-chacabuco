@@ -9,7 +9,7 @@
         <p class="admin-subtitle">Administrá los usuarios habilitados para reservar asientos.</p>
     </div>
 
-    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <div class="admin-btn-bar">
         <a href="{{ route('admin.baile.usuarios.create') }}" class="btn btn-primary">Nuevo usuario</a>
         <a href="{{ route('admin.baile.asientos.index') }}" class="btn btn-secondary">Asientos</a>
         <a href="{{ route('admin.baile.reservas.index') }}" class="btn btn-secondary">Reservas</a>

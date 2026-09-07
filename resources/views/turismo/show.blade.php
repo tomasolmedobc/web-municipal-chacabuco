@@ -8,7 +8,7 @@
     ['label' => 'Turismo','url' => route('turismo.index')],
     ['label' => $localidad->nombre],
 ]" />
-<section class="turismo-show-hero" style="background-image: linear-gradient(135deg, rgba(15,23,42,.55), rgba(15,23,42,.35)), url('{{ $localidad->imagen_portada_url }}');">
+<section class="turismo-show-hero" data-bg="{{ $localidad->imagen_portada_url }}">
     <div>
         <span class="section-badge">{{ $localidad->es_cabecera ? 'Ciudad cabecera' : 'Delegación' }}</span>
         <h1>{{ $localidad->nombre }}</h1>
@@ -22,6 +22,23 @@
     <section class="hab-card turismo-historia">
         <span class="section-badge">Historia</span>
         <div class="contenido">{!! $localidad->historia !!}</div>
+    </section>
+@endif
+
+@if($localidad->mapa_embed)
+    <section class="hab-card turismo-mapa">
+        <span class="section-badge">Ubicación</span>
+        <div class="turismo-mapa__wrap">
+            <iframe
+                src="{{ $localidad->mapa_embed }}"
+                width="100%"
+                height="400"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Mapa de {{ $localidad->nombre }}">
+            </iframe>
+        </div>
     </section>
 @endif
 
@@ -79,7 +96,7 @@
                                 <span class="turismo-item-card__badge">Destacado</span>
                             @endif
 
-                            <img src="{{ $item->imagen ?: $localidad->imagen_portada_url }}" alt="{{ $item->titulo }}">
+                            <img src="{{ $item->imagen ?: $localidad->imagen_portada_url }}" alt="{{ $item->titulo }}" loading="lazy">
 
                             <div class="turismo-item-card__body">
                                 @if($item->categoria)
@@ -130,6 +147,15 @@
 </section>
 
 @push('scripts')
+<script @nonce>
+(function () {
+    var hero = document.querySelector('.turismo-show-hero[data-bg]');
+    if (hero) {
+        hero.style.backgroundImage =
+            'linear-gradient(135deg,rgba(15,23,42,.55),rgba(15,23,42,.35)),url("' + hero.dataset.bg + '")';
+    }
+})();
+</script>
 <script @nonce>
 (function () {
     const tabs   = document.querySelectorAll('.js-turismo-tab');

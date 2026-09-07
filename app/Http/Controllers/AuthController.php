@@ -9,11 +9,13 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
-        $a = rand(1, 9);
-        $b = rand(1, 9);
-        session(['captcha_respuesta' => $a + $b]);
+        $a  = rand(2, 9);
+        $b  = rand(2, 9);
+        $op = rand(0, 1) ? '+' : '×';
 
-        return view('auth.login', ['captcha_pregunta' => "$a + $b"]);
+        session(['captcha_respuesta' => $op === '+' ? $a + $b : $a * $b]);
+
+        return view('auth.login', ['captcha_pregunta' => "$a $op $b"]);
     }
 
     public function login(Request $request)

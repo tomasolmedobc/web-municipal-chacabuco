@@ -16,8 +16,7 @@
         : ($item->imagen ? $item->imagen_url : $localidad->imagen_portada_url);
 @endphp
 
-<section class="turismo-show-hero"
-    style="background-image: linear-gradient(135deg, rgba(15,23,42,.55), rgba(15,23,42,.35)), url('{{ $heroUrl }}');">
+<section class="turismo-show-hero" data-bg="{{ $heroUrl }}">
     <div>
         <span class="section-badge">
             <i class="fa-solid {{ $config['icono'] }}"></i>
@@ -30,7 +29,7 @@
     </div>
 </section>
 
-<div style="display:flex; gap:10px; margin-bottom: 20px; flex-wrap:wrap;">
+<div class="turismo-item-nav">
     <a href="{{ route('turismo.show', ['localidad' => $localidad->slug, 'tipo' => $item->tipo]) }}"
        class="btn btn-secondary">
         <i class="fa-solid fa-arrow-left"></i>
@@ -86,7 +85,7 @@
         @endif
 
         @if($item->link_externo)
-            <a href="{{ $item->link_externo }}" target="_blank" rel="noopener" class="btn btn-primary" style="width:100%;">
+            <a href="{{ $item->link_externo }}" target="_blank" rel="noopener" class="btn btn-primary w-full">
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 Más información
             </a>
@@ -251,6 +250,15 @@
 @endsection
 
 @push('scripts')
+<script @nonce>
+(function () {
+    var hero = document.querySelector('.turismo-show-hero[data-bg]');
+    if (hero) {
+        hero.style.backgroundImage =
+            'linear-gradient(135deg,rgba(15,23,42,.55),rgba(15,23,42,.35)),url("' + hero.dataset.bg + '")';
+    }
+})();
+</script>
 <script @nonce>
 (function () {
     const modal   = document.getElementById('turismo-lightbox');

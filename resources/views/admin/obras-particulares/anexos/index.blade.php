@@ -8,7 +8,7 @@
         <h2 class="seccion-titulo">Formularios / Anexos</h2>
         <p class="admin-subtitle">Formularios descargables que se referencian en los procedimientos (Anexo 1 al 4 y más).</p>
     </div>
-    <div style="display:flex;gap:8px;">
+    <div class="admin-btn-bar">
         <a href="{{ route('admin.obras.anexos.create') }}" class="btn btn-primary">
             <i class="fa-solid fa-plus"></i> Nuevo formulario
         </a>
@@ -29,8 +29,8 @@
         @foreach($anexos as $anexo)
             <article class="admin-list-item">
                 <div>
-                    <div style="display:flex;align-items:center;gap:8px;">
-                        <h3 style="margin:0;">{{ $anexo->nombre }}</h3>
+                    <div class="admin-meta-row">
+                        <h3 class="h3-flush">{{ $anexo->nombre }}</h3>
                     </div>
                     <div class="meta-noticia">
                         <span>Orden: {{ $anexo->orden }}</span>
@@ -43,7 +43,7 @@
                         @endif
                     </div>
                     @if($anexo->archivo_ruta)
-                        <small class="fecha" style="margin-top:4px;display:block;">
+                        <small class="fecha mt-4 d-block">
                             URL: <code>{{ $anexo->archivo_ruta }}</code>
                         </small>
                     @endif

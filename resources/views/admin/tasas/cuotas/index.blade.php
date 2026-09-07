@@ -8,7 +8,7 @@
         <h2 class="seccion-titulo">Fechas de vencimiento</h2>
         <p class="admin-subtitle">Cuotas y fechas de vencimiento por grupo de tasa.</p>
     </div>
-    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <div class="admin-btn-bar">
         <a href="{{ route('admin.tasas.cuotas.create') }}" class="btn btn-primary">Nueva cuota</a>
         <a href="{{ route('admin.tasas.index') }}" class="btn btn-secondary">Volver</a>
     </div>
@@ -39,7 +39,7 @@
     @foreach($cuotas as $cuota)
     <div class="admin-list-item">
         <div>
-            <h3 style="margin:0 0 4px;">{{ $cuota->cuota_label }}</h3>
+            <h3 class="h3-item">{{ $cuota->cuota_label }}</h3>
             <div class="meta-noticia">
                 <span>{{ $cuota->grupo->nombre }}</span>
                 <span>Vence: <strong>{{ $cuota->fecha_vencimiento->format('d/m/Y') }}</strong></span>

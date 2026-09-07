@@ -11,7 +11,7 @@
         </p>
     </div>
 
-    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <div class="admin-btn-bar">
         <a href="{{ route('admin.gobierno-abierto.create', ['categoria' => $categoriaActiva]) }}"
            class="btn btn-primary">
             Nuevo {{ $config['singular'] }}
@@ -53,7 +53,7 @@
     @foreach($documentos as $documento)
         <article class="admin-list-item">
             <div>
-                <div class="hero-top" style="margin-bottom:10px;">
+                <div class="hero-top">
                     @if($categoriaActiva === \App\Models\Licitacion::CATEGORIA_LICITACIONES)
                         <span class="licitacion-badge badge-{{ $documento->tipo }}">
                             {{ $documento->tipo === 'publica' ? 'Publica' : 'Privada' }}

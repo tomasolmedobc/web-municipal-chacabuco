@@ -9,7 +9,7 @@
         <p class="admin-subtitle">Gestioná los asientos del salón.</p>
     </div>
 
-    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <div class="admin-btn-bar">
         <a href="{{ route('admin.baile.asientos.create') }}" class="btn btn-primary">Nuevo asiento</a>
         <a href="{{ route('admin.baile.usuarios.index') }}" class="btn btn-secondary">Usuarios</a>
         <a href="{{ route('admin.baile.reservas.index') }}" class="btn btn-secondary">Reservas</a>
@@ -17,7 +17,7 @@
     </div>
 </section>
 
-<div class="baile-stats" style="margin-bottom: 20px;">
+<div class="baile-stats mb-20">
     <div class="baile-stat">
         <span class="baile-stat__numero">{{ $totales['total'] }}</span>
         <span class="baile-stat__label">Total</span>
@@ -61,8 +61,8 @@
         @csrf
 
         @if($errors->hasAny(['color','fila_desde','fila_hasta','num_desde','num_hasta']))
-            <div class="alert-error" style="margin-bottom:14px;">
-                <ul style="margin:0;padding-left:18px;">
+            <div class="alert-error">
+                <ul>
                     @foreach($errors->only(['color','fila_desde','fila_hasta','num_desde','num_hasta']) as $e)
                         <li>{{ $e }}</li>
                     @endforeach
@@ -80,13 +80,13 @@
             <div class="admin-form-group">
                 <label class="campo-label">Fila desde</label>
                 <input type="text" name="fila_desde" class="campo-input"
-                       value="{{ old('fila_desde') }}" placeholder="A" maxlength="1" required style="text-transform:uppercase;">
+                       value="{{ old('fila_desde') }}" placeholder="A" maxlength="1" required class="text-uppercase">
             </div>
 
             <div class="admin-form-group">
                 <label class="campo-label">Fila hasta</label>
                 <input type="text" name="fila_hasta" class="campo-input"
-                       value="{{ old('fila_hasta') }}" placeholder="H" maxlength="1" required style="text-transform:uppercase;">
+                       value="{{ old('fila_hasta') }}" placeholder="H" maxlength="1" required class="text-uppercase">
             </div>
 
             <div class="admin-form-group">
@@ -101,8 +101,8 @@
                        value="{{ old('num_hasta') }}" min="1" max="999" required>
             </div>
 
-            <div class="admin-form-group" style="align-self:flex-end;">
-                <button type="submit" class="btn btn-primary" style="width:100%;">Crear asientos</button>
+            <div class="admin-form-group align-end">
+                <button type="submit" class="btn btn-primary w-full">Crear asientos</button>
             </div>
         </div>
 
@@ -123,7 +123,7 @@
     @foreach($asientos as $asiento)
         <article class="admin-list-item">
             <div>
-                <div class="hero-top" style="margin-bottom: 8px;">
+                <div class="hero-top">
                     <span class="licitacion-badge {{ $asiento->disponible ? 'badge-activa' : 'badge-finalizada' }}">
                         {{ $asiento->disponible ? 'Disponible' : 'Reservado' }}
                     </span>

@@ -13,8 +13,8 @@
 </section>
 
 @if($errors->any())
-    <div class="admin-alert" style="background:#fef2f2; color:#991b1b; margin-bottom:20px;">
-        <ul style="margin:0; padding-left:18px;">
+    <div class="alert-error">
+        <ul>
             @foreach($errors->all() as $err)
                 <li>{{ $err }}</li>
             @endforeach
@@ -50,7 +50,7 @@
                    value="{{ old('url', $tramite->url) }}"
                    maxlength="500"
                    placeholder="https://tramites.chacabuco.gob.ar/...">
-            <small style="color:var(--muted);">Dejá en blanco si aún no está disponible online.</small>
+            <small class="form-hint">Dejá en blanco si aún no está disponible online.</small>
         </div>
 
     </div>

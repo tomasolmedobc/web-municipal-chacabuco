@@ -46,12 +46,13 @@ class TasasAdminController extends Controller
             'btn_ordenanza_archivo'      => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:51200'],
         ]);
 
-        $config = TasasConfiguracion::instancia();
+        $validated = $request->validated();
+        $config    = TasasConfiguracion::instancia();
 
-        $config->texto_pago_anual       = $request->input('texto_pago_anual');
-        $config->texto_plan_facilidades = $request->input('texto_plan_facilidades');
-        $config->texto_info_bancaria    = $request->input('texto_info_bancaria');
-        $config->banner_url             = $request->input('banner_url');
+        $config->texto_pago_anual       = $validated['texto_pago_anual'] ?? null;
+        $config->texto_plan_facilidades = $validated['texto_plan_facilidades'] ?? null;
+        $config->texto_info_bancaria    = $validated['texto_info_bancaria'] ?? null;
+        $config->banner_url             = $validated['banner_url'] ?? null;
 
         if ($request->hasFile('banner_imagen')) {
             $this->eliminarArchivo($config->banner_imagen_ruta);

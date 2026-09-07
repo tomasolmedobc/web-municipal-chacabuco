@@ -97,7 +97,7 @@
 
 .proveedores-bank-card {
     display: grid;
-    gap: 8px;
+    gap: 10px;
     margin: 14px 0;
     padding: 16px;
     border: 1px solid var(--border);
@@ -105,6 +105,14 @@
     background: var(--card);
     color: var(--text);
 }
+
+.proveedores-contact-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 6px;
+}
+.proveedores-contact-row .btn { font-size: 14px; }
 
 .proveedores-bank-card strong {
     font-size: 18px;

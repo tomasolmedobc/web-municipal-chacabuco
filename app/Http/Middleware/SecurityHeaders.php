@@ -25,11 +25,11 @@ class SecurityHeaders
             'Content-Security-Policy',
             "default-src 'self'; " .
             "script-src 'self' 'nonce-{$nonce}'; " .
-            "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; " .
+            "style-src 'self' 'nonce-{$nonce}' https://cdnjs.cloudflare.com; " .
             "font-src 'self' https://cdnjs.cloudflare.com; " .
             "img-src 'self' data: blob:; " .
             "connect-src 'self' https://api.open-meteo.com; " .
-            "frame-src 'self' https://www.youtube.com https://player.vimeo.com; " .
+            "frame-src 'self' https://www.youtube.com https://player.vimeo.com https://www.google.com; " .
             "frame-ancestors 'self'; " .
             "object-src 'none';"
         );
@@ -38,7 +38,7 @@ class SecurityHeaders
         if (app()->isProduction() && $request->isSecure()) {
             $response->headers->set(
                 'Strict-Transport-Security',
-                'max-age=31536000; includeSubDomains'
+                'max-age=31536000; includeSubDomains; preload'
             );
         }
 

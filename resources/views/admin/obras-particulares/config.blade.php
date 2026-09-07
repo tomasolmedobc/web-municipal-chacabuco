@@ -12,8 +12,8 @@
 </section>
 
 @if($errors->any())
-    <div class="alert-error" style="margin-bottom:18px;">
-        <ul style="margin:0; padding-left:20px;">
+    <div class="alert-error">
+        <ul>
             @foreach($errors->all() as $e)
                 <li>{{ $e }}</li>
             @endforeach
@@ -25,8 +25,8 @@
     @csrf
     @method('PUT')
 
-    <fieldset style="border:none; padding:0; margin:0 0 24px;">
-        <legend style="font-weight:600; margin-bottom:14px;">Tipo de enlace</legend>
+    <fieldset class="fieldset-clean mb-24">
+        <legend class="legend-label">Tipo de enlace</legend>
 
         <label class="ops-radio-label">
             <input type="radio" name="registro_tipo" value="url"
@@ -35,7 +35,7 @@
             Enlace externo (URL)
         </label>
 
-        <label class="ops-radio-label" style="margin-top:8px;">
+        <label class="ops-radio-label mt-8">
             <input type="radio" name="registro_tipo" value="archivo"
                 {{ old('registro_tipo', $config->registro_tipo) === 'archivo' ? 'checked' : '' }}
             >
@@ -54,7 +54,7 @@
     </div>
 
     {{-- Archivo --}}
-    <div id="cfg-archivo" class="ops-config-panel" style="display:none;">
+    <div id="cfg-archivo" class="ops-config-panel d-none">
         <label class="campo-label">Archivo PDF</label>
         <input type="file" name="registro_archivo" class="campo-input" accept=".pdf,.doc,.docx">
         <p class="campo-ayuda">PDF, DOC o DOCX. Máximo 50 MB.</p>
@@ -63,7 +63,7 @@
             <div class="ops-archivo-actual">
                 <i class="fa-regular fa-file-pdf"></i>
                 <span>{{ $config->registro_archivo_nombre }}</span>
-                <em style="color:var(--muted); font-size:.8rem;">(actual — subí uno nuevo para reemplazarlo)</em>
+                <em class="text-muted-sm">(actual — subí uno nuevo para reemplazarlo)</em>
             </div>
         @endif
     </div>
@@ -75,8 +75,8 @@
 @push('scripts')
 <script @nonce>
 function toggleConfigType(val) {
-    document.getElementById('cfg-url').style.display    = val === 'url'     ? '' : 'none';
-    document.getElementById('cfg-archivo').style.display = val === 'archivo' ? '' : 'none';
+    document.getElementById('cfg-url').classList.toggle('d-none', val !== 'url');
+    document.getElementById('cfg-archivo').classList.toggle('d-none', val !== 'archivo');
 }
 document.querySelectorAll('input[name="registro_tipo"]').forEach(function (r) {
     r.addEventListener('change', function () { toggleConfigType(this.value); });

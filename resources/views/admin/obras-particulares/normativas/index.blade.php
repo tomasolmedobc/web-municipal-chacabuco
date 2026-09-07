@@ -8,7 +8,7 @@
         <h2 class="seccion-titulo">Normativas</h2>
         <p class="admin-subtitle">Ordenanzas y leyes vinculadas a cada categoría de Obras Particulares.</p>
     </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <div class="admin-btn-bar">
         <a href="{{ route('admin.obras.normativas.create', $categoriaActiva ? ['categoria' => $categoriaActiva->id] : []) }}"
            class="btn btn-primary">
             <i class="fa-solid fa-plus"></i> Nueva normativa
@@ -55,8 +55,8 @@
             @foreach($normativas as $normativa)
                 <article class="admin-list-item">
                     <div>
-                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                            <h3 style="margin:0;">{{ $normativa->nombre }}</h3>
+                        <div class="admin-meta-row">
+                            <h3 class="h3-flush">{{ $normativa->nombre }}</h3>
                             <span class="badge-estado {{ $normativa->visible ? 'badge-publicado' : 'badge-oculto' }}">
                                 {{ $normativa->visible ? 'Visible' : 'Oculta' }}
                             </span>

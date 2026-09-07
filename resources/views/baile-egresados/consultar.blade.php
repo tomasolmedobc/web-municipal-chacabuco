@@ -37,7 +37,7 @@
 
 @isset($reservas)
     @if($reservas->isEmpty())
-        <div class="baile-alert baile-alert--info" style="margin-top: 24px;">
+        <div class="baile-alert baile-alert--info mt-24">
             <i class="fa-solid fa-circle-info"></i>
             @if($usuario)
                 No tenés asientos reservados aún, <strong>{{ $usuario->nombre_completo }}</strong>.

@@ -168,3 +168,10 @@ body.dark .btn-estado-ocultar {
 .tab-pill.is-active:hover {
     color: #fff;
 }
+
+/* ── Disabled non-interactive button ────────────────────────────────── */
+.btn--disabled {
+    opacity: .5;
+    cursor: default;
+    pointer-events: none;
+}

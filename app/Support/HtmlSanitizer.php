@@ -4,11 +4,7 @@ namespace App\Support;
 
 class HtmlSanitizer
 {
-    // Tags que se eliminan junto con su contenido interno
-    private const STRIP_WITH_CONTENT = ['script', 'style', 'iframe', 'object', 'embed', 'form'];
-
-    // Tags auto-cerrantes peligrosos que se eliminan
-    private const STRIP_VOID = ['input', 'meta', 'link', 'base'];
+    private static ?\HTMLPurifier $purifier = null;
 
     public static function clean(?string $html): ?string
     {
@@ -16,30 +12,66 @@ class HtmlSanitizer
             return $html;
         }
 
-        // 1. Eliminar tags con su contenido interno (script, iframe, etc.)
-        foreach (self::STRIP_WITH_CONTENT as $tag) {
-            $html = preg_replace('/<\s*' . $tag . '[\s>][\s\S]*?<\s*\/\s*' . $tag . '\s*>/i', '', $html);
-            // También la variante auto-cerrada <script/>
-            $html = preg_replace('/<\s*' . $tag . '\b[^>]*\/>/i', '', $html);
+        return self::purifier()->purify($html);
+    }
+
+    private static function purifier(): \HTMLPurifier
+    {
+        if (self::$purifier !== null) {
+            return self::$purifier;
         }
 
-        // 2. Eliminar void tags peligrosos
-        foreach (self::STRIP_VOID as $tag) {
-            $html = preg_replace('/<\s*' . $tag . '\b[^>]*\/?>/i', '', $html);
+        $config = \HTMLPurifier_Config::createDefault();
+
+        // Cache para no reconstruir la definición en cada llamada
+        $cacheDir = storage_path('app/htmlpurifier');
+        if (!is_dir($cacheDir)) {
+            mkdir($cacheDir, 0755, true);
+        }
+        $config->set('Cache.SerializerPath', $cacheDir);
+
+        // Allowlist de elementos que TinyMCE puede generar
+        $config->set('HTML.Allowed',
+            'p[style],h1,h2,h3,h4,h5,h6,' .
+            'ul,ol,li,' .
+            'blockquote,pre,code,hr,br,' .
+            'strong,b,em,i,u,s,sub,sup,' .
+            'a[href|title|target|rel],' .
+            'img[src|alt|width|height|loading],' .
+            'table[style],thead,tbody,tfoot,' .
+            'tr,td[colspan|rowspan|style],th[colspan|rowspan|style],' .
+            'span[class|style],div[class|style]'
+        );
+
+        // Solo http, https, mailto — bloquea javascript:, vbscript:, data: automáticamente
+        $config->set('URI.AllowedSchemes', ['http' => true, 'https' => true, 'mailto' => true]);
+
+        // Permitir target="_blank" en links (TinyMCE lo usa)
+        $config->set('Attr.AllowedFrameTargets', ['_blank']);
+
+        // ID para cachear la definición personalizada
+        $config->set('HTML.DefinitionID', 'chacabuco-tinymce');
+        $config->set('HTML.DefinitionRev', 1);
+
+        // Restringir estilos inline a propiedades no peligrosas
+        $config->set('CSS.AllowedProperties', [
+            'color', 'background-color',
+            'font-size', 'font-weight', 'font-style', 'font-family',
+            'text-align', 'text-decoration',
+            'margin', 'margin-top', 'margin-bottom', 'margin-left', 'margin-right',
+            'padding', 'padding-top', 'padding-bottom', 'padding-left', 'padding-right',
+            'width', 'height', 'max-width',
+            'border', 'border-collapse', 'border-color', 'border-style', 'border-width',
+            'vertical-align', 'list-style-type',
+        ]);
+
+        // Registrar atributo HTML5 'loading' (lazy loading) que HTMLPurifier no conoce nativamente
+        if ($def = $config->maybeGetRawHTMLDefinition()) {
+            $def->addAttribute('img', 'loading', 'Enum#lazy,eager,auto');
         }
 
-        // 3. Eliminar manejadores de eventos en cualquier atributo (onclick, onload, onerror…)
-        $html = preg_replace('/\s+on\w+\s*=\s*"[^"]*"/i', '', $html);
-        $html = preg_replace('/\s+on\w+\s*=\s*\'[^\']*\'/i', '', $html);
-        $html = preg_replace('/\s+on\w+\s*=\s*[^\s>]+/i', '', $html);
+        self::$purifier = new \HTMLPurifier($config);
 
-        // 4. Eliminar protocolo javascript: en href y src
-        $html = preg_replace('/(\bhref\s*=\s*["\']?)\s*javascript:[^"\'>\s]*/i', '$1#', $html);
-        $html = preg_replace('/(\bsrc\s*=\s*["\']?)\s*javascript:[^"\'>\s]*/i', '$1#', $html);
-
-        // 5. Eliminar data: URIs en src (posible vector de XSS en navegadores viejos)
-        $html = preg_replace('/(\bsrc\s*=\s*["\']?)\s*data:[^"\'>\s]*/i', '$1#', $html);
-
-        return $html;
+        return self::$purifier;
     }
 }

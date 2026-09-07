@@ -12,8 +12,8 @@
 </section>
 
 @if($errors->any())
-    <div class="alert-error" style="margin-bottom:18px;">
-        <ul style="margin:0; padding-left:20px;">
+    <div class="alert-error">
+        <ul>
             @foreach($errors->all() as $e) <li>{{ $e }}</li> @endforeach
         </ul>
     </div>

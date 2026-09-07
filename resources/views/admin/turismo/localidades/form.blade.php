@@ -65,6 +65,39 @@
         </div>
 
         <div class="admin-form-group full">
+            <label for="mapa_embed">Mapa de Google Maps</label>
+            <input type="url"
+                   name="mapa_embed"
+                   id="mapa_embed"
+                   class="campo-input"
+                   placeholder="https://www.google.com/maps/embed?pb=..."
+                   value="{{ old('mapa_embed', $localidad->mapa_embed) }}">
+            <small class="fecha">
+                ⚠️ <strong>No uses el link de "Compartir".</strong>
+                Para obtener la URL correcta: Google Maps → buscá la localidad →
+                <strong>Compartir</strong> → pestaña <strong>"Insertar un mapa"</strong>
+                → del código <code>&lt;iframe src="<u>https://www.google.com/maps/embed?pb=…</u>"&gt;</code>
+                copiá únicamente el valor dentro de <code>src="..."</code>.
+                La URL debe empezar con <code>https://www.google.com/maps/embed</code>.
+            </small>
+            @error('mapa_embed') <small class="auth-error">{{ $message }}</small> @enderror
+
+            <div id="mapa-preview-wrap" class="mt-12"
+                @if(!old('mapa_embed', $localidad->mapa_embed)) hidden @endif>
+                <iframe
+                    id="mapa-preview"
+                    src="{{ old('mapa_embed', $localidad->mapa_embed) }}"
+                    width="100%"
+                    height="300"
+                    class="admin-mapa-preview"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+
+        <div class="admin-form-group full">
             <label for="imagen_portada">Imagen de portada</label>
             <input type="file" name="imagen_portada" id="imagen_portada" accept=".jpg,.jpeg,.png,.webp">
             <small class="fecha">Formatos: JPG, PNG, WEBP. Máximo 4MB.</small>
@@ -92,6 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!document.querySelector(selector)) return;
         tinymce.init({
             selector,
+            nonce: '{{ $cspNonce }}',
             height: 380,
             menubar: false,
             plugins: 'lists link code wordcount',
@@ -106,6 +140,24 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     initEditor('#historia');
+
+    // Preview en vivo del mapa
+    const mapaInput   = document.getElementById('mapa-embed');
+    const mapaWrap    = document.getElementById('mapa-preview-wrap');
+    const mapaIframe  = document.getElementById('mapa-preview');
+
+    if (mapaInput) {
+        mapaInput.addEventListener('input', function () {
+            var url = this.value.trim();
+            if (url.startsWith('https://www.google.com/maps/embed')) {
+                mapaIframe.src = url;
+                mapaWrap.hidden = false;
+            } else {
+                mapaWrap.hidden = true;
+                mapaIframe.src = '';
+            }
+        });
+    }
 });
 </script>
 @endpush

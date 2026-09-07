@@ -171,7 +171,7 @@
     @endif
 
     @if(($busqueda ?? null) && $noticias->count() > 0)
-        <p class="fecha" style="margin-bottom: 18px;">
+        <p class="fecha mb-18">
             Resultados para: <strong>{{ $busqueda }}</strong>
         </p>
     @endif
@@ -189,8 +189,8 @@
         @foreach($noticias as $noticia)
             <article class="admin-list-item">
                 <div>
-            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                <h3 style="margin:0;">{{ $noticia->titulo }}</h3>
+            <div class="admin-meta-row">
+                <h3 class="h3-flush">{{ $noticia->titulo }}</h3>
 
                 @if($noticia->categorias->count())
                     <span class="badge-categoria">

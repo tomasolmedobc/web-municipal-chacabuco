@@ -9,7 +9,7 @@
             <p class="admin-subtitle">Registro de acciones realizadas por los administradores.</p>
         </div>
 
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <div class="admin-btn-bar">
             <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Volver</a>
         </div>
     </section>
@@ -58,7 +58,7 @@
         @foreach($logs as $log)
             <article class="admin-list-item">
                 <div>
-                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:6px;">
+                    <div class="admin-meta-row mb-6">
                         <span class="audit-badge audit-badge--{{ $log->accion }}">
                             {{ ucfirst($log->accion) }}
                         </span>
@@ -68,26 +68,24 @@
                         @endif
                     </div>
 
-                    <p style="margin:0 0 4px; font-weight:600; color:var(--text);">
-                        {{ $log->descripcion }}
-                    </p>
+                    <p class="item-title-p">{{ $log->descripcion }}</p>
 
                     <div class="meta-noticia">
                         @if($log->user_nombre)
                             <span>
-                                <i class="fa-solid fa-user" style="font-size:11px;"></i>
+                                <i class="fa-solid fa-user" class="icon-sm"></i>
                                 {{ $log->user_nombre }}
                             </span>
                         @endif
 
                         <span>
-                            <i class="fa-solid fa-clock" style="font-size:11px;"></i>
+                            <i class="fa-solid fa-clock" class="icon-sm"></i>
                             {{ $log->created_at?->format('d/m/Y H:i:s') }}
                         </span>
 
                         @if($log->ip)
                             <span>
-                                <i class="fa-solid fa-globe" style="font-size:11px;"></i>
+                                <i class="fa-solid fa-globe" class="icon-sm"></i>
                                 {{ $log->ip }}
                             </span>
                         @endif

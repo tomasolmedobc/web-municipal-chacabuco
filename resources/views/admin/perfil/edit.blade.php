@@ -21,13 +21,13 @@
     @endif
     @auth
     @if(auth()->user()->rol === 'admin')
-        <div class="admin-form-card" style="margin-bottom: 24px;">
-            <h3 style="margin-top: 0;">Administración</h3>
+        <div class="admin-form-card mb-24">
+            <h3 class="mt-0">Administración</h3>
             <p class="admin-subtitle">
                 Accesos disponibles solo para usuarios administradores.
             </p>
 
-            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <div class="admin-btn-bar">
                 <a href="{{ route('admin.usuarios.create') }}" class="btn btn-primary">
                     Crear usuario
                 </a>
@@ -70,7 +70,7 @@
             </div>
 
             <div class="admin-form-group full">
-                <hr style="border:none; border-top:1px solid var(--border); margin:10px 0;">
+                <hr class="hr-divider">
                 <p class="fecha">Dejá la contraseña vacía si no querés cambiarla.</p>
             </div>
 

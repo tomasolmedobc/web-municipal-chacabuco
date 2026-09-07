@@ -9,7 +9,7 @@
             <p class="admin-subtitle">Editá la historia, descripción e imagen de portada de cada localidad.</p>
         </div>
 
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <div class="admin-btn-bar">
             <a href="{{ route('admin.turismo.localidades.create') }}" class="btn btn-primary">
                 Crear localidad
             </a>
@@ -36,8 +36,8 @@
         @foreach($localidades as $localidad)
             <article class="admin-list-item">
                 <div>
-                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:6px;">
-                        <h3 style="margin:0;">{{ $localidad->nombre }}</h3>
+                    <div class="admin-meta-row mb-6">
+                        <h3 class="h3-flush">{{ $localidad->nombre }}</h3>
 
                         @if($localidad->es_cabecera)
                             <span class="badge-categoria">Ciudad cabecera</span>

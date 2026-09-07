@@ -60,7 +60,7 @@ Destacada
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 .badge-destacada {
@@ -1130,3 +1130,263 @@ body.dark .password-reset-banner {
     color: var(--muted);
     margin: 10px 0 0;
 }
+
+/* =========================
+   UTILITY CLASSES
+   (replaces per-element inline styles)
+========================= */
+
+/* Header button bar — wraps action buttons inside .admin-header */
+.admin-btn-bar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* h3 flush / mini — removes default h3 margin in flex / list contexts */
+.h3-flush { margin: 0; }
+.h3-mini  { margin: 0 0 4px; }
+
+/* Meta row — flex row for badges / meta inside list items */
+.admin-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* Card header — flex between for per-card headers */
+.admin-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+/* Subsection h3 inside config / form cards */
+.admin-section-h3 {
+    font-size: 1rem;
+    margin: 0 0 16px;
+}
+
+/* HR divider between config sections */
+.section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0 0 28px;
+}
+
+/* Warning alert — visible-only-to-staff notices */
+.admin-alert--warning {
+    background: #fff7ed;
+    color: #9a3412;
+    margin: 20px 0;
+}
+body.dark .admin-alert--warning {
+    background: rgba(154, 52, 18, 0.1);
+    color: #fdba74;
+}
+
+/* Danger alert — error validation lists in admin forms */
+.admin-alert--danger {
+    background: #fef2f2;
+    color: #991b1b;
+}
+body.dark .admin-alert--danger {
+    background: rgba(153, 27, 27, 0.12);
+    color: #fca5a5;
+}
+.admin-alert--danger ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+/* Stand-alone error alert used in some admin pages */
+.alert-error {
+    margin-bottom: 18px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px solid #fecaca;
+    background: #fef2f2;
+    color: #991b1b;
+    box-shadow: var(--shadow);
+}
+body.dark .alert-error {
+    background: rgba(153, 27, 27, 0.12);
+    color: #fca5a5;
+    border-color: rgba(252, 165, 165, 0.25);
+}
+.alert-error ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+/* Checkbox + label row */
+.check-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.check-label input[type="checkbox"] {
+    width: auto;
+}
+
+/* Existing-file indicator inside upload forms */
+.file-current {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--primary-soft);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+}
+.file-current__icon  { color: var(--primary); font-size: 18px; flex-shrink: 0; }
+.file-current__label { font-size: 13px; font-weight: 600; }
+.file-current__link  { font-size: 12px; color: var(--primary); margin-left: 6px; }
+.file-current__hint  { font-size: 11px; color: var(--muted); margin-left: auto; }
+
+/* Small helper text below form fields */
+.form-hint { color: var(--muted); }
+
+/* Status/type icon badge (small colored square) */
+.icon-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--primary-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--primary);
+}
+
+/* List item main content row */
+.item-main-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Allows text truncation inside flex */
+.item-text { min-width: 0; }
+
+/* Single-line truncated title */
+.item-title {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Inline subtitle alongside title */
+.item-subtitle {
+    font-weight: 400;
+    color: var(--muted);
+    font-size: .85rem;
+}
+
+/* Small meta line below title */
+.item-meta {
+    font-size: .8rem;
+    color: var(--muted);
+    margin-top: 2px;
+}
+
+/* Small primary link (in meta rows) */
+.link-primary-sm { color: var(--primary); font-size: .8rem; }
+
+/* Color utilities */
+.text-danger  { color: #ef4444; }
+.text-success { color: #22c55e; }
+
+/* Small icon in meta rows */
+.icon-sm { font-size: 11px; }
+
+/* Count/total badge */
+.badge-count {
+    display: inline-flex;
+    align-items: center;
+    background: var(--primary-soft);
+    color: var(--primary);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: .8rem;
+    font-weight: 600;
+}
+
+/* Mini stat grid for content-status cards */
+.admin-stat-mini {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+/* Stat row item */
+.admin-stat-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: .875rem;
+}
+
+/* Strong paragraph (replaces <p style="margin:0;font-weight:600;color:var(--text)"> in log/list) */
+.item-title-p {
+    margin: 0 0 4px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* Structural rules that replace remaining inline styles */
+.admin-card-header h3 { margin: 0; font-size: 1rem; font-weight: 600; }
+.admin-list-item > p  { margin: 0; color: var(--muted); }
+
+/* Thin HR divider with symmetric top/bottom margin */
+.hr-divider { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
+
+/* Action group inside password-reset-banner */
+.banner-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+
+/* Input paired with a button (e.g. code generator) */
+.input-btn-row { display: flex; gap: 8px; }
+
+/* Map embed preview in admin forms */
+.admin-mapa-preview { border: 1px solid var(--border); border-radius: 8px; }
+
+/* Clean fieldset (no visible border, no margin — combine with mb-* utilities) */
+.fieldset-clean { border: none; padding: 0; }
+.legend-label   { display: block; font-weight: 600; margin-bottom: 14px; }
+
+/* HR divider with top margin (e.g. between config sections) */
+.section-divider--top { border: none; border-top: 1px solid var(--border); margin: 16px 0 28px; }
+
+/* H3 for list-item header (tight bottom spacing, 1rem size) */
+.h3-item { margin: 0 0 4px; font-size: 1rem; }
+
+/* Small muted note (em inside card info, etc.) */
+.text-muted-sm { color: var(--muted); font-size: .8rem; }
+
+/* Small button variant */
+.btn-sm { padding: 4px 12px !important; font-size: .85rem !important; }
+
+/* No-padding overflow-hidden card (cuotas table wrapper) */
+.cuotas-tabla-wrap { padding: 0; overflow: hidden; }
+
+/* Right-aligned + nowrap action cell in cuotas-tabla */
+.cuotas-tabla .td-actions { text-align: right; white-space: nowrap; }
+
+/* Empty-state td inside cuotas-tabla */
+.cuotas-tabla-empty { text-align: center; color: var(--muted); padding: 24px 0; }
+
+/* Quickadd form field sizing */
+.cuotas-quickadd .qs-label  { flex: 1; min-width: 160px; }
+.cuotas-quickadd .qs-fecha  { width: 160px; }
+.cuotas-quickadd .qs-estado { width: 120px; }

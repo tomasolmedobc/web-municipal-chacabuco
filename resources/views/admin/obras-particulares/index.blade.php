@@ -15,7 +15,7 @@
     <script @nonce>document.addEventListener('DOMContentLoaded', () => showToast(@json(session('ok')), 'success'));</script>
 @endif
 
-<div class="ops-admin-tip" style="margin-bottom:20px;">
+<div class="ops-admin-tip mb-20">
     <i class="fa-solid fa-circle-info"></i>
     <p>
         <strong>¿Cómo empezar?</strong> Seguí este orden para cargar el módulo por primera vez:<br>
@@ -33,7 +33,7 @@
         <div class="ops-admin-card__info">
             <strong>Formularios / Anexos</strong>
             <span>{{ $totalAnexos }} {{ $totalAnexos === 1 ? 'formulario' : 'formularios' }}</span>
-            <small style="font-size:.7rem;color:var(--text-muted);margin-top:2px;">Paso 1 — empezá aquí</small>
+            <small>Paso 1 — empezá aquí</small>
         </div>
         <i class="fa-solid fa-chevron-right ops-admin-card__arrow"></i>
     </a>
@@ -43,7 +43,7 @@
         <div class="ops-admin-card__info">
             <strong>Categorías</strong>
             <span>{{ $totalCategorias }} {{ $totalCategorias === 1 ? 'categoría' : 'categorías' }}</span>
-            <small style="font-size:.7rem;color:var(--text-muted);margin-top:2px;">Paso 2 — creá las secciones</small>
+            <small>Paso 2 — creá las secciones</small>
         </div>
         <i class="fa-solid fa-chevron-right ops-admin-card__arrow"></i>
     </a>
@@ -53,7 +53,7 @@
         <div class="ops-admin-card__info">
             <strong>Procedimientos</strong>
             <span>{{ $totalProcedimientos }} {{ $totalProcedimientos === 1 ? 'procedimiento' : 'procedimientos' }}</span>
-            <small style="font-size:.7rem;color:var(--text-muted);margin-top:2px;">Paso 3 — acordeones por categoría</small>
+            <small>Paso 3 — acordeones por categoría</small>
         </div>
         <i class="fa-solid fa-chevron-right ops-admin-card__arrow"></i>
     </a>
@@ -63,7 +63,7 @@
         <div class="ops-admin-card__info">
             <strong>Normativas</strong>
             <span>{{ $totalNormativas }} {{ $totalNormativas === 1 ? 'documento' : 'documentos' }}</span>
-            <small style="font-size:.7rem;color:var(--text-muted);margin-top:2px;">Paso 4 — PDFs por categoría</small>
+            <small>Paso 4 — PDFs por categoría</small>
         </div>
         <i class="fa-solid fa-chevron-right ops-admin-card__arrow"></i>
     </a>
@@ -81,7 +81,7 @@
                     Sin configurar
                 @endif
             </span>
-            <small style="font-size:.7rem;color:var(--text-muted);margin-top:2px;">Paso 5 — opcional</small>
+            <small>Paso 5 — opcional</small>
         </div>
         <i class="fa-solid fa-chevron-right ops-admin-card__arrow"></i>
     </a>

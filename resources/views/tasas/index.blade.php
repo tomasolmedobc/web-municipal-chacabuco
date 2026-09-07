@@ -34,7 +34,7 @@
                     <span>Consulta y formas de pago de tasas</span>
                 </a>
             @else
-                <span class="btn btn-outline" style="opacity:.5; cursor:default;">
+                <span class="btn btn-outline btn--disabled">
                     <i class="fa-solid fa-magnifying-glass-dollar"></i>
                     <span>Consulta y formas de pago de tasas</span>
                 </span>
@@ -46,7 +46,7 @@
                     <span>Ordenanza Impositiva Vigente</span>
                 </a>
             @else
-                <span class="btn btn-outline" style="opacity:.5; cursor:default;">
+                <span class="btn btn-outline btn--disabled">
                     <i class="fa-solid fa-book-open"></i>
                     <span>Ordenanza Impositiva Vigente</span>
                 </span>

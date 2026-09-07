@@ -13,7 +13,7 @@
         <h1>{{ $noticia->titulo }}</h1>
 
         @if($noticia->categorias->count())
-            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+            <div class="categorias-list">
                 @foreach($noticia->categorias as $categoria)
                     <span class="categoria-noticia">
                         {{ $categoria->nombre }}
@@ -28,7 +28,7 @@
 
         @auth
             @if(in_array(auth()->user()->rol, ['admin', 'editor']) && $noticia->estado === 'oculto')
-                <div class="admin-alert" style="background:#fff7ed; color:#9a3412; margin:20px 0;">
+                <div class="admin-alert admin-alert--warning">
                     ⚠️ Esta noticia está en modo <strong>oculto</strong>. Solo es visible para administradores y editores.
                 </div>
             @endif
@@ -62,7 +62,7 @@
         @endif
 
         @if($noticia->archivos->count())
-            <div style="margin-top: 30px;">
+            <div class="mt-30">
                 <h3>Archivos adjuntos</h3>
 
                 <div class="archivos-grid">

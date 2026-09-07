@@ -27,8 +27,8 @@
 
         {{-- ESTADO --}}
         <div class="admin-form-group full">
-            <label style="display:flex; align-items:center; gap:10px;">
-                <input type="checkbox" name="popup_activo" value="1" {{ $popup_activo ? 'checked' : '' }} style="width:auto;">
+            <label class="check-label">
+                <input type="checkbox" name="popup_activo" value="1" {{ $popup_activo ? 'checked' : '' }}>
                 <span>Mostrar popup en el portal</span>
             </label>
             <small class="fecha">Si está activo y tiene imagen, el popup se mostrará a los visitantes. Se puede desactivar sin borrar la imagen.</small>
@@ -47,7 +47,7 @@
                     <span>Quitar imagen actual</span>
                 </label>
             @else
-                <p class="fecha" style="margin-bottom:8px;">No hay imagen cargada. Se usará la imagen por defecto del municipio como previsualización.</p>
+                <p class="fecha mb-8">No hay imagen cargada. Se usará la imagen por defecto del municipio como previsualización.</p>
             @endif
 
             <input type="file" name="popup_imagen" accept=".jpg,.jpeg,.png,.webp">
@@ -91,9 +91,9 @@
     $prevUrl = $popup_boton_url ?: '#';
 @endphp
 
-<section class="admin-form-card" style="margin-top:24px;">
-    <h3 style="margin:0 0 16px; font-size:17px; font-weight:700;">Previsualización</h3>
-    <p class="admin-subtitle" style="margin-bottom:20px;">
+<section class="admin-form-card mt-24">
+    <h3 class="admin-section-h3">Previsualización</h3>
+    <p class="admin-subtitle mb-20">
         Así verán el popup los visitantes. El botón solo aparece si tiene texto configurado.
     </p>
 

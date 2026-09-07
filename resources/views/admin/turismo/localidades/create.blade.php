@@ -68,16 +68,13 @@
 </form>
 @endsection
 
-@push('scripts_head')
-    <script src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
-@endpush
-
 @push('scripts')
 <script @nonce>
 document.addEventListener('DOMContentLoaded', function () {
     if (typeof tinymce === 'undefined') return;
     tinymce.init({
         selector: '#historia',
+        nonce: '{{ $cspNonce }}',
         height: 380,
         menubar: false,
         plugins: 'lists link code wordcount',

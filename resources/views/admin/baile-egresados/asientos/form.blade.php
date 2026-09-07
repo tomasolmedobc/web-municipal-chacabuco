@@ -45,10 +45,9 @@
         </div>
 
         <div class="admin-form-group">
-            <label for="disponible" style="display:flex; align-items:center; gap:8px;">
+            <label for="disponible" class="check-label">
                 <input type="checkbox" name="disponible" id="disponible" value="1"
-                       {{ old('disponible', $asiento->disponible ?? true) ? 'checked' : '' }}
-                       style="width:auto;">
+                       {{ old('disponible', $asiento->disponible ?? true) ? 'checked' : '' }}>
                 Disponible para reserva
             </label>
             @error('disponible') <small class="auth-error">{{ $message }}</small> @enderror

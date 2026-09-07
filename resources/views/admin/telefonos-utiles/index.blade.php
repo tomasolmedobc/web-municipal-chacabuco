@@ -9,7 +9,7 @@
         <h2 class="seccion-titulo">Teléfonos Útiles</h2>
         <p class="admin-subtitle">Administrá el directorio de contactos y organismos.</p>
     </div>
-    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <div class="admin-btn-bar">
         <a href="{{ route('admin.telefonos-utiles.create') }}" class="btn btn-primary">
             <i class="fa-solid fa-plus"></i> Nueva entrada
         </a>
@@ -54,7 +54,7 @@
     @forelse($telefonos as $item)
         <div class="admin-list-item">
             <div>
-                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                <div class="admin-meta-row">
                     <strong>{{ $item->nombre }}</strong>
                     @if($item->categoria)
                         <span class="badge-categoria">{{ $item->categoria }}</span>
@@ -63,7 +63,7 @@
                         <span class="badge-estado badge-oculto">⚠ Oculto</span>
                     @endif
                 </div>
-                <div class="meta-noticia" style="margin-top:4px;">
+                <div class="meta-noticia mt-4">
                     @if($item->telefono)
                         <span><i class="fa-solid fa-phone"></i> {{ $item->telefono }}</span>
                     @endif

@@ -227,6 +227,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        DB::table('obras_procedimientos')->truncate();
+        // No reversible: this migration seeds content that may have been edited since.
+        // Truncating would destroy real data. Roll back manually if needed.
     }
 };

@@ -20,6 +20,7 @@ class Localidad extends Model
         'historia',
         'descripcion',
         'imagen_portada',
+        'mapa_embed',
         'orden',
         'estado',
     ];

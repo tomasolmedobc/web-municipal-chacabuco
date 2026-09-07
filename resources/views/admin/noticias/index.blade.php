@@ -9,7 +9,7 @@
         <h2 class="seccion-titulo">Noticias</h2>
         <p class="admin-subtitle">Administrá las noticias del sitio.</p>
     </div>
-    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <div class="admin-btn-bar">
         <a href="{{ route('admin.noticias.create') }}" class="btn btn-primary">
             <i class="fa-solid fa-plus"></i> Nueva noticia
         </a>
@@ -59,8 +59,8 @@
     @foreach($noticias as $noticia)
         <article class="admin-list-item">
             <div>
-                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                    <h3 style="margin:0;">{{ $noticia->titulo }}</h3>
+                <div class="admin-meta-row">
+                    <h3 class="h3-flush">{{ $noticia->titulo }}</h3>
                     @if($noticia->categorias->count())
                         <span class="badge-categoria">{{ $noticia->categorias->first()->nombre }}</span>
                     @endif

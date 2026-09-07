@@ -38,7 +38,7 @@
             </label>
         </div>
 
-        <div class="admin-form-group full" id="destacada-config" style="display:none;">
+        <div class="admin-form-group full d-none" id="destacada-config">
             <label for="destacada_dias">Duración destacada</label>
 
             <input
@@ -75,11 +75,11 @@
                 </select>
                 @error('estado') <small class="auth-error">{{ $message }}</small> @enderror
 
-                <small id="estado-alerta-oculto" class="estado-warning" style="display:none;">
+                <small id="estado-alerta-oculto" class="estado-warning d-none">
                     ⚠️ Esta noticia no será visible públicamente.
                 </small>
 
-                <small id="estado-alerta-publicado" class="estado-success" style="display:none;">
+                <small id="estado-alerta-publicado" class="estado-success d-none">
                     ✔ Esta noticia será visible en el portal.
                 </small>
             </div>
@@ -157,10 +157,6 @@
         <button type="submit" class="btn btn-primary">Guardar noticia</button>
     </form>
 @endsection
-
-@push('scripts_head')
-    <script src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
-@endpush
 
 @push('scripts')
     <script src="{{ asset('js/admin-noticias.js') }}"></script>

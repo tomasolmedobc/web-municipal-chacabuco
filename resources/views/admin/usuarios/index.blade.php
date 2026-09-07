@@ -9,7 +9,7 @@
             <p class="admin-subtitle">Gestioná administradores, editores, roles y contraseñas.</p>
         </div>
 
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <div class="admin-btn-bar">
             <a href="{{ route('admin.usuarios.create') }}" class="btn btn-primary">Nuevo usuario</a>
             <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Volver</a>
         </div>
@@ -37,7 +37,7 @@
                 <strong>Contraseña generada — copiala y compartila con el usuario:</strong>
                 <code id="nueva-password">{{ session('password_generada') }}</code>
             </div>
-            <div style="display:flex; gap:8px; align-items:center; flex-shrink:0;">
+            <div class="banner-actions">
                 <button type="button" class="btn btn-secondary" id="btn-copiar-password">Copiar</button>
                 <button type="button" class="btn btn-secondary" id="btn-cerrar-banner">Cerrar</button>
             </div>

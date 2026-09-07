@@ -17,8 +17,8 @@
 </section>
 
 @if($errors->any())
-    <div class="admin-alert" style="background:#fef2f2; color:#991b1b; margin-bottom:20px;">
-        <ul style="margin:0; padding-left:18px;">
+    <div class="admin-alert alert-error">
+        <ul>
             @foreach($errors->all() as $err)
                 <li>{{ $err }}</li>
             @endforeach
@@ -36,7 +36,7 @@
 
     <div class="admin-form-grid">
 
-        <div class="admin-form-group" style="grid-column: 1 / -1;">
+        <div class="admin-form-group full">
             <label for="nombre">Nombre / Organismo <span class="req">*</span></label>
             <input type="text" id="nombre" name="nombre"
                    value="{{ old('nombre', $item->nombre) }}"

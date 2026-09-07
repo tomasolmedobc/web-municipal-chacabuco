@@ -4,8 +4,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const textarea = document.querySelector('#contenido');
     if (!textarea) return;
 
+    var nonce = (document.querySelector('meta[name="csp-nonce"]') || {}).content || '';
+
     tinymce.init({
         selector: '#contenido',
+        nonce: nonce,
         height: 500,
         menubar: true,
         plugins: 'lists link image table code help wordcount',

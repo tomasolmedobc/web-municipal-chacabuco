@@ -45,8 +45,8 @@
             </div>
 
             <div class="admin-form-group full">
-                <hr style="width:100%; border:none; border-top:1px solid var(--border); margin:10px 0;">
-                <p class="fecha" style="margin:0;">
+                <hr class="hr-divider w-full">
+                <p class="fecha mt-0 mb-0">
                     Dejá los campos de contraseña vacíos si no querés cambiarla.
                 </p>
             </div>

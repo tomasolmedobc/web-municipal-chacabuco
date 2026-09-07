@@ -149,15 +149,15 @@
         </div>
 
         <div class="admin-form-group">
-            <label for="destacado" style="display:flex; align-items:center; gap:8px;">
-                <input type="checkbox" name="destacado" id="destacado" value="1" {{ old('destacado', $item->destacado) ? 'checked' : '' }} style="width:auto;">
+            <label for="destacado" class="check-label">
+                <input type="checkbox" name="destacado" id="destacado" value="1" {{ old('destacado', $item->destacado) ? 'checked' : '' }}>
                 Destacado en la portada de Turismo
             </label>
         </div>
 
         <div class="admin-form-group">
-            <label for="mostrar_detalle" style="display:flex; align-items:center; gap:8px;">
-                <input type="checkbox" name="mostrar_detalle" id="mostrar_detalle" value="1" {{ old('mostrar_detalle', $item->mostrar_detalle) ? 'checked' : '' }} style="width:auto;">
+            <label for="mostrar_detalle" class="check-label">
+                <input type="checkbox" name="mostrar_detalle" id="mostrar_detalle" value="1" {{ old('mostrar_detalle', $item->mostrar_detalle) ? 'checked' : '' }}>
                 Mostrar página de detalle completa
             </label>
             <small class="fecha">Si está activo, la card tendrá un link "Ver más" que abre el detalle.</small>
@@ -292,6 +292,7 @@
             if (typeof tinymce !== 'undefined' && document.getElementById('descripcion')) {
                 tinymce.init({
                     selector: '#descripcion',
+                    nonce: '{{ $cspNonce }}',
                     height: 280,
                     menubar: false,
                     plugins: 'lists link code wordcount',

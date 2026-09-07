@@ -187,6 +187,26 @@
     box-shadow: var(--shadow);
 }
 
+.ops-seccion > p {
+    color: var(--muted);
+    margin-bottom: 16px;
+}
+
+.ops-admin-card__info small {
+    font-size: .7rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+    display: block;
+}
+
+/* Anexos link-panel inside procedimiento form */
+.ops-anexos-list { display: flex; flex-direction: column; gap: 6px; }
+.ops-anexo-item  { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 6px 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; }
+.ops-anexo-name  { font-size: .85rem; font-weight: 600; flex: 1; min-width: 120px; }
+.ops-anexo-url   { font-size: .72rem; color: var(--text-muted); word-break: break-all; flex: 2; min-width: 0; }
+.ops-btn-copy    { font-size: .78rem; padding: 3px 10px; white-space: nowrap; flex-shrink: 0; }
+.ops-anexo-empty { font-size: .78rem; color: var(--text-muted); }
+
 .ops-seccion__titulo {
     display: flex;
     align-items: center;

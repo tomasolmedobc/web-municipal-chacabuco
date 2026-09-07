@@ -94,7 +94,7 @@
 
             <article class="hero">
                 <a href="{{ route('noticias.show', $noticiaDestacada->slug) }}" class="hero-media">
-                    <img src="{{ $noticiaDestacada->imagen_destacada_url }}" alt="{{ $noticiaDestacada->titulo }}">
+                    <img src="{{ $noticiaDestacada->imagen_destacada_url }}" alt="{{ $noticiaDestacada->titulo }}" fetchpriority="high">
                 </a>
 
                 <div class="hero-body">
@@ -156,7 +156,7 @@
 
                 <article class="news-card">
                     <a href="{{ route('noticias.show', $noticia->slug) }}" class="news-card__image">
-                        <img src="{{ $noticia->imagen_destacada_url }}" alt="{{ $noticia->titulo }}">
+                        <img src="{{ $noticia->imagen_destacada_url }}" alt="{{ $noticia->titulo }}" loading="lazy">
                     </a>
 
                     <div class="news-card__body">

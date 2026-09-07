@@ -8,7 +8,7 @@
         <h2 class="seccion-titulo">Grupos de tasas</h2>
         <p class="admin-subtitle">Administrá los grupos de tasas municipales.</p>
     </div>
-    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <div class="admin-btn-bar">
         <a href="{{ route('admin.tasas.grupos.create') }}" class="btn btn-primary">Nuevo grupo</a>
         <a href="{{ route('admin.tasas.index') }}" class="btn btn-secondary">Volver</a>
     </div>
@@ -22,7 +22,7 @@
     @foreach($grupos as $grupo)
     <div class="admin-list-item">
         <div>
-            <h3 style="margin:0 0 4px;">{{ $grupo->nombre }}</h3>
+            <h3 class="h3-item">{{ $grupo->nombre }}</h3>
             <div class="meta-noticia">
                 <span>Código: <strong>{{ $grupo->codigo }}</strong></span>
                 <span>Orden: {{ $grupo->orden }}</span>

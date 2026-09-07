@@ -35,10 +35,10 @@
 
         <div class="admin-form-group">
             <label for="codigo">Código de validación <small class="fecha">(8 caracteres)</small></label>
-            <div style="display:flex; gap:8px;">
+            <div class="input-btn-row">
                 <input type="text" name="codigo" id="codigo"
                        value="{{ old('codigo', $usuario->codigo) }}"
-                       minlength="8" maxlength="8" required style="flex:1;">
+                       minlength="8" maxlength="8" required class="flex-1">
                 <button type="button" id="btn-generar-codigo" class="btn btn-secondary" title="Generar código aleatorio">
                     Generar
                 </button>

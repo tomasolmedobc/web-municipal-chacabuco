@@ -124,7 +124,7 @@
 
 {{-- RESULTADOS --}}
 @if(($busqueda ?? '') !== '' || ($desde ?? '') || ($hasta ?? '') || ($orden ?? 'nuevas') !== 'nuevas' || ($categoriaSlug ?? ''))
-    <p class="fecha" style="margin-bottom: 18px;">
+    <p class="fecha mb-18">
         Se encontraron <strong>{{ $totalResultados }}</strong> resultado(s).
     </p>
 @endif
@@ -140,7 +140,7 @@
 
     <article class="hero">
         <a href="{{ route('noticias.show', $destacada->slug) }}" class="hero-media">
-            <img src="{{ $destacada->imagen_destacada_url }}" alt="{{ $destacada->titulo }}">
+            <img src="{{ $destacada->imagen_destacada_url }}" alt="{{ $destacada->titulo }}" fetchpriority="high">
         </a>
 
         <div class="hero-body">
@@ -204,7 +204,7 @@
 
         <article class="noticia">
             <a href="{{ route('noticias.show', $noticia->slug) }}" class="noticia-media">
-                <img src="{{ $noticia->imagen_destacada_url }}" alt="{{ $noticia->titulo }}">
+                <img src="{{ $noticia->imagen_destacada_url }}" alt="{{ $noticia->titulo }}" loading="lazy">
             </a>
 
             <div class="noticia-body">
@@ -220,7 +220,7 @@
                 @endif
 
                 @if($noticia->destacada)
-                    <span class="badge-destacada" style="margin-bottom: 8px;">
+                    <span class="badge-destacada mb-8">
                         DESTACADA
                     </span>
                 @endif

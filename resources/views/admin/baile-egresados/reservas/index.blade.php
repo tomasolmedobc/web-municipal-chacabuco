@@ -9,14 +9,14 @@
         <p class="admin-subtitle">Listado de todas las reservas registradas.</p>
     </div>
 
-    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <div class="admin-btn-bar">
         <a href="{{ route('admin.baile.usuarios.index') }}" class="btn btn-secondary">Usuarios</a>
         <a href="{{ route('admin.baile.asientos.index') }}" class="btn btn-secondary">Asientos</a>
         <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Volver</a>
     </div>
 </section>
 
-<div class="baile-stats" style="margin-bottom: 20px;">
+<div class="baile-stats mb-20">
     <div class="baile-stat">
         <span class="baile-stat__numero">{{ $totales['total'] }}</span>
         <span class="baile-stat__label">Total reservas</span>
@@ -60,7 +60,7 @@
     @foreach($reservas as $reserva)
         <article class="admin-list-item">
             <div>
-                <div class="hero-top" style="margin-bottom: 8px;">
+                <div class="hero-top">
                     @if($reserva->pago)
                         <span class="licitacion-badge badge-activa">Pagado</span>
                     @else

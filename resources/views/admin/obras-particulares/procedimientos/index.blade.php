@@ -8,10 +8,10 @@
         <h2 class="seccion-titulo">Procedimientos</h2>
         <p class="admin-subtitle">
             Acordeones de cada categoría en la página pública.<br>
-            <small style="color:var(--text-muted);">Las categorías son dinámicas — podés agregar, editar o eliminar categorías desde el módulo de Categorías.</small>
+            <small class="text-muted">Las categorías son dinámicas — podés agregar, editar o eliminar categorías desde el módulo de Categorías.</small>
         </p>
     </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <div class="admin-btn-bar">
         <a href="{{ route('admin.obras.procedimientos.create', $categoriaActiva ? ['categoria' => $categoriaActiva->id] : []) }}"
            class="btn btn-primary">
             Nuevo procedimiento
@@ -53,11 +53,11 @@
             @foreach($procedimientos as $proc)
                 <article class="admin-list-item">
                     <div>
-                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                        <div class="admin-meta-row">
                             @if($proc->codigo)
                                 <span class="badge-categoria">{{ strtoupper($proc->codigo) }}</span>
                             @endif
-                            <h3 style="margin:0;">{{ $proc->titulo }}</h3>
+                            <h3 class="h3-flush">{{ $proc->titulo }}</h3>
                             @if(! $proc->visible)
                                 <span class="badge-estado badge-oculto">Oculto</span>
                             @endif

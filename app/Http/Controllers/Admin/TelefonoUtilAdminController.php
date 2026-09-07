@@ -19,7 +19,8 @@ class TelefonoUtilAdminController extends Controller
         $query = TelefonoUtil::query();
 
         if (DB::getDriverName() === 'mysql') {
-            $query->orderByRaw("FIELD(categoria, '" . implode("','", TelefonoUtil::CATEGORIAS) . "')");
+            $placeholders = implode(',', array_fill(0, count(TelefonoUtil::CATEGORIAS), '?'));
+            $query->orderByRaw("FIELD(categoria, {$placeholders})", TelefonoUtil::CATEGORIAS);
         }
 
         $query->orderBy('orden')->orderBy('nombre');

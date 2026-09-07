@@ -8,7 +8,7 @@
         <h2 class="seccion-titulo">Categorías</h2>
         <p class="admin-subtitle">Secciones de la página pública de Obras Particulares. Cada categoría agrupa procedimientos y normativas.</p>
     </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <div class="admin-btn-bar">
         <a href="{{ route('admin.obras.categorias.create') }}" class="btn btn-primary">Nueva categoría</a>
         <a href="{{ route('admin.obras.index') }}" class="btn btn-secondary">Volver</a>
     </div>
@@ -18,7 +18,7 @@
     <script @nonce>document.addEventListener('DOMContentLoaded', () => showToast(@json(session('ok')), 'success'));</script>
 @endif
 
-<div class="ops-admin-tip" style="margin-bottom:20px;">
+<div class="ops-admin-tip mb-20">
     <i class="fa-solid fa-circle-info"></i>
     <p>
         Cada categoría se muestra como una sección en la página pública con su propia área de normativas y sus acordeones de procedimientos.
@@ -35,14 +35,14 @@
         @foreach($categorias as $categoria)
             <article class="admin-list-item">
                 <div>
-                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                        <h3 style="margin:0;">{{ $categoria->nombre }}</h3>
+                    <div class="admin-meta-row">
+                        <h3 class="h3-flush">{{ $categoria->nombre }}</h3>
                         <span class="badge-estado {{ $categoria->visible ? 'badge-publicado' : 'badge-oculto' }}">
                             {{ $categoria->visible ? 'Visible' : 'Oculta' }}
                         </span>
                     </div>
                     @if($categoria->descripcion)
-                        <p class="admin-subtitle" style="margin-top:4px;">{{ $categoria->descripcion }}</p>
+                        <p class="admin-subtitle mt-4">{{ $categoria->descripcion }}</p>
                     @endif
                     <div class="meta-noticia">
                         <span>Orden: {{ $categoria->orden }}</span>

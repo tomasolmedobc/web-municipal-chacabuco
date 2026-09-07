@@ -112,11 +112,21 @@ a.turismo-item-card:hover {
 
 .turismo-show-hero {
     border-radius: 22px;
+    background-image: linear-gradient(135deg, rgba(15,23,42,.55), rgba(15,23,42,.35));
     background-size: cover;
     background-position: center;
     padding: 60px 36px;
     box-shadow: var(--shadow);
     color: #fff;
+}
+
+.turismo-mapa__wrap iframe { border: 0; }
+
+.turismo-item-nav {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 .turismo-show-hero h1 {
@@ -173,6 +183,22 @@ a.turismo-item-card:hover {
 .turismo-historia .contenido a {
     color: var(--primary);
     text-decoration: underline;
+}
+
+.turismo-mapa {
+    margin-top: 24px;
+    display: grid;
+    gap: 14px;
+}
+
+.turismo-mapa__wrap {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.turismo-mapa__wrap iframe {
+    display: block;
 }
 
 .turismo-tabs-section {

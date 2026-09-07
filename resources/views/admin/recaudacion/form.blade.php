@@ -15,8 +15,8 @@
 </section>
 
 @if($errors->any())
-    <div class="admin-alert" style="background:#fef2f2; color:#991b1b; margin-bottom:20px;">
-        <ul style="margin:0; padding-left:18px;">
+    <div class="alert-error">
+        <ul>
             @foreach($errors->all() as $err)
                 <li>{{ $err }}</li>
             @endforeach
@@ -46,23 +46,20 @@
             <label for="pdf">Subir archivo PDF</label>
 
             @if($modo === 'editar' && $item->url && !str_starts_with($item->url, 'http'))
-                <div style="margin-bottom:10px; display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--primary-soft); border-radius:10px; border:1px solid var(--border);">
-                    <i class="fa-solid fa-file-pdf" style="color:var(--primary); font-size:18px;"></i>
+                <div class="file-current">
+                    <i class="fa-solid fa-file-pdf file-current__icon"></i>
                     <div>
-                        <span style="font-size:13px; font-weight:600;">Archivo actual:</span>
-                        <a href="{{ $item->url }}" target="_blank" rel="noopener"
-                           style="font-size:12px; color:var(--primary); margin-left:6px;">
+                        <span class="file-current__label">Archivo actual:</span>
+                        <a href="{{ $item->url }}" target="_blank" rel="noopener" class="file-current__link">
                             Ver PDF <i class="fa-solid fa-arrow-up-right-from-square"></i>
                         </a>
                     </div>
-                    <span style="font-size:11px; color:var(--muted); margin-left:auto;">
-                        Subir uno nuevo lo reemplazará
-                    </span>
+                    <span class="file-current__hint">Subir uno nuevo lo reemplazará</span>
                 </div>
             @endif
 
             <input type="file" id="pdf" name="pdf" accept=".pdf,application/pdf">
-            <small style="color:var(--muted);">Máximo 10 MB. Al subir un nuevo archivo reemplaza el anterior automáticamente.</small>
+            <small class="form-hint">Máximo 10 MB. Al subir un nuevo archivo reemplaza el anterior automáticamente.</small>
         </div>
 
         {{-- URL manual (solo si no hay archivo local o se quiere un link externo) --}}
@@ -72,7 +69,7 @@
                    value="{{ old('url', ($item->url && str_starts_with($item->url, 'http')) ? $item->url : '') }}"
                    maxlength="500"
                    placeholder="https://...">
-            <small style="color:var(--muted);">Solo si el archivo está alojado en otro servidor. Si subís un archivo arriba, este campo se ignora.</small>
+            <small class="form-hint">Solo si el archivo está alojado en otro servidor. Si subís un archivo arriba, este campo se ignora.</small>
         </div>
 
         <div class="admin-form-group">
@@ -80,7 +77,7 @@
             <input type="number" id="orden" name="orden"
                    value="{{ old('orden', $item->orden ?? 0) }}"
                    min="0" max="9999">
-            <small style="color:var(--muted);">Número más bajo aparece primero.</small>
+            <small class="form-hint">Número más bajo aparece primero.</small>
         </div>
 
     </div>
