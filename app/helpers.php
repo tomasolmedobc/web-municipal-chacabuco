@@ -20,6 +20,10 @@ if (!function_exists('video_embed_url')) {
         }
         $url = trim($url);
 
+        // YouTube embed URL — already in embed format
+        if (preg_match('/youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/', $url, $m)) {
+            return 'https://www.youtube.com/embed/' . $m[1];
+        }
         // YouTube: youtube.com/watch?v=ID
         if (preg_match('/youtube\.com\/watch\?(?:[^&]+&)*v=([a-zA-Z0-9_-]{11})/', $url, $m)) {
             return 'https://www.youtube.com/embed/' . $m[1];
@@ -31,6 +35,10 @@ if (!function_exists('video_embed_url')) {
         // YouTube Shorts: youtube.com/shorts/ID
         if (preg_match('/youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/', $url, $m)) {
             return 'https://www.youtube.com/embed/' . $m[1];
+        }
+        // Vimeo player embed URL — already in embed format
+        if (preg_match('/player\.vimeo\.com\/video\/(\d+)/', $url, $m)) {
+            return 'https://player.vimeo.com/video/' . $m[1];
         }
         // Vimeo: vimeo.com/ID
         if (preg_match('/vimeo\.com\/(?:[^\/]+\/)*(\d+)/', $url, $m)) {

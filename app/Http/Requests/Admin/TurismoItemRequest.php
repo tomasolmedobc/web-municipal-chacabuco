@@ -38,6 +38,7 @@ class TurismoItemRequest extends FormRequest
             'adjuntos'     => ['nullable', 'array'],
             'adjuntos.*'   => ['file', 'mimes:pdf,doc,docx,xls,xlsx,zip', 'max:20480'],
             'video_url'    => ['nullable', 'string', 'max:2048'],
+            'mapa_embed'   => ['nullable', 'url', 'max:2048'],
         ];
     }
 }

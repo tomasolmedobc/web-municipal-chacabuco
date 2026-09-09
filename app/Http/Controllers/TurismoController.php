@@ -63,6 +63,20 @@ class TurismoController extends Controller
             ->limit(8)
             ->get();
 
+        $eventosVigentes = TurismoItem::visible()
+            ->where('tipo', TurismoItem::TIPO_EVENTO)
+            ->where(function ($q) use ($hoy) {
+                $q->where('fecha_fin', '>=', $hoy)
+                  ->orWhere(function ($q2) use ($hoy) {
+                      $q2->whereNull('fecha_fin')
+                         ->where('fecha_inicio', '>=', $hoy);
+                  });
+            })
+            ->with('localidad')
+            ->orderBy('fecha_inicio')
+            ->limit(12)
+            ->get();
+
         $eventosFinalizados = TurismoItem::visible()
             ->where('tipo', TurismoItem::TIPO_EVENTO)
             ->where(function ($q) {
@@ -80,8 +94,9 @@ class TurismoController extends Controller
             ->get();
 
         return view('turismo.index', [
-            'localidades' => $localidades,
-            'destacados' => $destacados,
+            'localidades'       => $localidades,
+            'destacados'        => $destacados,
+            'eventosVigentes'   => $eventosVigentes,
             'eventosFinalizados' => $eventosFinalizados,
         ]);
     }

@@ -175,6 +175,30 @@
         </div>
 
         <div class="admin-form-group full">
+            <label for="mapa_embed">Mapa "Cómo llegar" <small class="fecha">(Google Maps — opcional)</small></label>
+            <input type="url"
+                   name="mapa_embed"
+                   id="mapa_embed"
+                   value="{{ old('mapa_embed', $item->mapa_embed) }}"
+                   placeholder="https://www.google.com/maps/embed?pb=...">
+            <small class="fecha">
+                En Google Maps → Compartir → <strong>Insertar un mapa</strong> → copiá solo el valor del atributo <code>src</code> del iframe. Debe empezar con <code>https://www.google.com/maps/embed</code>.
+            </small>
+            @error('mapa_embed') <small class="auth-error">{{ $message }}</small> @enderror
+
+            <div id="mapa-preview-wrap" style="{{ old('mapa_embed', $item->mapa_embed) ? '' : 'display:none' }}; margin-top:10px;">
+                <iframe id="mapa-preview"
+                        src="{{ old('mapa_embed', $item->mapa_embed) }}"
+                        width="100%" height="280"
+                        style="border:0;border-radius:10px;"
+                        allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Vista previa del mapa">
+                </iframe>
+            </div>
+        </div>
+
+        <div class="admin-form-group full">
             <label for="imagen">Imagen</label>
             <input type="file" name="imagen" id="imagen" accept=".jpg,.jpeg,.png,.webp">
             <small class="fecha">Formatos: JPG, PNG, WEBP. Máximo 4MB.</small>
@@ -326,6 +350,24 @@
 
             tipoSelect.addEventListener('change', actualizarCamposEvento);
             actualizarCamposEvento();
+
+            // Preview en vivo del mapa embed
+            const mapaInput = document.getElementById('mapa_embed');
+            const mapaPreviewWrap = document.getElementById('mapa-preview-wrap');
+            const mapaPreview = document.getElementById('mapa-preview');
+
+            if (mapaInput) {
+                mapaInput.addEventListener('input', function () {
+                    const val = this.value.trim();
+                    if (val.startsWith('https://www.google.com/maps/embed')) {
+                        mapaPreview.src = val;
+                        mapaPreviewWrap.style.display = '';
+                    } else {
+                        mapaPreviewWrap.style.display = 'none';
+                        mapaPreview.src = '';
+                    }
+                });
+            }
 
             // Acciones de galería y archivos sin formularios anidados
             document.querySelectorAll('.js-accion-ajax').forEach(btn => {

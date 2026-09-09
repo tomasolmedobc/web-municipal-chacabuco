@@ -55,6 +55,11 @@ class TurismoItem extends Model
         'mostrar_detalle',
         'orden',
         'video_url',
+        'mapa_embed',
+    ];
+
+    protected $attributes = [
+        'mostrar_detalle' => true,
     ];
 
     protected $casts = [

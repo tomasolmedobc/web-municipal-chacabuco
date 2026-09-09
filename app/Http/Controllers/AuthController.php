@@ -4,18 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class AuthController extends Controller
 {
     public function showLogin()
     {
-        $a  = rand(2, 9);
-        $b  = rand(2, 9);
-        $op = rand(0, 1) ? '+' : '×';
-
-        session(['captcha_respuesta' => $op === '+' ? $a + $b : $a * $b]);
-
-        return view('auth.login', ['captcha_pregunta' => "$a $op $b"]);
+        return view('auth.login', [
+            'turnstileSiteKey' => config('services.turnstile.site_key'),
+        ]);
     }
 
     public function login(Request $request)
@@ -23,15 +20,16 @@ class AuthController extends Controller
         $request->validate([
             'email'    => ['required', 'email'],
             'password' => ['required'],
-            'captcha'  => ['required', 'numeric'],
+            'cf-turnstile-response' => ['required', 'string'],
         ]);
 
-        if ((int) $request->input('captcha') !== (int) session('captcha_respuesta')) {
-            session()->forget('captcha_respuesta');
-            return back()->withErrors(['captcha' => 'Respuesta incorrecta.'])->onlyInput('email');
-        }
+        $token = $request->input('cf-turnstile-response');
 
-        session()->forget('captcha_respuesta');
+        $verified = $this->verifyTurnstile($token, $request->ip());
+
+        if (! $verified) {
+            return back()->withErrors(['captcha' => 'Verificación de seguridad fallida. Intentá de nuevo.'])->onlyInput('email');
+        }
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $request->session()->regenerate();
@@ -52,5 +50,25 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('login');
+    }
+
+    private function verifyTurnstile(string $token, string $ip): bool
+    {
+        $secret = config('services.turnstile.secret_key');
+
+        if (empty($secret)) {
+            return true;
+        }
+
+        try {
+            $response = Http::asForm()->post(
+                'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+                ['secret' => $secret, 'response' => $token, 'remoteip' => $ip]
+            );
+
+            return $response->successful() && $response->json('success') === true;
+        } catch (\Throwable) {
+            return false;
+        }
     }
 }

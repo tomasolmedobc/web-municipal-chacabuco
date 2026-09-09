@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NoticiaController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\GobiernoAbiertoController;
 use App\Http\Controllers\LicitacionController;
 use App\Http\Controllers\AccesoMunicipalController;
@@ -154,10 +155,10 @@ Route::get('/turismo/{localidad}', [TurismoController::class, 'show'])
 Route::prefix('baile-egresados')->name('baile-egresados.')->group(function () {
     Route::get('/', [BaileEgresadosController::class, 'index'])->name('index');
     Route::get('/reservar', [BaileEgresadosController::class, 'reservarForm'])->name('reservar');
-    Route::post('/reservar', [BaileEgresadosController::class, 'guardarReserva'])->name('guardar');
+    Route::post('/reservar', [BaileEgresadosController::class, 'guardarReserva'])->middleware('throttle:5,1')->name('guardar');
     Route::get('/confirmacion', [BaileEgresadosController::class, 'confirmacion'])->name('confirmacion');
     Route::get('/consultar', [BaileEgresadosController::class, 'consultarForm'])->name('consultar');
-    Route::post('/consultar', [BaileEgresadosController::class, 'consultar'])->name('consultar.post');
+    Route::post('/consultar', [BaileEgresadosController::class, 'consultar'])->middleware('throttle:10,1')->name('consultar.post');
 });
 
 Route::get('/telefonos-utiles', [TelefonoUtilController::class, 'index'])
@@ -201,6 +202,19 @@ Route::middleware('guest')->group(function () {
     Route::post('/acceso-interno', [AuthController::class, 'login'])
         ->middleware('throttle:5,1')
         ->name('login.post');
+
+    Route::get('/recuperar-contrasena', [PasswordResetController::class, 'showForgotForm'])
+        ->name('password.request');
+
+    Route::post('/recuperar-contrasena', [PasswordResetController::class, 'sendLink'])
+        ->middleware('throttle:5,1')
+        ->name('password.email');
+
+    Route::get('/nueva-contrasena/{token}', [PasswordResetController::class, 'showResetForm'])
+        ->name('password.reset');
+
+    Route::post('/nueva-contrasena', [PasswordResetController::class, 'reset'])
+        ->name('password.update');
 
 });
 

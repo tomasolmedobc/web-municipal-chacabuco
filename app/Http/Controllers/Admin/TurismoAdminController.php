@@ -225,7 +225,7 @@ class TurismoAdminController extends Controller
                 'nombre_original' => $nombreOriginal,
                 'nombre_archivo'  => $nombreFinal,
                 'ruta'            => "/{$carpeta}/{$nombreFinal}",
-                'mime_type'       => $archivo->getClientMimeType(),
+                'mime_type'       => $archivo->getMimeType(),
                 'extension'       => $extension,
             ]);
         }

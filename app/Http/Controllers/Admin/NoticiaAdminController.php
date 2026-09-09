@@ -321,7 +321,7 @@ class NoticiaAdminController extends Controller
                 'nombre_original' => $nombreOriginal,
                 'nombre_archivo' => $nombreFinal,
                 'ruta' => $rutaPublica,
-                'mime_type' => $archivo->getClientMimeType(),
+                'mime_type' => $archivo->getMimeType(),
                 'extension' => $extension,
             ]);
         }

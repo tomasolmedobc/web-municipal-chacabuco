@@ -157,6 +157,26 @@
             </div>
         @endif
 
+        {{-- Mapa cómo llegar --}}
+        @if($item->mapa_embed)
+            <div class="turismo-mapa">
+                <h3 class="turismo-galeria__titulo">
+                    <i class="fa-solid fa-location-dot"></i>
+                    Cómo llegar
+                </h3>
+                <div class="turismo-mapa__wrap">
+                    <iframe
+                        src="{{ $item->mapa_embed }}"
+                        width="100%" height="360"
+                        style="border:0;"
+                        allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Cómo llegar a {{ $item->titulo }}">
+                    </iframe>
+                </div>
+            </div>
+        @endif
+
         {{-- Archivos adjuntos --}}
         @if($item->archivos->count())
             <div class="turismo-adjuntos">

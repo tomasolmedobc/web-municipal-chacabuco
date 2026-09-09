@@ -38,6 +38,59 @@
     </div>
 </section>
 
+@if($eventosVigentes->count())
+    <section class="turismo-destacados">
+        <div class="section-heading">
+            <h2>Eventos y Agenda</h2>
+            <p>Actividades y eventos próximos en Chacabuco y sus delegaciones.</p>
+        </div>
+
+        <div class="turismo-item-grid">
+            @foreach($eventosVigentes as $evento)
+                @php
+                    $urlEvento = $evento->mostrar_detalle
+                        ? route('turismo.show.item', [$evento->localidad->slug, $evento->id])
+                        : route('turismo.show', ['localidad' => $evento->localidad->slug, 'tipo' => 'evento']);
+                @endphp
+                <a href="{{ $urlEvento }}" class="turismo-item-card">
+                    <span class="turismo-item-card__badge turismo-item-card__badge--activo">Activo</span>
+                    <img src="{{ $evento->imagen_url }}" alt="{{ $evento->titulo }}" loading="lazy">
+
+                    <div class="turismo-item-card__body">
+                        <span class="hero-badge">
+                            <i class="fa-solid fa-calendar-days"></i>
+                            Evento
+                        </span>
+                        <h3>{{ $evento->titulo }}</h3>
+
+                        @if($evento->descripcion)
+                            <p>{{ \Illuminate\Support\Str::limit(html_entity_decode(strip_tags($evento->descripcion), ENT_QUOTES | ENT_HTML5, 'UTF-8'), 100) }}</p>
+                        @endif
+
+                        <span class="turismo-evento-fecha">
+                            <i class="fa-solid fa-calendar-days"></i>
+                            {{ $evento->fecha_inicio->format('d/m/Y') }}
+                            @if($evento->hora_inicio) · {{ substr($evento->hora_inicio, 0, 5) }} hs @endif
+                            @if($evento->fecha_fin && $evento->fecha_fin != $evento->fecha_inicio)
+                                — {{ $evento->fecha_fin->format('d/m/Y') }}
+                            @endif
+                        </span>
+
+                        <span class="turismo-item-card__localidad">
+                            <i class="fa-solid fa-location-dot"></i>
+                            {{ $evento->localidad->nombre }}
+                        </span>
+
+                        @if($evento->mostrar_detalle)
+                            <span class="turismo-item-card__ver-mas">Ver más →</span>
+                        @endif
+                    </div>
+                </a>
+            @endforeach
+        </div>
+    </section>
+@endif
+
 @if($destacados->count())
     <section class="turismo-destacados">
         <div class="section-heading">

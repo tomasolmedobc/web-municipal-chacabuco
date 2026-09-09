@@ -24,12 +24,12 @@ class SecurityHeaders
         $response->headers->set(
             'Content-Security-Policy',
             "default-src 'self'; " .
-            "script-src 'self' 'nonce-{$nonce}'; " .
-            "style-src 'self' 'nonce-{$nonce}' https://cdnjs.cloudflare.com; " .
+            "script-src 'self' 'nonce-{$nonce}' https://challenges.cloudflare.com; " .
+            "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; " .
             "font-src 'self' https://cdnjs.cloudflare.com; " .
             "img-src 'self' data: blob:; " .
-            "connect-src 'self' https://api.open-meteo.com; " .
-            "frame-src 'self' https://www.youtube.com https://player.vimeo.com https://www.google.com; " .
+            "connect-src 'self' https://api.open-meteo.com https://challenges.cloudflare.com; " .
+            "frame-src 'self' https://www.youtube.com https://player.vimeo.com https://www.google.com https://challenges.cloudflare.com; " .
             "frame-ancestors 'self'; " .
             "object-src 'none';"
         );

@@ -3,8 +3,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const body = document.body;
 
     const temaGuardado = localStorage.getItem('theme');
+    const prefiereDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-    if (temaGuardado === 'dark') {
+    if (temaGuardado === 'dark' || (!temaGuardado && prefiereDark)) {
         body.classList.add('dark');
     }
 

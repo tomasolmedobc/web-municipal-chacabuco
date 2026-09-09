@@ -19,6 +19,6 @@ class TurismoItemImagen extends Model
 
     public function getImagenUrlAttribute(): string
     {
-        return asset('storage/' . $this->imagen);
+        return $this->imagen ?? '/images/importantes/default-noticia.webp';
     }
 }

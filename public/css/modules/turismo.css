@@ -45,6 +45,10 @@
     background: #dc2626;
 }
 
+.turismo-item-card__badge--activo {
+    background: #16a34a;
+}
+
 .turismo-item-card--finalizado {
     opacity: .82;
     filter: saturate(.6);
@@ -312,6 +316,11 @@ a.turismo-item-detalle__meta-valor:hover { color: var(--primary); }
 .turismo-item-detalle__main {
     display: grid;
     gap: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 28px;
+    box-shadow: var(--shadow);
 }
 
 .turismo-item-detalle__imagen {

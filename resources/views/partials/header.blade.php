@@ -8,7 +8,7 @@
 
             <div class="site-brand__text">
                 <span class="site-brand__eyebrow">Municipalidad de Chacabuco</span>
-                <h1>Portal Oficial</h1>
+                <span class="site-brand__title">Portal Oficial</span>
             </div>
         </a>
 

@@ -36,6 +36,7 @@ class AccesoMunicipalController extends Controller
                 ->onlyInput([]);
         }
 
+        $request->session()->regenerate();
         $request->session()->put('acceso_municipal_autorizado', true);
         $request->session()->put('acceso_municipal_expira', now()->addHours(self::SESSION_TTL_HORAS)->timestamp);
 

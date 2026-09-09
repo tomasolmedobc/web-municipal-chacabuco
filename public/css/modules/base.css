@@ -83,6 +83,22 @@ textarea:focus {
     box-shadow: 0 0 0 3px var(--primary-soft);
 }
 
+:is(a, button, [role="button"], .btn, .tab-pill, .leer-mas, .volver):focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* ── Reduced motion ─────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
 /* ── Shared page hero ───────────────────────────────────────────────── */
 .noticias-hero,
 .ga-hero,
@@ -293,6 +309,50 @@ h2 {
 .auth-error {
     color: #dc2626;
     font-size: 13px;
+}
+
+.auth-status {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.dark .auth-status {
+    background: #14532d;
+    color: #86efac;
+    border-color: #166534;
+}
+
+.auth-forgot {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: right;
+    text-decoration: none;
+}
+
+.auth-forgot:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+.auth-link {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 13px;
+}
+
+.auth-link a {
+    color: var(--muted);
+    text-decoration: none;
+}
+
+.auth-link a:hover {
+    color: var(--primary);
+    text-decoration: underline;
 }
 
 .captcha-pregunta {
