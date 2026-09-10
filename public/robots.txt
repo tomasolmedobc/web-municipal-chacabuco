@@ -1,2 +1,8 @@
 User-agent: *
-Disallow:
+Disallow: /admin/
+Disallow: /login
+Disallow: /logout
+Disallow: /acceso-municipal/
+Disallow: /buscar?
+
+Sitemap: https://chacabuco.gob.ar/sitemap.xml

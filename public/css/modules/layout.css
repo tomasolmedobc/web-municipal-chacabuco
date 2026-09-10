@@ -102,3 +102,42 @@
     color: var(--muted);
     font-size: 14px;
 }
+
+/* =========================
+   WHATSAPP FAB
+========================= */
+.whatsapp-fab {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    z-index: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #25d366;
+    color: #fff;
+    font-size: 26px;
+    box-shadow: 0 4px 16px rgba(37, 211, 102, 0.45);
+    transition: transform .18s ease, box-shadow .18s ease;
+    text-decoration: none;
+}
+
+.whatsapp-fab:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.55);
+    color: #fff;
+}
+
+body.dark .whatsapp-fab {
+    box-shadow: 0 4px 16px rgba(37, 211, 102, 0.3);
+}
+
+@media (max-width: 600px) {
+    .whatsapp-fab {
+        bottom: 156px;
+        right: 16px;
+    }
+}

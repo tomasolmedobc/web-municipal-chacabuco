@@ -73,6 +73,7 @@
                     @if($noticia->autor)
                         <span>{{ $noticia->autor }}</span>
                     @endif
+                    <span title="Visitas"><i class="fa-regular fa-eye"></i> {{ number_format($noticia->vistas) }}</span>
                 </div>
             </div>
 

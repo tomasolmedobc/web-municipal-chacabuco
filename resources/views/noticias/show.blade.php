@@ -24,6 +24,9 @@
 
         <div class="fecha">
             <strong>Fecha:</strong> {{ $noticia->fecha->format('d/m/Y - H:i') }} hs
+            <span class="noticia-vistas" title="Cantidad de visitas">
+                <i class="fa-regular fa-eye"></i> {{ number_format($noticia->vistas) }}
+            </span>
         </div>
 
         @auth
@@ -127,6 +130,30 @@
         </div>
     </div>
 @endsection
+
+@push('scripts_head')
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    "headline": {{ Js::from($noticia->titulo) }},
+    "description": {{ Js::from(\Illuminate\Support\Str::of($noticia->contenido)->stripTags()->squish()->limit(160)->toString()) }},
+    "datePublished": "{{ $noticia->fecha?->toIso8601String() }}",
+    "dateModified": "{{ $noticia->updated_at?->toIso8601String() }}",
+    "image": {{ Js::from($noticia->imagen_destacada_url) }},
+    "author": {
+        "@type": "Organization",
+        "name": "Municipalidad de Chacabuco"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Municipalidad de Chacabuco",
+        "url": "{{ url('/') }}"
+    },
+    "url": "{{ route('noticias.show', $noticia->slug) }}"
+}
+</script>
+@endpush
 
 @push('scripts')
     <script src="{{ asset('js/noticia-show.js') }}"></script>

@@ -6,12 +6,13 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="csp-nonce" content="{{ $cspNonce }}">
 
-    <title>@yield('title', 'Chacabuco Noticias')</title>
+    <title>@yield('title', 'Municipalidad de Chacabuco')</title>
 
-    <meta name="description" content="@yield('meta_description', 'Noticias de la Municipalidad de Chacabuco')">
+    <meta name="description" content="@yield('meta_description', 'Portal oficial del Municipio de Chacabuco — noticias, trámites, servicios y gobierno abierto.')">
+    <link rel="alternate" type="application/rss+xml" title="Noticias — Municipalidad de Chacabuco" href="{{ route('rss') }}">
 
-    <meta property="og:title" content="@yield('title', 'Chacabuco Noticias')">
-    <meta property="og:description" content="@yield('meta_description', 'Noticias de la Municipalidad de Chacabuco')">
+    <meta property="og:title" content="@yield('title', 'Municipalidad de Chacabuco')">
+    <meta property="og:description" content="@yield('meta_description', 'Portal oficial del Municipio de Chacabuco — noticias, trámites, servicios y gobierno abierto.')">
     <meta property="og:image" content="@yield('og_image', asset('images/importantes/default-noticia.webp'))">
     <meta property="og:type" content="website">
 
@@ -31,10 +32,11 @@
     </script>
 </head>
 <body>
+    <a href="#main-content" class="skip-to-content">Ir al contenido principal</a>
     <div class="contenedor">
         @include('partials.header')
 
-        <main>
+        <main id="main-content">
             @yield('content')
         </main>
 
@@ -52,7 +54,7 @@
                     <h4>Contacto</h4>
                     <p>Reconquista 26, Chacabuco, BA</p>
                     <p>(02352) 470300</p>
-                    <p>contacto@chacabuco.gob.ar</p>
+                    <p>municipalidad@chacabuco.gob.ar</p>
                     <p>Lunes a viernes, 7:00 a 13:00 hs</p>
                 </div>
 
@@ -162,6 +164,16 @@
     @endif
 @endif
 
+@if(config_sistema('whatsapp_activo') === '1' && config_sistema('whatsapp_url'))
+<a href="{{ config_sistema('whatsapp_url') }}"
+   class="whatsapp-fab"
+   target="_blank"
+   rel="noopener noreferrer"
+   aria-label="Contactar por WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+</a>
+@endif
+
 <div id="clima-widget" class="clima-widget" hidden aria-label="Temperatura actual en Chacabuco">
     <span class="clima-widget__icon" id="clima-icon">—</span>
     <div class="clima-widget__data">
@@ -224,6 +236,38 @@
 })();
 </script>
 <script src="{{ asset('js/ui-feedback.js') }}"></script>
+<script @nonce>
+(function () {
+    var toggle = document.getElementById('search-toggle');
+    var panel  = document.getElementById('header-search-panel');
+    var input  = document.getElementById('header-search-input');
+    if (!toggle || !panel) return;
+
+    function open() {
+        panel.hidden = false;
+        toggle.setAttribute('aria-expanded', 'true');
+        if (input) input.focus();
+    }
+
+    function close() {
+        panel.hidden = true;
+        toggle.setAttribute('aria-expanded', 'false');
+    }
+
+    toggle.addEventListener('click', function () {
+        panel.hidden ? open() : close();
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !panel.hidden) close();
+    });
+
+    // Si estamos en la página de búsqueda, dejamos el panel abierto
+    if (window.location.pathname === '{{ route('busqueda', [], false) }}') {
+        open();
+    }
+})();
+</script>
 <script @nonce>
 (function () {
     var STORAGE_KEY = 'chacabuco_font_size';

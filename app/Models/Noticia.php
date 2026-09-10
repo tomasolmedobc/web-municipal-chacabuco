@@ -29,6 +29,7 @@ class Noticia extends Model
         'destacada',
         'destacada_hasta',
         'video_url',
+        'vistas',
     ];
 
     protected $casts = [
@@ -37,6 +38,7 @@ class Noticia extends Model
         'wp_modified_at' => 'datetime',
         'destacada' => 'boolean',
         'destacada_hasta' => 'datetime',
+        'vistas' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 
 /* Controllers */
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\BusquedaController;
+use App\Http\Controllers\RssFeedController;
 use App\Http\Controllers\NoticiaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordResetController;
@@ -58,6 +61,16 @@ use App\Http\Controllers\Admin\TasasCuotaAdminController;
 | Frontend público
 |--------------------------------------------------------------------------
 */
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])
+    ->name('sitemap');
+
+Route::get('/rss.xml', [RssFeedController::class, 'index'])
+    ->name('rss');
+
+Route::get('/buscar', [BusquedaController::class, 'index'])
+    ->middleware('throttle:30,1')
+    ->name('busqueda');
 
 Route::get('/', [HomeController::class, 'index'])
     ->name('home');

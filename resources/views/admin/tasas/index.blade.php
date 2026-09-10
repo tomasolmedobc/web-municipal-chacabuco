@@ -6,7 +6,7 @@
 <section class="admin-header">
     <div>
         <h2 class="seccion-titulo">Tasas Municipales</h2>
-        <p class="admin-subtitle">Gestioná el contenido, botones, banner y fechas de vencimiento de tasas.</p>
+        <p class="admin-subtitle">Gestioná el contenido, botones, banner y grupos de tasas.</p>
     </div>
     <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Volver al panel</a>
 </section>
@@ -30,15 +30,6 @@
         <div class="tasas-admin-card__info">
             <strong>Grupos de tasas</strong>
             <span>{{ $totalGrupos }} {{ $totalGrupos === 1 ? 'grupo' : 'grupos' }}</span>
-        </div>
-        <i class="fa-solid fa-chevron-right tasas-admin-card__arrow"></i>
-    </a>
-
-    <a href="{{ route('admin.tasas.cuotas.index') }}" class="tasas-admin-card">
-        <div class="tasas-admin-card__icon"><i class="fa-solid fa-calendar-days"></i></div>
-        <div class="tasas-admin-card__info">
-            <strong>Fechas de vencimiento</strong>
-            <span>{{ $totalCuotas }} {{ $totalCuotas === 1 ? 'cuota' : 'cuotas' }} cargadas</span>
         </div>
         <i class="fa-solid fa-chevron-right tasas-admin-card__arrow"></i>
     </a>

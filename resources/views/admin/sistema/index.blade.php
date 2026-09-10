@@ -94,6 +94,31 @@
 
     </div>
 
+        {{-- WHATSAPP --}}
+        <div class="admin-form-group full">
+            <label class="form-label-block">Botón de WhatsApp</label>
+            <p class="admin-subtitle" style="margin-bottom:12px">Muestra un botón flotante de contacto por WhatsApp en todo el sitio.</p>
+
+            <label class="config-toggle-label">
+                <input type="checkbox" name="whatsapp_activo" value="1" {{ $whatsapp_activo ? 'checked' : '' }}>
+                <span>Activar botón de WhatsApp</span>
+            </label>
+
+            <div class="admin-form-group" style="margin-top:12px">
+                <label for="whatsapp_url">URL de WhatsApp <small class="text-muted">(ej: https://wa.me/5492352000000)</small></label>
+                <input
+                    type="url"
+                    id="whatsapp_url"
+                    name="whatsapp_url"
+                    value="{{ $whatsapp_url }}"
+                    placeholder="https://wa.me/5492352XXXXXX"
+                    class="filtro-input"
+                    style="max-width:420px"
+                >
+                @error('whatsapp_url') <small class="auth-error">{{ $message }}</small> @enderror
+            </div>
+        </div>
+
     <button type="submit" class="btn btn-primary">
         Guardar configuración
     </button>

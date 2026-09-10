@@ -17,18 +17,21 @@ class SistemaController extends Controller
     public function index()
     {
         return view('admin.sistema.index', [
-            'logo' => config_sistema('logo'),
-            'portada' => config_sistema('portada'),
-            'default_noticia' => config_sistema('default_noticia'),
+            'logo'             => config_sistema('logo'),
+            'portada'          => config_sistema('portada'),
+            'default_noticia'  => config_sistema('default_noticia'),
+            'whatsapp_activo'  => config_sistema('whatsapp_activo') === '1',
+            'whatsapp_url'     => config_sistema('whatsapp_url'),
         ]);
     }
 
     public function update(Request $request)
     {
         $request->validate([
-            'logo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-            'portada' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            'logo'          => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'portada'       => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
             'default_noticia' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            'whatsapp_url'  => ['nullable', 'url', 'max:255'],
         ]);
 
         if ($request->boolean('eliminar_logo')) {
@@ -54,6 +57,15 @@ class SistemaController extends Controller
         if ($request->hasFile('default_noticia')) {
             $this->guardarConfiguracionArchivo($request, 'default_noticia', 'config/default-noticia');
         }
+
+        // WhatsApp
+        $whatsappActivo = $request->boolean('whatsapp_activo') ? '1' : '0';
+        Configuracion::updateOrCreate(['clave' => 'whatsapp_activo'], ['valor' => $whatsappActivo]);
+        config_sistema_flush('whatsapp_activo');
+
+        $whatsappUrl = trim($request->input('whatsapp_url', ''));
+        Configuracion::updateOrCreate(['clave' => 'whatsapp_url'], ['valor' => $whatsappUrl]);
+        config_sistema_flush('whatsapp_url');
 
         return back()->with('ok', 'Configuración actualizada correctamente');
     }

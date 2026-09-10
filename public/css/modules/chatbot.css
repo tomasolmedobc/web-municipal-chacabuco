@@ -5,7 +5,7 @@
 .chatbot-btn {
     position: fixed;
     bottom: 28px;
-    right: 28px;
+    right: 20px;
     z-index: 1000;
     width: 56px;
     height: 56px;
@@ -32,7 +32,7 @@
 .chatbot-ventana {
     position: fixed;
     bottom: 96px;
-    right: 28px;
+    right: 20px;
     z-index: 999;
     width: 340px;
     max-height: 520px;
@@ -288,8 +288,8 @@
 
 @media (max-width: 600px) {
     /* subir el chatbot por encima de la barra de utilidades mobile (≈76px) */
-    .chatbot-btn     { bottom: 88px; }
-    .chatbot-ventana { bottom: 154px; }
+    .chatbot-btn     { bottom: 84px; right: 16px; }
+    .chatbot-ventana { bottom: 152px; right: 12px; }
 }
 
 @media (max-width: 400px) {
@@ -297,11 +297,11 @@
         right: 10px;
         left: 10px;
         width: auto;
-        bottom: 154px;
+        bottom: 152px;
     }
 
     .chatbot-btn {
         right: 16px;
-        bottom: 88px;
+        bottom: 84px;
     }
 }

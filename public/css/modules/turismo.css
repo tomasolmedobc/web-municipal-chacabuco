@@ -843,10 +843,12 @@ a.turismo-item-detalle__meta-valor:hover { color: var(--primary); }
     text-decoration: underline;
 }
 
-@media (max-width: 420px) {
+@media (max-width: 600px) {
     .evento-reminder {
         right: 12px;
-        bottom: 12px;
-        width: calc(100vw - 24px);
+        left: 12px;
+        bottom: 84px;
+        width: auto;
+        border-radius: 16px;
     }
 }

@@ -113,6 +113,10 @@ class NoticiaController extends Controller
 
         $noticia = $query->firstOrFail();
 
+        if (!Auth::check()) {
+            $noticia->increment('vistas');
+        }
+
         return view('noticias.show', compact('noticia'));
     }
 }

@@ -13,6 +13,11 @@
         </a>
 
         <div class="site-header__actions">
+            <button type="button" class="btn-search-toggle" id="search-toggle" aria-expanded="false" aria-controls="header-search-panel">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span class="search-toggle-label">Buscar</span>
+            </button>
+
             @auth
                 <div class="user-box">
                     <div class="user-box__info">
@@ -47,6 +52,28 @@
             'gobierno-abierto.*', 'licitaciones.*', 'gastos-recursos-balance.*', 'proveedores.*'
         );
     @endphp
+    <div id="header-search-panel" class="header-search-panel" hidden>
+        <form action="{{ route('busqueda') }}" method="GET" class="header-search-form" role="search">
+            <div class="header-search-wrap">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                    type="search"
+                    name="q"
+                    id="header-search-input"
+                    value="{{ request('q') }}"
+                    placeholder="Buscá noticias, turismo, trámites…"
+                    class="header-search-input"
+                    autocomplete="off"
+                    minlength="3"
+                    aria-label="Buscar en el portal"
+                >
+            </div>
+            <button type="submit" class="header-search-btn">
+                <i class="fa-solid fa-magnifying-glass"></i>&nbsp; Buscar
+            </button>
+        </form>
+    </div>
+
     <nav class="site-nav">
         <a href="{{ url('/') }}"                          @class(['is-active' => request()->routeIs('home')])>Inicio</a>
         <a href="{{ route('noticias.index') }}"           @class(['is-active' => request()->routeIs('noticias.*')])>Noticias</a>

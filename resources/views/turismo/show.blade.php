@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@section('title', $localidad->nombre . ' - Turismo')
+@section('title', $localidad->nombre . ' - Turismo Chacabuco')
+@section('meta_description', \Illuminate\Support\Str::of($localidad->descripcion)->stripTags()->squish()->limit(160)->whenEmpty(fn($s) => "Descubrí los atractivos, gastronomía y eventos de {$localidad->nombre}, Chacabuco."))
+@section('og_image', $localidad->imagen_portada_url)
 
 @section('content')
 <x-breadcrumb :items="[

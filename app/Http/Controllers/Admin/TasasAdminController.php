@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\TasasConfiguracion;
 use App\Models\TasasGrupo;
-use App\Models\TasasCuota;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -19,7 +18,6 @@ class TasasAdminController extends Controller
         return view('admin.tasas.index', [
             'config'      => TasasConfiguracion::instancia(),
             'totalGrupos' => TasasGrupo::count(),
-            'totalCuotas' => TasasCuota::count(),
         ]);
     }
 

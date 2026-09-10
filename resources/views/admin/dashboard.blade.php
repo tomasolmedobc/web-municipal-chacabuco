@@ -3,6 +3,13 @@
 @section('title', 'Panel de administración')
 
 @section('content')
+<section class="admin-header">
+    <div>
+        <h2 class="seccion-titulo">Panel de administración</h2>
+        <p class="admin-subtitle">Gestioná el contenido y la configuración del sitio municipal.</p>
+    </div>
+</section>
+
 <div class="admin-stats">
     <div class="admin-stat-card">
         <h3>Total noticias</h3>
@@ -36,13 +43,6 @@
     </div>
     @endif
 </div>
-
-    <section class="admin-header">
-        <div>
-            <h2 class="seccion-titulo">Panel de administración</h2>
-            <p class="admin-subtitle">Gestioná el contenido y la configuración del sitio municipal.</p>
-        </div>
-    </section>
 
     <div class="admin-modules">
 

@@ -18,7 +18,7 @@
 
             <div class="municipal-hero__actions">
                 <a href="{{ route('noticias.index') }}" class="btn btn-primary">Ver noticias</a>
-                <a href="{{ route('tramites-servicios.index') }}" class="btn btn-secondary">Tramites</a>
+                <a href="{{ route('tramites-servicios.index') }}" class="btn btn-secondary">Trámites</a>
                 <a href="{{ route('gobierno-abierto.index') }}" class="btn btn-secondary">Gobierno Abierto</a>
             </div>
         </div>
@@ -39,37 +39,37 @@
 
         <div class="quick-access__grid">
             <a href="{{ route('noticias.index') }}" class="quick-card">
-                <span class="quick-card__icon">📰</span>
+                <span class="quick-card__icon"><i class="fa-solid fa-newspaper"></i></span>
                 <h3>Noticias</h3>
                 <p>Novedades, comunicados y actualidad municipal.</p>
             </a>
 
             <a href="{{ route('tramites-servicios.index') }}" class="quick-card">
-                <span class="quick-card__icon">📄</span>
+                <span class="quick-card__icon"><i class="fa-solid fa-file-lines"></i></span>
                 <h3>Trámites</h3>
                 <p>Accedé a gestiones y trámites municipales.</p>
             </a>
 
             <a href="{{ route('turismo.index') }}" class="quick-card">
-                <span class="quick-card__icon">🗺️</span>
+                <span class="quick-card__icon"><i class="fa-solid fa-map-location-dot"></i></span>
                 <h3>Turismo</h3>
                 <p>Localidades, eventos y atractivos del partido de Chacabuco.</p>
             </a>
 
             <a href="{{ route('gobierno-abierto.index') }}" class="quick-card">
-                <span class="quick-card__icon">🏛️</span>
+                <span class="quick-card__icon"><i class="fa-solid fa-landmark"></i></span>
                 <h3>Gobierno Abierto</h3>
-                <p>Información pública, licitaciones, nóminas, datos institucionales y documentación del Municipio de Chacabuco.</p>
+                <p>Licitaciones, nóminas y documentos institucionales del municipio.</p>
             </a>
 
             <a href="{{ route('telefonos-utiles.index') }}" class="quick-card">
-                <span class="quick-card__icon">📞</span>
+                <span class="quick-card__icon"><i class="fa-solid fa-phone"></i></span>
                 <h3>Teléfonos útiles</h3>
                 <p>Contactos y canales de atención municipal.</p>
             </a>
 
             <a href="{{ route('proveedores.index') }}" class="quick-card">
-                <span class="quick-card__icon">🏪</span>
+                <span class="quick-card__icon"><i class="fa-solid fa-store"></i></span>
                 <h3>Proveedores</h3>
                 <p>Información para proveedores del municipio de Chacabuco.</p>
             </a>

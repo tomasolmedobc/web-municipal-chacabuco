@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('title', $item->titulo . ' — Turismo')
+@section('meta_description', \Illuminate\Support\Str::of($item->descripcion)->stripTags()->squish()->limit(160))
+@section('og_image', $item->imagen_url)
 
 @section('content')
 <x-breadcrumb :items="[
