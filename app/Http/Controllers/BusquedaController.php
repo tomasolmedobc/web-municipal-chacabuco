@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Noticia;
+use App\Models\PublicAccessButton;
 use App\Models\TurismoItem;
 use Illuminate\Http\Request;
 
@@ -152,6 +153,7 @@ class BusquedaController extends Controller
         $noticias  = collect();
         $items     = collect();
         $secciones = collect();
+        $accesos   = collect();
         $palabras  = [];
 
         if (mb_strlen($q) >= 3) {
@@ -168,8 +170,8 @@ class BusquedaController extends Controller
                     }
                 })
                 ->orderByDesc('fecha')
-                ->limit(12)
-                ->get();
+                ->paginate(12)
+                ->appends($request->only('q'));
 
             $items = TurismoItem::visible()
                 ->where('mostrar_detalle', true)
@@ -187,11 +189,24 @@ class BusquedaController extends Controller
                 ->get();
 
             $secciones = $this->buscarSecciones($q);
+
+            $accesos = PublicAccessButton::where('activo', true)
+                ->where(function ($query) use ($q, $palabras) {
+                    $query->where('titulo', 'like', "%{$q}%")
+                          ->orWhere('descripcion', 'like', "%{$q}%");
+                    foreach ($palabras as $p) {
+                        $query->orWhere('titulo', 'like', "%{$p}%")
+                              ->orWhere('descripcion', 'like', "%{$p}%");
+                    }
+                })
+                ->orderBy('orden')
+                ->limit(8)
+                ->get();
         }
 
-        $total = $noticias->count() + $items->count() + $secciones->count();
+        $total = $noticias->total() + $items->count() + $secciones->count() + $accesos->count();
 
-        return view('busqueda.index', compact('q', 'noticias', 'items', 'secciones', 'total', 'palabras'));
+        return view('busqueda.index', compact('q', 'noticias', 'items', 'secciones', 'accesos', 'total', 'palabras'));
     }
 
     private function buscarSecciones(string $q): \Illuminate\Support\Collection

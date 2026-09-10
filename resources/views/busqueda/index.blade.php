@@ -50,7 +50,7 @@ function busquedaHighlight(string $texto, array $palabras): string {
     </div>
 @elseif($q)
     <p class="busqueda-total">
-        <strong>{{ $total }}</strong> {{ $total === 1 ? 'resultado' : 'resultados' }} para
+        <strong>{{ number_format($total) }}</strong> {{ $total === 1 ? 'resultado' : 'resultados' }} para
         <strong>"{{ $q }}"</strong>
     </p>
 
@@ -80,13 +80,44 @@ function busquedaHighlight(string $texto, array $palabras): string {
     </section>
     @endif
 
+    {{-- ACCESOS RÁPIDOS --}}
+    @if($accesos->count())
+    <section class="busqueda-seccion">
+        <h2 class="busqueda-seccion__titulo">
+            <i class="fa-solid fa-bolt"></i>
+            Accesos rápidos
+            <span class="busqueda-seccion__count">{{ $accesos->count() }}</span>
+        </h2>
+
+        <div class="busqueda-secciones-grid">
+            @foreach($accesos as $acceso)
+            @php $url = $acceso->url_personalizada ?: $acceso->url; @endphp
+            <a href="{{ $url }}"
+               class="busqueda-seccion-card"
+               {{ str_starts_with($url, 'http') ? 'target="_blank" rel="noopener"' : '' }}>
+                <span class="busqueda-seccion-card__icon">
+                    <i class="fa-solid {{ $acceso->icono ?? 'fa-link' }}"></i>
+                </span>
+                <div>
+                    <strong>{!! busquedaHighlight($acceso->titulo, $palabras) !!}</strong>
+                    @if($acceso->descripcion)
+                        <span>{!! busquedaHighlight($acceso->descripcion, $palabras) !!}</span>
+                    @endif
+                </div>
+                <i class="fa-solid fa-chevron-right busqueda-seccion-card__arrow"></i>
+            </a>
+            @endforeach
+        </div>
+    </section>
+    @endif
+
     {{-- NOTICIAS --}}
-    @if($noticias->count())
+    @if($noticias->total() > 0)
     <section class="busqueda-seccion">
         <h2 class="busqueda-seccion__titulo">
             <i class="fa-solid fa-newspaper"></i>
             Noticias
-            <span class="busqueda-seccion__count">{{ $noticias->count() }}</span>
+            <span class="busqueda-seccion__count">{{ $noticias->total() }}</span>
         </h2>
 
         <div class="busqueda-lista">
@@ -113,6 +144,12 @@ function busquedaHighlight(string $texto, array $palabras): string {
             </a>
             @endforeach
         </div>
+
+        @if($noticias->hasPages())
+        <div class="paginacion">
+            {{ $noticias->links('vendor.pagination.custom') }}
+        </div>
+        @endif
     </section>
     @endif
 
