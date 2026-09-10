@@ -200,7 +200,7 @@
 
             <div class="info-box">
                 <h3>Contacto</h3>
-                <p>(02352) 470300 · contacto@chacabuco.gob.ar</p>
+                <p>(02352)470300 · municipalidad@chacabuco.gob.ar</p>
             </div>
         </div>
     </section>
