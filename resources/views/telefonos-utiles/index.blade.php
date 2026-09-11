@@ -78,6 +78,9 @@
 
                 <div class="tel-tabla-wrap">
                     <table class="tel-tabla">
+                        <colgroup>
+                            <col><col><col><col>
+                        </colgroup>
                         <thead>
                             <tr>
                                 <th>Organismo / Servicio</th>
