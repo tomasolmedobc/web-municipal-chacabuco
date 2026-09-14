@@ -88,10 +88,6 @@
     transform: scale(var(--portada-zoom, 1));
 }
 
-.municipal-hero__media img {
-    min-height: 360px;
-    max-height: 430px;
-}
 
 .hero-media img {
     min-height: 360px;

@@ -20,7 +20,6 @@ class SistemaController extends Controller
             'logo'                => config_sistema('logo'),
             'portada'             => config_sistema('portada'),
             'portada_orig'        => config_sistema('portada_orig'),
-            'portada_posicion'    => config_sistema('portada_posicion', '50% 50%'),
             'portada_zoom'        => config_sistema('portada_zoom', '1'),
             'portada_altura'      => config_sistema('portada_altura', '390'),
             'portada_crop_top'    => (int) config_sistema('portada_crop_top',    '0'),
@@ -38,7 +37,6 @@ class SistemaController extends Controller
         $request->validate([
             'logo'                => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'portada'             => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
-            'portada_posicion'    => ['nullable', 'string', 'regex:/^\d{1,3}%\s\d{1,3}%$/'],
             'portada_zoom'        => ['nullable', 'numeric', 'min:1', 'max:2'],
             'portada_altura'      => ['nullable', 'integer', 'in:320,380,440,500'],
             'portada_crop_top'    => ['nullable', 'integer', 'min:0', 'max:45'],
@@ -81,11 +79,7 @@ class SistemaController extends Controller
             $this->guardarConfiguracionArchivo($request, 'default_noticia', 'config/default-noticia');
         }
 
-        // Ajustes de portada — posición, zoom y altura
-        $portadaPosicion = $request->input('portada_posicion', '50% 50%');
-        Configuracion::updateOrCreate(['clave' => 'portada_posicion'], ['valor' => $portadaPosicion]);
-        config_sistema_flush('portada_posicion');
-
+        // Ajustes de portada — zoom y altura
         $portadaZoom = number_format(max(1, min(2, (float) $request->input('portada_zoom', 1))), 2);
         Configuracion::updateOrCreate(['clave' => 'portada_zoom'], ['valor' => $portadaZoom]);
         config_sistema_flush('portada_zoom');
@@ -150,6 +144,16 @@ class SistemaController extends Controller
         $extension = strtolower($archivo->getClientOriginalExtension());
 
         if ($extension === 'webp') {
+            $finfo    = finfo_open(FILEINFO_MIME_TYPE);
+            $realMime = finfo_file($finfo, $archivo->getRealPath());
+            finfo_close($finfo);
+
+            if ($realMime !== 'image/webp') {
+                throw ValidationException::withMessages([
+                    $clave => 'El archivo no es un WebP válido.',
+                ]);
+            }
+
             $archivo->move($directorio, $nombreBase . '.webp');
 
             return '/storage/' . trim($carpeta, '/') . '/' . $nombreBase . '.webp';
@@ -297,8 +301,11 @@ class SistemaController extends Controller
         if (!Storage::disk('public')->exists($relSource)) return;
 
         $srcAbs = Storage::disk('public')->path($relSource);
-        $img    = @imagecreatefromwebp($srcAbs);
-        if (!$img) return;
+        $img    = imagecreatefromwebp($srcAbs);
+        if (!$img) {
+            \Illuminate\Support\Facades\Log::warning("aplicarCropGD: no se pudo abrir {$srcAbs}");
+            return;
+        }
 
         $srcW = imagesx($img);
         $srcH = imagesy($img);

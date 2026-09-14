@@ -55,8 +55,29 @@
     --max-width: 1120px;
 }
 
+/* ── Dark mode: tokens compartidos ─────────────────────────────────── */
+/* Usados tanto por el media query del OS como por la clase .dark del toggle */
+@media (prefers-color-scheme: dark) {
+    /* Solo aplica si el usuario no forzó el tema claro con la clase .light */
+    body:not(.light) {
+        --bg: #0b1220;
+        --card: #111827;
+        --card-soft: #1f2937;
+        --hover: #1f2937;
+        --text: #e5e7eb;
+        --muted: #94a3b8;
+        --primary: #60a5fa;
+        --primary-hover: #93c5fd;
+        --primary-soft: rgba(96, 165, 250, 0.12);
+        --border: #243041;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        --shadow-hover: 0 14px 30px rgba(0, 0, 0, 0.45);
+        --shadow-hero: 0 18px 38px rgba(0, 0, 0, 0.5);
+    }
+}
+
 body.dark {
-    --bg: #0b1220;
+    --bg: #222831;
     --card: #111827;
     --card-soft: #1f2937;
     --hover: #1f2937;

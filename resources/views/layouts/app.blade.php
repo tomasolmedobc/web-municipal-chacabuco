@@ -32,6 +32,16 @@
     </script>
 </head>
 <body>
+    <script @nonce>
+    (function () {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.body.classList.add('dark');
+        } else if (t === 'light') {
+            document.body.classList.add('light');
+        }
+    })();
+    </script>
     <a href="#main-content" class="skip-to-content">Ir al contenido principal</a>
     <div class="contenedor">
         @include('partials.header')
