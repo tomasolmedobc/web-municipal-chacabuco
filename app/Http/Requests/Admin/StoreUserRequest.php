@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreUserRequest extends FormRequest
@@ -14,11 +15,13 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'     => ['required', 'string', 'max:255'],
-            'apellido' => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'email', 'unique:users'],
-            'password' => ['required', 'min:6', 'confirmed'],
-            'rol'      => ['required', 'in:admin,editor'],
+            'name'      => ['required', 'string', 'max:255'],
+            'apellido'  => ['required', 'string', 'max:255'],
+            'email'     => ['required', 'email', 'unique:users'],
+            'password'  => ['required', 'min:6', 'confirmed'],
+            'rol'       => ['required', 'in:admin,editor'],
+            'modulos'   => ['nullable', 'array'],
+            'modulos.*' => ['string', 'in:' . implode(',', array_keys(User::MODULOS))],
         ];
     }
 }

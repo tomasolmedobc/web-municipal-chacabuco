@@ -46,9 +46,12 @@
 
     <div class="admin-modules">
 
+        @php $user = auth()->user(); @endphp
+
         <section class="admin-module-group">
             <h3 class="admin-module-group__title"><i class="fa-solid fa-newspaper"></i> Contenido</h3>
             <div class="admin-module-grid">
+                @if($user->canAccess('noticias'))
                 <a href="{{ route('admin.noticias.index') }}" class="admin-module-card admin-module-card--primary">
                     <span class="admin-module-card__icon"><i class="fa-solid fa-newspaper"></i></span>
                     <span class="admin-module-card__label">Noticias</span>
@@ -59,19 +62,22 @@
                     <span class="admin-module-card__label">Nueva noticia</span>
                     <span class="admin-module-card__desc">Publicá un comunicado o novedad municipal</span>
                 </a>
-                @if(auth()->user()->rol === 'admin')
+                @endif
+                @if($user->canAccess('gobierno_abierto'))
                 <a href="{{ route('admin.gobierno-abierto.index') }}" class="admin-module-card">
                     <span class="admin-module-card__icon"><i class="fa-solid fa-landmark"></i></span>
                     <span class="admin-module-card__label">Gobierno abierto</span>
                     <span class="admin-module-card__desc">Licitaciones, nóminas y documentos institucionales</span>
                 </a>
                 @endif
+                @if($user->canAccess('turismo'))
                 <a href="{{ route('admin.turismo.index') }}" class="admin-module-card">
                     <span class="admin-module-card__icon"><i class="fa-solid fa-map-location-dot"></i></span>
                     <span class="admin-module-card__label">Turismo</span>
                     <span class="admin-module-card__desc">Localidades y eventos del municipio</span>
                 </a>
-                @if(auth()->user()->rol === 'admin')
+                @endif
+                @if($user->canAccess('baile_egresados'))
                 <a href="{{ route('admin.baile.usuarios.index') }}" class="admin-module-card">
                     <span class="admin-module-card__icon"><i class="fa-solid fa-champagne-glasses"></i></span>
                     <span class="admin-module-card__label">Baile de Egresados</span>
@@ -81,50 +87,61 @@
             </div>
         </section>
 
-        @if(auth()->user()->rol === 'admin')
+        @if($user->canAccess('habilitaciones') || $user->canAccess('obras_particulares') || $user->canAccess('tasas') || $user->canAccess('recaudacion'))
         <section class="admin-module-group">
             <h3 class="admin-module-group__title"><i class="fa-solid fa-folder-open"></i> Gestión</h3>
             <div class="admin-module-grid">
+                @if($user->canAccess('habilitaciones'))
                 <a href="{{ route('admin.habilitaciones.index') }}" class="admin-module-card">
                     <span class="admin-module-card__icon"><i class="fa-solid fa-store"></i></span>
                     <span class="admin-module-card__label">Habilitaciones</span>
                     <span class="admin-module-card__desc">Permisos y habilitaciones comerciales</span>
                 </a>
+                @endif
+                @if($user->canAccess('obras_particulares'))
                 <a href="{{ route('admin.obras.index') }}" class="admin-module-card">
                     <span class="admin-module-card__icon"><i class="fa-solid fa-helmet-safety"></i></span>
                     <span class="admin-module-card__label">Obras Particulares</span>
                     <span class="admin-module-card__desc">Solicitudes de obras y planos</span>
                 </a>
+                @endif
+                @if($user->canAccess('tasas'))
                 <a href="{{ route('admin.tasas.index') }}" class="admin-module-card">
                     <span class="admin-module-card__icon"><i class="fa-solid fa-file-invoice-dollar"></i></span>
                     <span class="admin-module-card__label">Tasas Municipales</span>
                     <span class="admin-module-card__desc">Información y vencimientos de tasas</span>
                 </a>
+                @endif
+                @if($user->canAccess('recaudacion'))
                 <a href="{{ route('admin.recaudacion.index') }}" class="admin-module-card">
                     <span class="admin-module-card__icon"><i class="fa-solid fa-chart-line"></i></span>
                     <span class="admin-module-card__label">Recaudación</span>
                     <span class="admin-module-card__desc">Estadísticas y datos de recaudación</span>
                 </a>
+                @endif
             </div>
         </section>
         @endif
 
+        @if($user->canAccess('popup') || $user->canAccess('telefonos_utiles') || $user->canAccess('carnet_conducir'))
         <section class="admin-module-group">
             <h3 class="admin-module-group__title"><i class="fa-solid fa-sliders"></i> Configuración del sitio</h3>
             <div class="admin-module-grid">
-                @if(auth()->user()->rol === 'admin')
+                @if($user->canAccess('popup'))
                 <a href="{{ route('admin.popup.index') }}" class="admin-module-card">
                     <span class="admin-module-card__icon"><i class="fa-solid fa-bullhorn"></i></span>
                     <span class="admin-module-card__label">Popup anuncio</span>
                     <span class="admin-module-card__desc">Cartel de anuncio en la página principal</span>
                 </a>
                 @endif
+                @if($user->canAccess('telefonos_utiles'))
                 <a href="{{ route('admin.telefonos-utiles.index') }}" class="admin-module-card">
                     <span class="admin-module-card__icon"><i class="fa-solid fa-phone"></i></span>
                     <span class="admin-module-card__label">Teléfonos Útiles</span>
                     <span class="admin-module-card__desc">Contactos de emergencia y dependencias</span>
                 </a>
-                @if(auth()->user()->rol === 'admin')
+                @endif
+                @if($user->canAccess('carnet_conducir'))
                 <a href="{{ route('admin.carnet.index') }}" class="admin-module-card">
                     <span class="admin-module-card__icon"><i class="fa-solid fa-id-card"></i></span>
                     <span class="admin-module-card__label">Carnet de Conducir</span>
@@ -133,16 +150,31 @@
                 @endif
             </div>
         </section>
+        @endif
 
-        @if(auth()->user()->rol === 'admin')
+        @if($user->canAccess('auditoria') || $user->rol === 'admin')
         <section class="admin-module-group">
             <h3 class="admin-module-group__title"><i class="fa-solid fa-shield-halved"></i> Sistema</h3>
             <div class="admin-module-grid">
+                @if($user->canAccess('auditoria'))
                 <a href="{{ route('admin.audit-log.index') }}" class="admin-module-card">
                     <span class="admin-module-card__icon"><i class="fa-solid fa-clipboard-list"></i></span>
                     <span class="admin-module-card__label">Auditoría</span>
                     <span class="admin-module-card__desc">Registro de todas las acciones en el sistema</span>
                 </a>
+                @endif
+                @if($user->rol === 'admin')
+                <a href="{{ route('admin.usuarios.index') }}" class="admin-module-card">
+                    <span class="admin-module-card__icon"><i class="fa-solid fa-users"></i></span>
+                    <span class="admin-module-card__label">Usuarios</span>
+                    <span class="admin-module-card__desc">Gestión de usuarios y permisos de módulos</span>
+                </a>
+                <a href="{{ route('admin.sistema.index') }}" class="admin-module-card">
+                    <span class="admin-module-card__icon"><i class="fa-solid fa-gear"></i></span>
+                    <span class="admin-module-card__label">Sistema</span>
+                    <span class="admin-module-card__desc">Configuración general del sitio</span>
+                </a>
+                @endif
             </div>
         </section>
         @endif

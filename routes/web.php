@@ -269,17 +269,11 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Noticias + Licitaciones
+    | Noticias
     |--------------------------------------------------------------------------
     */
 
-    Route::middleware('role:admin,editor')->group(function () {
-
-        /*
-        |--------------------------------------------------------------------------
-        | Noticias
-        |--------------------------------------------------------------------------
-        */
+    Route::middleware('module:noticias')->group(function () {
 
         Route::get('/noticias', [NoticiaAdminController::class, 'index'])
             ->name('admin.noticias.index');
@@ -307,13 +301,13 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     });
 
-    Route::middleware('role:admin')->group(function () {
+    /*
+    |--------------------------------------------------------------------------
+    | Gobierno Abierto
+    |--------------------------------------------------------------------------
+    */
 
-        /*
-        |--------------------------------------------------------------------------
-        | Gobierno Abierto
-        |--------------------------------------------------------------------------
-        */
+    Route::middleware('module:gobierno_abierto')->group(function () {
 
         Route::get('/gobierno-abierto', [LicitacionAdminController::class, 'index'])
             ->name('admin.gobierno-abierto.index');
@@ -356,11 +350,15 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::delete('/licitaciones/{licitacion}', [LicitacionAdminController::class, 'destroy'])
             ->name('admin.licitaciones.destroy');
 
-        /*
-        |--------------------------------------------------------------------------
-        | Habilitaciones
-        |--------------------------------------------------------------------------
-        */
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Habilitaciones
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('module:habilitaciones')->group(function () {
 
         Route::get('/habilitaciones', [HabilitacionAdminController::class, 'index'])
             ->name('admin.habilitaciones.index');
@@ -386,12 +384,15 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::delete('/habilitaciones/{habilitacion}', [HabilitacionAdminController::class, 'destroy'])
             ->name('admin.habilitaciones.destroy');
 
+    });
 
-        /*
-        |--------------------------------------------------------------------------
-        | Turismo
-        |--------------------------------------------------------------------------
-        */
+    /*
+    |--------------------------------------------------------------------------
+    | Baile de Egresados
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('module:baile_egresados')->group(function () {
 
         Route::prefix('baile-egresados')->name('admin.baile.')->group(function () {
             Route::get('/usuarios', [BaileUsuariosAdminController::class, 'index'])->name('usuarios.index');
@@ -416,7 +417,13 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     });
 
-    Route::middleware('role:admin,editor')->group(function () {
+    /*
+    |--------------------------------------------------------------------------
+    | Turismo
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('module:turismo')->group(function () {
 
         Route::get('/turismo/localidades', [LocalidadAdminController::class, 'index'])
             ->name('admin.turismo.localidades.index');
@@ -460,12 +467,15 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::delete('/turismo/{turismo}/archivos/{archivo}', [TurismoAdminController::class, 'destroyArchivo'])
             ->name('admin.turismo.archivos.destroy');
 
+    });
 
-        /*
-        |--------------------------------------------------------------------------
-        | Teléfonos Útiles
-        |--------------------------------------------------------------------------
-        */
+    /*
+    |--------------------------------------------------------------------------
+    | Teléfonos Útiles
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('module:telefonos_utiles')->group(function () {
 
         Route::get('/telefonos-utiles', [TelefonoUtilAdminController::class, 'index'])
             ->name('admin.telefonos-utiles.index');
@@ -487,13 +497,13 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     });
 
-    Route::middleware('role:admin')->group(function () {
+    /*
+    |--------------------------------------------------------------------------
+    | Obras Particulares
+    |--------------------------------------------------------------------------
+    */
 
-        /*
-        |--------------------------------------------------------------------------
-        | Obras Particulares
-        |--------------------------------------------------------------------------
-        */
+    Route::middleware('module:obras_particulares')->group(function () {
 
         Route::get('/obras-particulares', [ObraParticularAdminController::class, 'index'])
             ->name('admin.obras.index');
@@ -576,12 +586,15 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::delete('/obras-particulares/procedimientos/{procedimiento}', [ObraProcedimientoAdminController::class, 'destroy'])
             ->name('admin.obras.procedimientos.destroy');
 
+    });
 
-        /*
-        |--------------------------------------------------------------------------
-        | Tasas Municipales
-        |--------------------------------------------------------------------------
-        */
+    /*
+    |--------------------------------------------------------------------------
+    | Tasas Municipales
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('module:tasas')->group(function () {
 
         Route::get('/tasas', [TasasAdminController::class, 'index'])
             ->name('admin.tasas.index');
@@ -628,44 +641,84 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::delete('/tasas/cuotas/{cuota}', [TasasCuotaAdminController::class, 'destroy'])
             ->name('admin.tasas.cuotas.destroy');
 
-        // Carnet de Conducir
-        Route::get('/carnet-conducir',                                    [CarnetAdminController::class, 'index'])          ->name('admin.carnet.index');
-        Route::get('/carnet-conducir/contenido/editar',                   [CarnetAdminController::class, 'editConfig'])     ->name('admin.carnet.config.edit');
-        Route::put('/carnet-conducir/contenido',                          [CarnetAdminController::class, 'updateConfig'])   ->name('admin.carnet.config.update');
-        Route::get('/carnet-conducir/materiales/crear',                   [CarnetAdminController::class, 'createMaterial']) ->name('admin.carnet.materiales.create');
-        Route::post('/carnet-conducir/materiales',                        [CarnetAdminController::class, 'storeMaterial'])  ->name('admin.carnet.materiales.store');
-        Route::get('/carnet-conducir/materiales/{material}/editar',       [CarnetAdminController::class, 'editMaterial'])   ->name('admin.carnet.materiales.edit');
-        Route::put('/carnet-conducir/materiales/{material}',              [CarnetAdminController::class, 'updateMaterial']) ->name('admin.carnet.materiales.update');
-        Route::delete('/carnet-conducir/materiales/{material}',           [CarnetAdminController::class, 'destroyMaterial'])->name('admin.carnet.materiales.destroy');
-        Route::patch('/carnet-conducir/materiales/{material}/toggle',     [CarnetAdminController::class, 'toggleMaterial']) ->name('admin.carnet.materiales.toggle');
-
-        // Recaudación
-        Route::get('/recaudacion',                              [RecaudacionAdminController::class, 'index'])      ->name('admin.recaudacion.index');
-        Route::get('/recaudacion/crear',                        [RecaudacionAdminController::class, 'create'])     ->name('admin.recaudacion.create');
-        Route::post('/recaudacion',                             [RecaudacionAdminController::class, 'store'])      ->name('admin.recaudacion.store');
-        Route::get('/recaudacion/tramite-online/editar',        [RecaudacionAdminController::class, 'editTramite'])->name('admin.recaudacion.tramite.edit');
-        Route::put('/recaudacion/tramite-online',               [RecaudacionAdminController::class, 'updateTramite'])->name('admin.recaudacion.tramite.update');
-        Route::get('/recaudacion/{documento}/editar',           [RecaudacionAdminController::class, 'edit'])       ->name('admin.recaudacion.edit');
-        Route::put('/recaudacion/{documento}',                  [RecaudacionAdminController::class, 'update'])     ->name('admin.recaudacion.update');
-        Route::delete('/recaudacion/{documento}',               [RecaudacionAdminController::class, 'destroy'])    ->name('admin.recaudacion.destroy');
-        Route::patch('/recaudacion/{documento}/toggle',         [RecaudacionAdminController::class, 'toggle'])     ->name('admin.recaudacion.toggle');
-
     });
-
 
     /*
     |--------------------------------------------------------------------------
-    | Usuarios + Sistema
+    | Carnet de Conducir
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('module:carnet_conducir')->group(function () {
+
+        Route::get('/carnet-conducir',                                [CarnetAdminController::class, 'index'])          ->name('admin.carnet.index');
+        Route::get('/carnet-conducir/contenido/editar',               [CarnetAdminController::class, 'editConfig'])     ->name('admin.carnet.config.edit');
+        Route::put('/carnet-conducir/contenido',                      [CarnetAdminController::class, 'updateConfig'])   ->name('admin.carnet.config.update');
+        Route::get('/carnet-conducir/materiales/crear',               [CarnetAdminController::class, 'createMaterial']) ->name('admin.carnet.materiales.create');
+        Route::post('/carnet-conducir/materiales',                    [CarnetAdminController::class, 'storeMaterial'])  ->name('admin.carnet.materiales.store');
+        Route::get('/carnet-conducir/materiales/{material}/editar',   [CarnetAdminController::class, 'editMaterial'])   ->name('admin.carnet.materiales.edit');
+        Route::put('/carnet-conducir/materiales/{material}',          [CarnetAdminController::class, 'updateMaterial']) ->name('admin.carnet.materiales.update');
+        Route::delete('/carnet-conducir/materiales/{material}',       [CarnetAdminController::class, 'destroyMaterial'])->name('admin.carnet.materiales.destroy');
+        Route::patch('/carnet-conducir/materiales/{material}/toggle', [CarnetAdminController::class, 'toggleMaterial']) ->name('admin.carnet.materiales.toggle');
+
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Recaudación
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('module:recaudacion')->group(function () {
+
+        Route::get('/recaudacion',                           [RecaudacionAdminController::class, 'index'])        ->name('admin.recaudacion.index');
+        Route::get('/recaudacion/crear',                     [RecaudacionAdminController::class, 'create'])       ->name('admin.recaudacion.create');
+        Route::post('/recaudacion',                          [RecaudacionAdminController::class, 'store'])        ->name('admin.recaudacion.store');
+        Route::get('/recaudacion/tramite-online/editar',     [RecaudacionAdminController::class, 'editTramite'])  ->name('admin.recaudacion.tramite.edit');
+        Route::put('/recaudacion/tramite-online',            [RecaudacionAdminController::class, 'updateTramite'])->name('admin.recaudacion.tramite.update');
+        Route::get('/recaudacion/{documento}/editar',        [RecaudacionAdminController::class, 'edit'])         ->name('admin.recaudacion.edit');
+        Route::put('/recaudacion/{documento}',               [RecaudacionAdminController::class, 'update'])       ->name('admin.recaudacion.update');
+        Route::delete('/recaudacion/{documento}',            [RecaudacionAdminController::class, 'destroy'])      ->name('admin.recaudacion.destroy');
+        Route::patch('/recaudacion/{documento}/toggle',      [RecaudacionAdminController::class, 'toggle'])       ->name('admin.recaudacion.toggle');
+
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Popup anuncio
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('module:popup')->group(function () {
+
+        Route::get('/popup', [PopupAdminController::class, 'index'])
+            ->name('admin.popup.index');
+
+        Route::put('/popup', [PopupAdminController::class, 'update'])
+            ->name('admin.popup.update');
+
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Auditoría
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('module:auditoria')->group(function () {
+
+        Route::get('/audit-log', [AuditLogController::class, 'index'])
+            ->name('admin.audit-log.index');
+
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Usuarios + Sistema (solo admin)
     |--------------------------------------------------------------------------
     */
 
     Route::middleware('role:admin')->group(function () {
-
-        /*
-        |--------------------------------------------------------------------------
-        | Usuarios
-        |--------------------------------------------------------------------------
-        */
 
         Route::resource('usuarios', UserController::class)
             ->except(['show'])
@@ -674,33 +727,17 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::post('/usuarios/{usuario}/reset-password', [UserController::class, 'resetPassword'])
             ->name('admin.usuarios.resetPassword');
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Sistema
-        |--------------------------------------------------------------------------
-        */
-
         Route::get('/sistema', [SistemaController::class, 'index'])
             ->name('admin.sistema.index');
 
         Route::put('/sistema', [SistemaController::class, 'update'])
             ->name('admin.sistema.update');
 
-        Route::get('/popup', [PopupAdminController::class, 'index'])
-            ->name('admin.popup.index');
-
-        Route::put('/popup', [PopupAdminController::class, 'update'])
-            ->name('admin.popup.update');
-
         Route::get('/botones-visibilidad', [PublicAccessButtonController::class, 'index'])
             ->name('admin.botones-visibilidad.index');
 
         Route::put('/botones-visibilidad', [PublicAccessButtonController::class, 'update'])
             ->name('admin.botones-visibilidad.update');
-
-        Route::get('/audit-log', [AuditLogController::class, 'index'])
-            ->name('admin.audit-log.index');
 
     });
 

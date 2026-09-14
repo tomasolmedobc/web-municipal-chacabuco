@@ -6,7 +6,7 @@
     <section class="admin-header">
         <div>
             <h2 class="seccion-titulo">Editar usuario</h2>
-            <p class="admin-subtitle">Modificá los datos, rol o contraseña del usuario.</p>
+            <p class="admin-subtitle">Modificá los datos, rol, módulos o contraseña del usuario.</p>
         </div>
 
         <a href="{{ route('admin.usuarios.index') }}" class="btn btn-secondary">Volver</a>
@@ -37,11 +37,28 @@
 
             <div class="admin-form-group full">
                 <label for="rol">Rol</label>
-                <select name="rol" id="rol" required>
+                <select name="rol" id="rol-select" required>
                     <option value="editor" {{ old('rol', $usuario->rol) === 'editor' ? 'selected' : '' }}>Editor</option>
                     <option value="admin" {{ old('rol', $usuario->rol) === 'admin' ? 'selected' : '' }}>Administrador</option>
                 </select>
                 @error('rol') <small class="auth-error">{{ $message }}</small> @enderror
+            </div>
+
+            {{-- Módulos: visible solo cuando rol = editor --}}
+            <div class="admin-form-group full" id="modulos-section">
+                <label>Módulos permitidos</label>
+                <p class="fecha mt-0 mb-8">Seleccioná los módulos a los que tendrá acceso este editor. Los administradores tienen acceso total sin restricciones.</p>
+                <div class="modulos-grid">
+                    @php $modulosActivos = old('modulos', $usuario->modulos ?? []); @endphp
+                    @foreach(\App\Models\User::MODULOS as $key => $label)
+                    <label class="modulo-checkbox">
+                        <input type="checkbox" name="modulos[]" value="{{ $key }}"
+                            {{ in_array($key, $modulosActivos) ? 'checked' : '' }}>
+                        {{ $label }}
+                    </label>
+                    @endforeach
+                </div>
+                @error('modulos') <small class="auth-error">{{ $message }}</small> @enderror
             </div>
 
             <div class="admin-form-group full">
@@ -66,3 +83,19 @@
         <button type="submit" class="btn btn-primary">Actualizar usuario</button>
     </form>
 @endsection
+
+@push('scripts')
+<script @nonce>
+(function () {
+    var rolSelect = document.getElementById('rol-select');
+    var modulosSection = document.getElementById('modulos-section');
+
+    function toggleModulos() {
+        modulosSection.style.display = rolSelect.value === 'editor' ? '' : 'none';
+    }
+
+    rolSelect.addEventListener('change', toggleModulos);
+    toggleModulos();
+})();
+</script>
+@endpush

@@ -34,6 +34,7 @@ class UserController extends Controller
             'email'    => $data['email'],
             'password' => Hash::make($data['password']),
             'rol'      => $data['rol'],
+            'modulos'  => $data['rol'] === 'admin' ? null : ($data['modulos'] ?? []),
         ]);
 
         AuditLog::registrar('crear', 'User', $nuevoUsuario->id, "Usuario creado: \"{$data['name']}\" ({$data['email']}) — rol: {$data['rol']}");
@@ -60,6 +61,7 @@ class UserController extends Controller
         $usuario->apellido = $data['apellido'];
         $usuario->email    = $data['email'];
         $usuario->rol      = $data['rol'];
+        $usuario->modulos  = $data['rol'] === 'admin' ? null : ($data['modulos'] ?? []);
 
         if (!empty($data['password'])) {
             $usuario->password = Hash::make($data['password']);
