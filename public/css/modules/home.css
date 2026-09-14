@@ -83,7 +83,9 @@
     height: 100%;
     object-fit: cover;
     display: block;
+    border-radius: 18px;
     transition: transform 0.35s ease;
+    transform: scale(var(--portada-zoom, 1));
 }
 
 .municipal-hero__media img {
@@ -99,7 +101,7 @@
 
 .municipal-hero:hover .municipal-hero__media img,
 .hero:hover .hero-media img {
-    transform: scale(1.02);
+    transform: scale(calc(var(--portada-zoom, 1) * 1.02));
 }
 
 .hero-badge {

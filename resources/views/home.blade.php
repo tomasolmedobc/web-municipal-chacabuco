@@ -23,10 +23,15 @@
             </div>
         </div>
 
-        <div class="municipal-hero__media">
+        @php
+            $portadaAltura = config_sistema('portada_altura', '390');
+            $portadaZoom   = config_sistema('portada_zoom', '1');
+        @endphp
+        <div class="municipal-hero__media" style="--portada-zoom: {{ $portadaZoom }};">
             <img
                 src="{{ config_sistema('portada', asset('images/importantes/tu-imagen-default.webp')) }}"
                 alt="Municipalidad de Chacabuco"
+                style="min-height: {{ $portadaAltura }}px; max-height: {{ $portadaAltura }}px;"
             >
         </div>
     </section>

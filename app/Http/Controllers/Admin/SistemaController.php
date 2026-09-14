@@ -17,21 +17,36 @@ class SistemaController extends Controller
     public function index()
     {
         return view('admin.sistema.index', [
-            'logo'             => config_sistema('logo'),
-            'portada'          => config_sistema('portada'),
-            'default_noticia'  => config_sistema('default_noticia'),
-            'whatsapp_activo'  => config_sistema('whatsapp_activo') === '1',
-            'whatsapp_url'     => config_sistema('whatsapp_url'),
+            'logo'                => config_sistema('logo'),
+            'portada'             => config_sistema('portada'),
+            'portada_orig'        => config_sistema('portada_orig'),
+            'portada_posicion'    => config_sistema('portada_posicion', '50% 50%'),
+            'portada_zoom'        => config_sistema('portada_zoom', '1'),
+            'portada_altura'      => config_sistema('portada_altura', '390'),
+            'portada_crop_top'    => (int) config_sistema('portada_crop_top',    '0'),
+            'portada_crop_bottom' => (int) config_sistema('portada_crop_bottom', '0'),
+            'portada_crop_left'   => (int) config_sistema('portada_crop_left',   '0'),
+            'portada_crop_right'  => (int) config_sistema('portada_crop_right',  '0'),
+            'default_noticia'     => config_sistema('default_noticia'),
+            'whatsapp_activo'     => config_sistema('whatsapp_activo') === '1',
+            'whatsapp_url'        => config_sistema('whatsapp_url'),
         ]);
     }
 
     public function update(Request $request)
     {
         $request->validate([
-            'logo'          => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-            'portada'       => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
-            'default_noticia' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
-            'whatsapp_url'  => ['nullable', 'url', 'max:255'],
+            'logo'                => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'portada'             => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            'portada_posicion'    => ['nullable', 'string', 'regex:/^\d{1,3}%\s\d{1,3}%$/'],
+            'portada_zoom'        => ['nullable', 'numeric', 'min:1', 'max:2'],
+            'portada_altura'      => ['nullable', 'integer', 'in:320,380,440,500'],
+            'portada_crop_top'    => ['nullable', 'integer', 'min:0', 'max:45'],
+            'portada_crop_bottom' => ['nullable', 'integer', 'min:0', 'max:45'],
+            'portada_crop_left'   => ['nullable', 'integer', 'min:0', 'max:45'],
+            'portada_crop_right'  => ['nullable', 'integer', 'min:0', 'max:45'],
+            'default_noticia'     => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            'whatsapp_url'        => ['nullable', 'url', 'max:255'],
         ]);
 
         if ($request->boolean('eliminar_logo')) {
@@ -40,6 +55,7 @@ class SistemaController extends Controller
 
         if ($request->boolean('eliminar_portada')) {
             $this->eliminarConfiguracionArchivo('portada');
+            $this->eliminarConfiguracionArchivo('portada_orig');
         }
 
         if ($request->boolean('eliminar_default_noticia')) {
@@ -52,10 +68,47 @@ class SistemaController extends Controller
 
         if ($request->hasFile('portada')) {
             $this->guardarConfiguracionArchivo($request, 'portada', 'config/portada');
+            // Guardar copia del original para re-recortar sin degradar
+            $this->guardarPortadaOriginal();
+            // Nueva imagen: resetear crop
+            foreach (['portada_crop_top','portada_crop_bottom','portada_crop_left','portada_crop_right'] as $k) {
+                Configuracion::updateOrCreate(['clave' => $k], ['valor' => '0']);
+                config_sistema_flush($k);
+            }
         }
 
         if ($request->hasFile('default_noticia')) {
             $this->guardarConfiguracionArchivo($request, 'default_noticia', 'config/default-noticia');
+        }
+
+        // Ajustes de portada — posición, zoom y altura
+        $portadaPosicion = $request->input('portada_posicion', '50% 50%');
+        Configuracion::updateOrCreate(['clave' => 'portada_posicion'], ['valor' => $portadaPosicion]);
+        config_sistema_flush('portada_posicion');
+
+        $portadaZoom = number_format(max(1, min(2, (float) $request->input('portada_zoom', 1))), 2);
+        Configuracion::updateOrCreate(['clave' => 'portada_zoom'], ['valor' => $portadaZoom]);
+        config_sistema_flush('portada_zoom');
+
+        $portadaAltura = $request->input('portada_altura', '390');
+        Configuracion::updateOrCreate(['clave' => 'portada_altura'], ['valor' => $portadaAltura]);
+        config_sistema_flush('portada_altura');
+
+        // Recorte de portada
+        $cropTop    = max(0, min(45, (int) $request->input('portada_crop_top',    0)));
+        $cropBottom = max(0, min(45, (int) $request->input('portada_crop_bottom', 0)));
+        $cropLeft   = max(0, min(45, (int) $request->input('portada_crop_left',   0)));
+        $cropRight  = max(0, min(45, (int) $request->input('portada_crop_right',  0)));
+
+        foreach (['portada_crop_top' => $cropTop, 'portada_crop_bottom' => $cropBottom,
+                  'portada_crop_left' => $cropLeft, 'portada_crop_right' => $cropRight] as $k => $v) {
+            Configuracion::updateOrCreate(['clave' => $k], ['valor' => (string) $v]);
+            config_sistema_flush($k);
+        }
+
+        // Aplicar recorte con GD si hay portada disponible
+        if (Configuracion::where('clave', 'portada')->exists()) {
+            $this->aplicarCropGD($cropTop, $cropBottom, $cropLeft, $cropRight);
         }
 
         // WhatsApp
@@ -207,6 +260,78 @@ class SistemaController extends Controller
         if (Storage::disk('public')->exists($rutaRelativa)) {
             Storage::disk('public')->delete($rutaRelativa);
         }
+    }
+
+    private function guardarPortadaOriginal(): void
+    {
+        $portadaPath = Configuracion::where('clave', 'portada')->value('valor');
+        if (!$portadaPath) return;
+
+        $relPortada = str_replace('/storage/', '', $portadaPath);
+        if (!Storage::disk('public')->exists($relPortada)) return;
+
+        $dirOrig = Storage::disk('public')->path('config/portada-orig');
+        File::ensureDirectoryExists($dirOrig);
+
+        $nombre    = basename($relPortada);
+        $destAbs   = $dirOrig . '/' . $nombre;
+        $srcAbs    = Storage::disk('public')->path($relPortada);
+
+        copy($srcAbs, $destAbs);
+
+        $origPath = '/storage/config/portada-orig/' . $nombre;
+        Configuracion::updateOrCreate(['clave' => 'portada_orig'], ['valor' => $origPath]);
+        config_sistema_flush('portada_orig');
+    }
+
+    private function aplicarCropGD(int $top, int $bottom, int $left, int $right): void
+    {
+        // Fuente: original si existe, sino la portada actual
+        $origPath   = Configuracion::where('clave', 'portada_orig')->value('valor');
+        $portadaPath = Configuracion::where('clave', 'portada')->value('valor');
+        $source     = $origPath ?? $portadaPath;
+
+        if (!$source) return;
+
+        $relSource = str_replace('/storage/', '', $source);
+        if (!Storage::disk('public')->exists($relSource)) return;
+
+        $srcAbs = Storage::disk('public')->path($relSource);
+        $img    = @imagecreatefromwebp($srcAbs);
+        if (!$img) return;
+
+        $srcW = imagesx($img);
+        $srcH = imagesy($img);
+
+        $x = (int) round($srcW * $left   / 100);
+        $y = (int) round($srcH * $top    / 100);
+        $w = (int) round($srcW * (100 - $left - $right)  / 100);
+        $h = (int) round($srcH * (100 - $top  - $bottom) / 100);
+
+        $w = max(10, $w);
+        $h = max(10, $h);
+
+        // Sin recorte: restaurar original
+        if ($w === $srcW && $h === $srcH) {
+            imagedestroy($img);
+            if ($origPath && $origPath !== $portadaPath) {
+                $relDest = str_replace('/storage/', '', $portadaPath);
+                copy($srcAbs, Storage::disk('public')->path($relDest));
+                config_sistema_flush('portada');
+            }
+            return;
+        }
+
+        $cropped = imagecrop($img, ['x' => $x, 'y' => $y, 'width' => $w, 'height' => $h]);
+        imagedestroy($img);
+        if (!$cropped) return;
+
+        $relDest = str_replace('/storage/', '', $portadaPath);
+        $destAbs = Storage::disk('public')->path($relDest);
+        imagewebp($cropped, $destAbs, 85);
+        imagedestroy($cropped);
+
+        config_sistema_flush('portada');
     }
 
     private function liberarNoticiasConImagenDefault(string $valorActual): void
