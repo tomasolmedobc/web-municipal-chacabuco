@@ -72,6 +72,14 @@ class PopupAdminController extends Controller
         $rutaWebp  = $directorio . '/' . $nombre . '.webp';
 
         if ($extension === 'webp') {
+            $finfo    = finfo_open(FILEINFO_MIME_TYPE);
+            $realMime = finfo_file($finfo, $archivo->getRealPath());
+            finfo_close($finfo);
+
+            if ($realMime !== 'image/webp') {
+                throw ValidationException::withMessages(['popup_imagen' => 'El archivo no es un WebP válido.']);
+            }
+
             $archivo->move($directorio, $nombre . '.webp');
         } else {
             $imagen = match ($extension) {

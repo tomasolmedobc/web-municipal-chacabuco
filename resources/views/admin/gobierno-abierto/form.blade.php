@@ -205,7 +205,7 @@
                                     type="button"
                                     class="btn btn-danger btn-eliminar-archivo"
                                     data-id="{{ $archivo->id }}"
-                                    data-url="{{ route('admin.gobierno-abierto.archivos.destroy', $archivo) }}"
+                                    data-url="{{ route('admin.gobierno-abierto.archivos.destroy', [$documento, $archivo]) }}"
                                 >
                                     Quitar
                                 </button>

@@ -296,7 +296,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::delete('/noticias/{noticia}', [NoticiaAdminController::class, 'destroy'])
             ->name('admin.noticias.destroy');
 
-        Route::delete('/archivos/{archivo}', [NoticiaAdminController::class, 'destroyArchivo'])
+        Route::delete('/noticias/{noticia}/archivos/{archivo}', [NoticiaAdminController::class, 'destroyArchivo'])
             ->name('admin.noticias.archivos.destroy');
 
     });
@@ -327,7 +327,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::delete('/gobierno-abierto/{licitacion}', [LicitacionAdminController::class, 'destroy'])
             ->name('admin.gobierno-abierto.destroy');
 
-        Route::delete('/gobierno-abierto/archivos/{archivo}', [LicitacionAdminController::class, 'destroyArchivo'])
+        Route::delete('/gobierno-abierto/{licitacion}/archivos/{archivo}', [LicitacionAdminController::class, 'destroyArchivo'])
             ->name('admin.gobierno-abierto.archivos.destroy');
 
         Route::get('/licitaciones', function () {

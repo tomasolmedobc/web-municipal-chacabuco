@@ -29,6 +29,7 @@
                    id="tel-search-input"
                    class="tel-search-input"
                    value="{{ $q }}"
+                   aria-label="Buscar teléfonos útiles"
                    placeholder="Buscar por nombre, teléfono, dirección…"
                    autocomplete="off">
             @if($q || $categoria)

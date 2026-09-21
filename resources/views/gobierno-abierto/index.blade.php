@@ -22,6 +22,7 @@
 
     <input type="search"
            id="ga-search"
+           aria-label="Buscar accesos de Gobierno Abierto"
            placeholder="Buscar por licitaciones, proveedores, ordenanzas..."
            autocomplete="off">
 </section>

@@ -233,11 +233,25 @@
     </div>
 </div>
 
+{{-- PDF viewer modal --}}
+<div id="pdfModal" class="pdf-modal" hidden>
+    <div class="pdf-modal__overlay" id="pdfModalOverlay"></div>
+    <div class="pdf-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="pdfModalTitle">
+        <div class="pdf-modal__header">
+            <h3 id="pdfModalTitle">Vista previa PDF</h3>
+            <button type="button" class="pdf-modal__close" id="pdfModalClose" aria-label="Cerrar">✕</button>
+        </div>
+        <div class="pdf-modal__body">
+            <iframe id="pdfViewer" src="" frameborder="0"></iframe>
+        </div>
+    </div>
+</div>
+
 {{-- Lightbox modal --}}
 <div class="turismo-lightbox" id="turismo-lightbox" hidden>
     <div class="turismo-lightbox__overlay" id="turismo-lightbox-overlay"></div>
 
-    <div class="turismo-lightbox__dialog">
+    <div class="turismo-lightbox__dialog" role="dialog" aria-modal="true" aria-labelledby="turismo-lightbox-titulo">
         <div class="turismo-lightbox__header">
             <span class="turismo-lightbox__titulo" id="turismo-lightbox-titulo"></span>
             <div class="turismo-lightbox__controles">
@@ -272,6 +286,7 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/noticia-show.js') }}"></script>
 <script @nonce>
 (function () {
     var hero = document.querySelector('.turismo-show-hero[data-bg]');

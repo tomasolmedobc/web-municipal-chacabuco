@@ -99,8 +99,12 @@
     <div id="app-confirm-modal" class="app-confirm-modal" hidden>
         <div class="app-confirm-overlay" id="app-confirm-overlay"></div>
 
-        <div class="app-confirm-dialog">
-            <h3>Confirmar acción</h3>
+        <div class="app-confirm-dialog"
+             role="alertdialog"
+             aria-modal="true"
+             aria-labelledby="app-confirm-title"
+             aria-describedby="app-confirm-message">
+            <h3 id="app-confirm-title">Confirmar acción</h3>
             <p id="app-confirm-message">¿Seguro?</p>
 
             <div class="app-confirm-actions">

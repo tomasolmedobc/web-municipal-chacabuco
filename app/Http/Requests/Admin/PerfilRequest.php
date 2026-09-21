@@ -15,7 +15,7 @@ class PerfilRequest extends FormRequest
     {
         return [
             'name'     => ['required', 'string', 'max:255'],
-            'password' => ['nullable', 'string', 'min:6', 'confirmed'],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ];
     }
 }

@@ -197,7 +197,7 @@
                                     type="button"
                                     class="btn btn-danger btn-eliminar-archivo"
                                     data-id="{{ $archivo->id }}"
-                                    data-url="{{ route('admin.noticias.archivos.destroy', $archivo) }}"
+                                    data-url="{{ route('admin.noticias.archivos.destroy', [$noticia, $archivo]) }}"
                                 >
                                     Quitar
                                 </button>

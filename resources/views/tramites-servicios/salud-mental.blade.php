@@ -40,6 +40,7 @@
     </div>
     <input type="search"
            id="sm-search"
+           aria-label="Buscar salón de salud mental"
            placeholder="Ej: Rawson, Patricia Daló, Junín..."
            autocomplete="off">
 </section>

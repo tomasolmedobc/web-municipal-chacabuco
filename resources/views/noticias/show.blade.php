@@ -120,7 +120,7 @@
             <div class="pdf-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="pdfModalTitle">
                 <div class="pdf-modal__header">
                     <h3 id="pdfModalTitle">Vista previa PDF</h3>
-                    <button type="button" class="pdf-modal__close" id="pdfModalClose">✕</button>
+                    <button type="button" class="pdf-modal__close" id="pdfModalClose" aria-label="Cerrar">✕</button>
                 </div>
 
                 <div class="pdf-modal__body">

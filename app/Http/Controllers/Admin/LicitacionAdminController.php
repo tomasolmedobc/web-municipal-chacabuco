@@ -128,8 +128,10 @@ class LicitacionAdminController extends Controller
             ->with('ok', $this->mensajeOk($categoria, 'eliminado'));
     }
 
-    public function destroyArchivo(LicitacionArchivo $archivo)
+    public function destroyArchivo(Licitacion $licitacion, LicitacionArchivo $archivo)
     {
+        abort_if($archivo->licitacion_id !== $licitacion->id, 403);
+
         $this->eliminarArchivoFisico($archivo->ruta);
         $archivo->delete();
 

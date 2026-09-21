@@ -22,6 +22,14 @@ class ImageUploader
         $extension = strtolower($archivo->getClientOriginalExtension());
 
         if ($extension === 'webp') {
+            $finfo    = finfo_open(FILEINFO_MIME_TYPE);
+            $realMime = finfo_file($finfo, $archivo->getRealPath());
+            finfo_close($finfo);
+
+            if ($realMime !== 'image/webp') {
+                return null;
+            }
+
             $archivo->move($directorio, $nombreBase . '.webp');
 
             return '/storage/' . trim($carpeta, '/') . '/' . $nombreBase . '.webp';
@@ -112,6 +120,15 @@ class ImageUploader
         $archivo->move($directorioOriginal, $nombreBase . '.' . $extension);
 
         if ($extension === 'webp') {
+            $finfo    = finfo_open(FILEINFO_MIME_TYPE);
+            $realMime = finfo_file($finfo, $rutaOriginal);
+            finfo_close($finfo);
+
+            if ($realMime !== 'image/webp') {
+                @unlink($rutaOriginal);
+                return null;
+            }
+
             copy($rutaOriginal, $rutaWebp);
             return "/images/{$carpeta}/{$anio}/{$mes}/{$nombreBase}.webp";
         }

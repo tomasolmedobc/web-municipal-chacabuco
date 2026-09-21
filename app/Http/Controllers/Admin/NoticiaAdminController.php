@@ -187,8 +187,10 @@ class NoticiaAdminController extends Controller
         return redirect()->back()->with('ok', $mensaje);
     }
 
-    public function destroyArchivo(NoticiaArchivo $archivo)
+    public function destroyArchivo(Noticia $noticia, NoticiaArchivo $archivo)
     {
+        abort_if($archivo->noticia_id !== $noticia->id, 403);
+
         $this->eliminarArchivoPublico($archivo->ruta);
 
         $archivo->delete();

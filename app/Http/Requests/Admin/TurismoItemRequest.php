@@ -13,6 +13,14 @@ class TurismoItemRequest extends FormRequest
         return true;
     }
 
+    public function messages(): array
+    {
+        return [
+            'mapa_embed.starts_with' => 'La URL del mapa debe ser la URL de inserción de Google Maps (empieza con https://www.google.com/maps/embed). Usá la pestaña "Insertar un mapa" y copiá el valor del atributo src="...".',
+            'mapa_embed.url'         => 'La URL del mapa no tiene un formato válido.',
+        ];
+    }
+
     public function rules(): array
     {
         $tipo     = TurismoItem::normalizarTipo($this->input('tipo'));
@@ -38,7 +46,7 @@ class TurismoItemRequest extends FormRequest
             'adjuntos'     => ['nullable', 'array'],
             'adjuntos.*'   => ['file', 'mimes:pdf,doc,docx,xls,xlsx,zip', 'max:20480'],
             'video_url'    => ['nullable', 'string', 'max:2048'],
-            'mapa_embed'   => ['nullable', 'url', 'max:2048'],
+            'mapa_embed'   => ['nullable', 'url', 'max:2048', 'starts_with:https://www.google.com/maps/embed'],
         ];
     }
 }
