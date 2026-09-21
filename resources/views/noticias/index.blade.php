@@ -167,11 +167,11 @@
                 {{ $destacada->fecha?->format('d/m/Y H:i') }}
             </div>
 
-            <h1 class="hero-title">
+            <h2 class="hero-title">
                 <a href="{{ route('noticias.show', $destacada->slug) }}">
                     {{ $destacada->titulo }}
                 </a>
-            </h1>
+            </h2>
 
             <p class="hero-resumen hero-resumen-destacado">
                 {{ strlen(trim($resumenDestacada)) > 20 ? $resumenDestacada : 'Sin descripción disponible.' }}

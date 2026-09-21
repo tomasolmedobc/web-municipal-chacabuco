@@ -18,9 +18,9 @@
         <div class="municipal-hero__content">
             <span class="section-badge">Portal oficial del municipio</span>
 
-            <h2 class="municipal-hero__title">
+            <h1 class="municipal-hero__title">
                 Información pública, noticias y servicios para la comunidad
-            </h2>
+            </h1>
 
             <p class="municipal-hero__text">
                 Accedé a las últimas novedades, trámites, servicios municipales e información útil
@@ -128,11 +128,11 @@
                         {{ $noticiaDestacada->fecha?->format('d/m/Y H:i') }}
                     </div>
 
-                    <h1 class="hero-title">
+                    <h3 class="hero-title">
                         <a href="{{ route('noticias.show', $noticiaDestacada->slug) }}">
                             {{ $noticiaDestacada->titulo }}
                         </a>
-                    </h1>
+                    </h3>
 
                     <p class="hero-resumen hero-resumen-destacado">
                         {{ strlen(trim($resumenDestacada)) > 20 ? $resumenDestacada : 'Sin descripción disponible.' }}
@@ -184,7 +184,7 @@
                         <p>{{ $contenidoLimpio }}</p>
 
                         <a href="{{ route('noticias.show', $noticia->slug) }}" class="news-card__link">
-                            Leer más →
+                            Leer más <span aria-hidden="true">→</span>
                         </a>
                     </div>
                 </article>

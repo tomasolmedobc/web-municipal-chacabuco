@@ -82,7 +82,7 @@
                         </span>
 
                         @if($evento->mostrar_detalle)
-                            <span class="turismo-item-card__ver-mas">Ver más →</span>
+                            <span class="turismo-item-card__ver-mas">Ver más <span aria-hidden="true">→</span></span>
                         @endif
                     </div>
                 </a>
@@ -123,7 +123,7 @@
                         </span>
 
                         @if($item->mostrar_detalle)
-                            <span class="turismo-item-card__ver-mas">Ver más →</span>
+                            <span class="turismo-item-card__ver-mas">Ver más <span aria-hidden="true">→</span></span>
                         @endif
                     </div>
                 </a>

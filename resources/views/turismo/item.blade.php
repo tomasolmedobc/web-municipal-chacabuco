@@ -304,11 +304,14 @@
     const titulo  = document.getElementById('turismo-lightbox-titulo');
     const counter = document.getElementById('turismo-lightbox-counter');
     const btns    = Array.from(document.querySelectorAll('.js-galeria-btn'));
+    const dialog  = modal ? modal.querySelector('.turismo-lightbox__dialog') : null;
 
-    if (!modal || !btns.length) return;
+    if (!modal || !dialog || !btns.length) return;
 
+    const FOCUSABLE = 'a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])';
     let zoom = 1;
     let current = 0;
+    let lastFocus = null;
 
     const imagenes = btns.map(b => ({ src: b.dataset.src, titulo: b.dataset.titulo }));
 
@@ -317,7 +320,20 @@
         img.style.transformOrigin = 'center center';
     }
 
+    function trapTab(e) {
+        if (e.key !== 'Tab') return;
+        const els = Array.from(dialog.querySelectorAll(FOCUSABLE));
+        if (!els.length) return;
+        const first = els[0], last = els[els.length - 1];
+        if (e.shiftKey) {
+            if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+            if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
+        }
+    }
+
     function abrir(index) {
+        lastFocus = document.activeElement;
         current = index;
         const item = imagenes[index];
         img.src = item.src;
@@ -328,9 +344,13 @@
         applyZoom();
         modal.hidden = false;
         document.body.style.overflow = 'hidden';
+        document.addEventListener('keydown', trapTab);
 
         document.getElementById('lb-prev').style.display = imagenes.length > 1 ? '' : 'none';
         document.getElementById('lb-next').style.display = imagenes.length > 1 ? '' : 'none';
+
+        const closeBtn = document.getElementById('lb-cerrar');
+        if (closeBtn) closeBtn.focus();
     }
 
     function cerrar() {
@@ -339,6 +359,8 @@
         document.body.style.overflow = '';
         zoom = 1;
         applyZoom();
+        document.removeEventListener('keydown', trapTab);
+        if (lastFocus) lastFocus.focus();
     }
 
     function navegar(dir) {
