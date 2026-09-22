@@ -17,7 +17,9 @@
             <button class="ts-tab is-active"
                     type="button"
                     role="tab"
+                    id="ts-tab-tramites"
                     aria-selected="true"
+                    aria-controls="ts-panel-tramites"
                     data-ts-tab="tramites">
                 <i class="fa-solid fa-file-signature"></i>
                 Tramites
@@ -27,7 +29,9 @@
             <button class="ts-tab"
                     type="button"
                     role="tab"
+                    id="ts-tab-servicios"
                     aria-selected="false"
+                    aria-controls="ts-panel-servicios"
                     data-ts-tab="servicios">
                 <i class="fa-solid fa-screwdriver-wrench"></i>
                 Servicios
@@ -49,7 +53,13 @@
         No se encontraron accesos para la busqueda ingresada.
     </div>
 
-    <div class="ts-content is-active" data-ts-content="tramites">
+    <div class="ts-content is-active"
+         id="ts-panel-tramites"
+         role="tabpanel"
+         aria-labelledby="ts-tab-tramites"
+         aria-hidden="false"
+         tabindex="0"
+         data-ts-content="tramites">
         <div class="ts-grid">
             @foreach($tramites as $item)
                 @include('tramites-servicios.partials.card', ['item' => $item, 'tipo' => 'tramite'])
@@ -57,7 +67,13 @@
         </div>
     </div>
 
-    <div class="ts-content" data-ts-content="servicios">
+    <div class="ts-content"
+         id="ts-panel-servicios"
+         role="tabpanel"
+         aria-labelledby="ts-tab-servicios"
+         aria-hidden="true"
+         tabindex="0"
+         data-ts-content="servicios">
         <div class="ts-grid">
             @foreach($servicios as $item)
                 @include('tramites-servicios.partials.card', ['item' => $item, 'tipo' => 'servicio'])

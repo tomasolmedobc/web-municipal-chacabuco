@@ -74,7 +74,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         contents.forEach((content) => {
-            content.classList.toggle('is-active', content.dataset.tsContent === type);
+            const isActive = content.dataset.tsContent === type;
+            content.classList.toggle('is-active', isActive);
+            content.setAttribute('aria-hidden', isActive ? 'false' : 'true');
         });
 
         if (refresh) {
