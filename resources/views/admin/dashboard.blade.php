@@ -105,6 +105,13 @@
                     <span class="admin-module-card__desc">Solicitudes de obras y planos</span>
                 </a>
                 @endif
+                @if($user->canAccess('proveedores'))
+                <a href="{{ route('admin.proveedores.index') }}" class="admin-module-card">
+                    <span class="admin-module-card__icon"><i class="fa-solid fa-store"></i></span>
+                    <span class="admin-module-card__label">Compras y Proveedores</span>
+                    <span class="admin-module-card__desc">Requisitos, información bancaria y contacto</span>
+                </a>
+                @endif
                 @if($user->canAccess('tasas'))
                 <a href="{{ route('admin.tasas.index') }}" class="admin-module-card">
                     <span class="admin-module-card__icon"><i class="fa-solid fa-file-invoice-dollar"></i></span>

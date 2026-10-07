@@ -26,6 +26,7 @@ class User extends Authenticatable
         'baile_egresados'    => 'Baile de Egresados',
         'habilitaciones'     => 'Habilitaciones',
         'obras_particulares' => 'Obras Particulares',
+        'proveedores'        => 'Compras y Proveedores',
         'tasas'              => 'Tasas Municipales',
         'recaudacion'        => 'Recaudación',
         'popup'              => 'Popup anuncio',

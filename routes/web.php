@@ -55,6 +55,7 @@ use App\Http\Controllers\Admin\ObraProcedimientoAdminController;
 use App\Http\Controllers\Admin\TasasAdminController;
 use App\Http\Controllers\Admin\TasasGrupoAdminController;
 use App\Http\Controllers\Admin\TasasCuotaAdminController;
+use App\Http\Controllers\Admin\ProveedoresAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,7 +98,9 @@ Route::get('/gobierno-abierto/accesos/{licitacion}', [GobiernoAbiertoController:
     ->name('gobierno-abierto.accesos.show');
 
 Route::get('/gobierno-abierto/proveedores', function () {
-    return view('gobierno-abierto.proveedores.index');
+    return view('gobierno-abierto.proveedores.index', [
+        'config' => \App\Models\ProveedoresConfiguracion::instancia(),
+    ]);
 })->name('proveedores.index');
 
 Route::get('/tramites-y-servicios', [TramitesServiciosController::class, 'index'])
@@ -640,6 +643,25 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
         Route::delete('/tasas/cuotas/{cuota}', [TasasCuotaAdminController::class, 'destroy'])
             ->name('admin.tasas.cuotas.destroy');
+
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Compras y Proveedores
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('module:proveedores')->group(function () {
+
+        Route::get('/proveedores', [ProveedoresAdminController::class, 'index'])
+            ->name('admin.proveedores.index');
+
+        Route::get('/proveedores/configuracion', [ProveedoresAdminController::class, 'editConfig'])
+            ->name('admin.proveedores.config.edit');
+
+        Route::put('/proveedores/configuracion', [ProveedoresAdminController::class, 'updateConfig'])
+            ->name('admin.proveedores.config.update');
 
     });
 

@@ -94,17 +94,8 @@
                 Requisitos de inscripción
             </summary>
 
-            <div class="accordion-content">
-                <ul>
-                    <li>Solicitud de inscripción mediante formulario.</li>
-                    <li>Constancia de inscripción ante AFIP (CUIT).</li>
-                    <li>Certificado de inscripción en Ingresos Brutos.</li>
-                    <li>Copia del contrato social, si corresponde.</li>
-                    <li>Copia del certificado de habilitación municipal.</li>
-                    <li>Sellado de inscripción: $48.000,00.</li>
-                    <li>Certificado de exención, si corresponde.</li>
-                    <li>Constancia de Libre Deuda Alimentario emitida por el Registro de Deudores Morosos Alimentarios.</li>
-                </ul>
+            <div class="accordion-content contenido">
+                {!! $config->texto_requisitos !!}
             </div>
         </details>
 
@@ -113,21 +104,8 @@
                 Información bancaria
             </summary>
 
-            <div class="accordion-content">
-                <p>Cuenta bancaria para el depósito del arancel:</p>
-
-                <div class="proveedores-bank-card">
-                    <strong>Municipalidad de Chacabuco</strong>
-                    <span>CUIT: 30-99908326-5</span>
-                    <span>Banco de la Provincia de Buenos Aires</span>
-                    <span>Cuenta: 6441-50733/4</span>
-                    <span>CBU: 01403303 01644105073340</span>
-                </div>
-
-                <p>
-                    Una vez efectuado el depósito, enviá la boleta escaneada para verificar el ingreso
-                    y emitir el recibo correspondiente.
-                </p>
+            <div class="accordion-content contenido">
+                {!! $config->texto_info_bancaria !!}
             </div>
         </details>
 
@@ -136,11 +114,8 @@
                 Email de contacto y envío de documentación
             </summary>
 
-            <div class="accordion-content">
-                <p>
-                    La documentación debe enviarse a
-                    <a href="mailto:compras@chacabuco.gob.ar">compras@chacabuco.gob.ar</a>.
-                </p>
+            <div class="accordion-content contenido">
+                {!! $config->texto_email_contacto !!}
             </div>
         </details>
 
@@ -149,28 +124,8 @@
                 Creación de usuario para el sistema de proveedores
             </summary>
 
-            <div class="accordion-content">
-                <p>Para solicitar el alta de usuario en el sistema, enviá los siguientes datos:</p>
-
-                <div class="proveedores-bank-card">
-                    <span><strong>CUIT:</strong></span>
-                    <span><strong>RAZÓN SOCIAL:</strong></span>
-                    <span><strong>MAIL:</strong></span>
-                    <span><strong>TELÉFONO:</strong></span>
-                </div>
-
-                <p class="mt-14">Enviá la información a cualquiera de estas direcciones:</p>
-
-                <div class="proveedores-contact-row">
-                    <a href="mailto:desistemas_chacabuco@gmail.com" class="btn btn-secondary">
-                        <i class="fa-solid fa-envelope"></i>
-                        desistemas_chacabuco@gmail.com
-                    </a>
-                    <a href="mailto:sistemas@chacabuco.gob.ar" class="btn btn-secondary">
-                        <i class="fa-solid fa-envelope"></i>
-                        sistemas@chacabuco.gob.ar
-                    </a>
-                </div>
+            <div class="accordion-content contenido">
+                {!! $config->texto_creacion_usuario !!}
             </div>
         </details>
     </div>
@@ -220,20 +175,33 @@
         </p>
     </div>
 
+    @if($config->guia_video_url && video_embed_url($config->guia_video_url))
+        <div class="video-embed" style="margin-bottom: 2rem">
+            <div class="video-embed__wrap">
+                <iframe src="{{ video_embed_url($config->guia_video_url) }}"
+                        title="Guía visual de proveedores"
+                        allowfullscreen
+                        loading="lazy"></iframe>
+            </div>
+        </div>
+    @endif
+
     <div class="proveedores-gallery__grid">
         <article class="proveedores-photo-card">
             <button
                 type="button"
                 class="proveedores-photo-card__button"
-                data-image="{{ asset('images/guias/proveedores-1.webp') }}"
-                data-title="Paso 1"
+                data-image="{{ $config->guia_imagen_1_url }}"
+                data-title="{{ $config->guia_imagen_1_titulo ?? 'Paso 1' }}"
             >
-                <img src="{{ asset('images/guias/proveedores-1.webp') }}" alt="Paso 1">
+                <img src="{{ $config->guia_imagen_1_url }}" alt="{{ $config->guia_imagen_1_titulo ?? 'Paso 1' }}">
             </button>
 
             <div class="proveedores-photo-card__body">
-                <h3>Paso 1</h3>
-                <p>Seleccioná la factura dentro del sistema.</p>
+                <h3>{{ $config->guia_imagen_1_titulo ?? 'Paso 1' }}</h3>
+                @if($config->guia_imagen_1_desc)
+                    <p>{{ $config->guia_imagen_1_desc }}</p>
+                @endif
             </div>
         </article>
 
@@ -241,15 +209,17 @@
             <button
                 type="button"
                 class="proveedores-photo-card__button"
-                data-image="{{ asset('images/guias/proveedores-2.webp') }}"
-                data-title="Paso 2"
+                data-image="{{ $config->guia_imagen_2_url }}"
+                data-title="{{ $config->guia_imagen_2_titulo ?? 'Paso 2' }}"
             >
-                <img src="{{ asset('images/guias/proveedores-2.webp') }}" alt="Paso 2">
+                <img src="{{ $config->guia_imagen_2_url }}" alt="{{ $config->guia_imagen_2_titulo ?? 'Paso 2' }}">
             </button>
 
             <div class="proveedores-photo-card__body">
-                <h3>Paso 2</h3>
-                <p>Accedé a la sección de retenciones.</p>
+                <h3>{{ $config->guia_imagen_2_titulo ?? 'Paso 2' }}</h3>
+                @if($config->guia_imagen_2_desc)
+                    <p>{{ $config->guia_imagen_2_desc }}</p>
+                @endif
             </div>
         </article>
     </div>
