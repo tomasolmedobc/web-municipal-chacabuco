@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
+use App\Support\Turnstile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -22,6 +23,8 @@ class OmicController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        Turnstile::exigir($request);
+
         $validator = Validator::make($request->all(), [
             'apellido' => ['required', 'string', 'max:80'],
             'nombre' => ['required', 'string', 'max:80'],

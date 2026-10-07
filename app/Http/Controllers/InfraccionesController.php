@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Illuminate\Database\QueryException;
+use App\Support\Turnstile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -12,6 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class InfraccionesController extends Controller
 {
+    private const LIBRE_DEUDA_MINUTOS = 15;
+
     public function index()
     {
         return view('infracciones.index', [
@@ -26,12 +29,15 @@ class InfraccionesController extends Controller
 
     public function consultar(Request $request)
     {
+        Turnstile::exigir($request);
+
         $data = $request->validate([
             'criterio' => ['required', 'in:dominio,dni'],
-            'valor' => ['required', 'string', 'max:30'],
+            'valor' => ['required', 'string', 'min:5', 'max:30'],
         ], [
             'criterio.required' => 'Seleccione un criterio de busqueda.',
             'valor.required' => 'Ingrese el dato para consultar.',
+            'valor.min' => 'Ingrese al menos 5 caracteres para consultar.',
         ]);
 
         $criterio = $data['criterio'];
@@ -41,6 +47,16 @@ class InfraccionesController extends Controller
             $infracciones = $this->buscarInfracciones($criterio, $valor);
 
             $cedulas = $criterio === 'dni' ? $this->buscarCedulas($valor)->all() : [];
+
+            // Habilita el libre deuda solo para el DNI que acaba de consultarse (con captcha) y no tiene infracciones
+            if ($criterio === 'dni' && $infracciones->isEmpty()) {
+                session([
+                    'libre_deuda_dni'    => $valor,
+                    'libre_deuda_expira' => now()->addMinutes(self::LIBRE_DEUDA_MINUTOS)->timestamp,
+                ]);
+            } else {
+                session()->forget(['libre_deuda_dni', 'libre_deuda_expira']);
+            }
 
             return redirect()
                 ->route('infracciones.index')
@@ -108,6 +124,13 @@ class InfraccionesController extends Controller
             'apellido' => ['required', 'string', 'max:80'],
             'nombre' => ['required', 'string', 'max:80'],
         ]);
+
+        // Solo para el DNI consultado hace poco (la consulta ya pasó por el captcha)
+        abort_unless(
+            session('libre_deuda_dni') === $data['dni'] && now()->timestamp <= (int) session('libre_deuda_expira', 0),
+            403,
+            'Para solicitar el libre deuda primero consulte el DNI en esta misma página.'
+        );
 
         $infracciones = $this->buscarInfracciones('dni', $data['dni']);
 

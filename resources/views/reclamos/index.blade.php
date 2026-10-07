@@ -120,6 +120,8 @@
             @error('detalles') <small>{{ $message }}</small> @enderror
         </label>
 
+        <x-turnstile />
+
         <button type="submit" class="btn btn-primary">
             <i class="fa-solid fa-paper-plane"></i>
             Enviar reclamo

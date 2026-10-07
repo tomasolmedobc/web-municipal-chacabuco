@@ -163,7 +163,7 @@ class HabilitacionAdminController extends Controller
         $this->eliminarArchivoFisico($documento->archivo_ruta);
 
         $archivo = $request->file('archivo');
-        $extension = strtolower($archivo->getClientOriginalExtension());
+        $extension = \App\Support\ImageUploader::extensionSegura($archivo);
         $carpeta = $this->carpetaArchivo($archivo->getClientOriginalName(), $documento);
         $nombreArchivo = $this->nombreArchivoUnico(
             $carpeta,

@@ -155,7 +155,7 @@ class LicitacionAdminController extends Controller
 
         foreach ($request->file('archivos') as $archivo) {
             $carpeta = $this->carpetaArchivo($archivo->getClientOriginalName(), $documento);
-            $extension = strtolower($archivo->getClientOriginalExtension());
+            $extension = \App\Support\ImageUploader::extensionSegura($archivo);
             $nombreArchivo = $this->nombreArchivoUnico(
                 $carpeta,
                 $this->nombreBaseFecha(pathinfo($archivo->getClientOriginalName(), PATHINFO_FILENAME)),

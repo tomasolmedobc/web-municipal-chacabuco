@@ -18,6 +18,7 @@ class NoticiaRequest extends FormRequest
             'contenido'        => ['required', 'string'],
             'categorias'       => ['nullable', 'array'],
             'categorias.*'     => ['exists:categorias,id'],
+            'nueva_categoria'  => ['nullable', 'string', 'max:100'],
             'fecha'            => ['required', 'date'],
             'estado'           => ['required', 'in:oculto,publicado'],
             'destacada'        => ['nullable', 'boolean'],
@@ -25,6 +26,15 @@ class NoticiaRequest extends FormRequest
             'archivos.*'       => ['nullable', 'file', 'mimes:pdf,doc,docx,xls,xlsx', 'max:10240'],
             'destacada_dias'   => ['nullable', 'integer', 'min:1', 'max:30'],
             'video_url'        => ['nullable', 'string', 'max:2048'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'archivos.*.mimes' => 'Los archivos adjuntos deben ser PDF, DOC, DOCX, XLS o XLSX.',
+            'archivos.*.max'   => 'Cada archivo adjunto no puede superar los 10 MB.',
+            'archivos.*.file'  => 'No se pudo subir uno de los archivos adjuntos.',
         ];
     }
 }

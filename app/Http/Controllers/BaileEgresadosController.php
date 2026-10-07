@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BaileLugar;
 use App\Models\BaileReserva;
 use App\Models\BaileUsuario;
+use App\Support\Turnstile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -32,6 +33,8 @@ class BaileEgresadosController extends Controller
 
     public function guardarReserva(Request $request)
     {
+        Turnstile::exigir($request);
+
         $request->validate([
             'dni'      => ['required', 'digits_between:7,9'],
             'codigo'   => ['required', 'string', 'size:8'],

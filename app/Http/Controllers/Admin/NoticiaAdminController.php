@@ -85,7 +85,7 @@ class NoticiaAdminController extends Controller
             'autor' => Auth::user()->name,
         ]);
 
-        $noticia->categorias()->sync($datos['categorias'] ?? []);
+        $noticia->categorias()->sync($this->categoriasConNueva($datos));
 
         if ($request->hasFile('archivos')) {
             $this->guardarArchivosAdjuntos($request->file('archivos'), $noticia);
@@ -143,7 +143,7 @@ class NoticiaAdminController extends Controller
 
         $noticia->save();
 
-        $noticia->categorias()->sync($datos['categorias'] ?? []);
+        $noticia->categorias()->sync($this->categoriasConNueva($datos));
 
         if ($request->hasFile('archivos')) {
             $this->guardarArchivosAdjuntos($request->file('archivos'), $noticia);
@@ -293,6 +293,30 @@ class NoticiaAdminController extends Controller
             ]);
     }
 
+    /**
+     * Devuelve los ids de categorías elegidas, sumando la categoría nueva si se
+     * escribió una (se reutiliza si ya existe una con el mismo nombre).
+     */
+    private function categoriasConNueva(array $datos): array
+    {
+        $ids = $datos['categorias'] ?? [];
+        $nombre = trim((string) ($datos['nueva_categoria'] ?? ''));
+        $slug = Str::slug($nombre);
+
+        if ($nombre === '' || $slug === '') {
+            return $ids;
+        }
+
+        $categoria = Categoria::where('nombre', $nombre)->orWhere('slug', $slug)->first()
+            ?? Categoria::create(['nombre' => $nombre, 'slug' => $slug]);
+
+        if ($categoria->wasRecentlyCreated) {
+            AuditLog::registrar('crear', 'Categoria', $categoria->id, "Categoría creada: \"{$categoria->nombre}\"");
+        }
+
+        return array_values(array_unique(array_merge($ids, [$categoria->id])));
+    }
+
     private function guardarArchivosAdjuntos($archivos, Noticia $noticia): void
     {
         $anio = now()->format('Y');
@@ -303,8 +327,10 @@ class NoticiaAdminController extends Controller
         File::ensureDirectoryExists($directorio);
 
         foreach ($archivos as $archivo) {
-            $extension = strtolower($archivo->getClientOriginalExtension());
+            $extension = ImageUploader::extensionSegura($archivo);
             $nombreOriginal = $archivo->getClientOriginalName();
+            // Se lee antes de mover: después de move() el archivo temporal ya no existe
+            $mimeType = $archivo->getMimeType();
             $nombreBase = ImageUploader::nombreBaseFecha(pathinfo($nombreOriginal, PATHINFO_FILENAME));
             $nombreFinal = $nombreBase . '.' . $extension;
 
@@ -323,7 +349,7 @@ class NoticiaAdminController extends Controller
                 'nombre_original' => $nombreOriginal,
                 'nombre_archivo' => $nombreFinal,
                 'ruta' => $rutaPublica,
-                'mime_type' => $archivo->getMimeType(),
+                'mime_type' => $mimeType,
                 'extension' => $extension,
             ]);
         }

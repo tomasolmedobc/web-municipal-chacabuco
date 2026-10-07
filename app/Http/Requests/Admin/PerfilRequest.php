@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
 class PerfilRequest extends FormRequest
 {
@@ -15,7 +16,7 @@ class PerfilRequest extends FormRequest
     {
         return [
             'name'     => ['required', 'string', 'max:255'],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'password' => ['nullable', 'string', Password::min(10), 'confirmed'],
         ];
     }
 }

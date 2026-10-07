@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Database\QueryException;
+use App\Support\Turnstile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -26,6 +27,8 @@ class ReclamosController extends Controller
 
     public function store(Request $request)
     {
+        Turnstile::exigir($request);
+
         $data = $request->validate([
             'apellido' => ['required', 'string', 'max:50'],
             'nombre' => ['required', 'string', 'max:50'],

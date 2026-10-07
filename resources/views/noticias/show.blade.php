@@ -134,7 +134,7 @@
 @push('scripts_head')
 <script type="application/ld+json">
 {
-    "@context": "https://schema.org",
+    "@@context": "https://schema.org",
     "@type": "NewsArticle",
     "headline": {{ Js::from($noticia->titulo) }},
     "description": {{ Js::from(\Illuminate\Support\Str::of($noticia->contenido)->stripTags()->squish()->limit(160)->toString()) }},

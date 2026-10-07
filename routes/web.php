@@ -230,6 +230,7 @@ Route::middleware('guest')->group(function () {
         ->name('password.reset');
 
     Route::post('/nueva-contrasena', [PasswordResetController::class, 'reset'])
+        ->middleware('throttle:5,1')
         ->name('password.update');
 
 });

@@ -80,6 +80,8 @@
             </div>
         </div>
 
+        <x-turnstile />
+
         <div class="baile-form__actions">
             <button type="submit" class="btn btn-primary">
                 <i class="fa-solid fa-ticket"></i>

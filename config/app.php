@@ -123,4 +123,20 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Proxies de confianza
+    |--------------------------------------------------------------------------
+    |
+    | Vacío = no se confía en ningún proxy (servidor expuesto directo). Si hay un
+    | proxy delante (Cloudflare, balanceador), poner "*" o una lista de IPs/rangos
+    | separados por coma para que Laravel lea la IP y el protocolo reales.
+    |
+    */
+
+    'trusted_proxies' => array_values(array_filter(array_map(
+        'trim',
+        explode(',', (string) env('TRUSTED_PROXIES', ''))
+    ))),
+
 ];

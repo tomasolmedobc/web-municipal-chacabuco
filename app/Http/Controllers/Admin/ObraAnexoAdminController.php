@@ -94,7 +94,7 @@ class ObraAnexoAdminController extends Controller
         $this->eliminarArchivoFisico($anexo->archivo_ruta);
 
         $archivo   = $request->file('archivo');
-        $extension = strtolower($archivo->getClientOriginalExtension());
+        $extension = \App\Support\ImageUploader::extensionSegura($archivo);
         $carpeta   = 'obras-particulares/anexos';
         $base      = now()->format('dmY_Hi') . '_' . Str::slug(pathinfo($archivo->getClientOriginalName(), PATHINFO_FILENAME));
         $nombre    = $this->nombreUnico($carpeta, $base, $extension);

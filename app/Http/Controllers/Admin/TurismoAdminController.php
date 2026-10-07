@@ -212,8 +212,10 @@ class TurismoAdminController extends Controller
         File::ensureDirectoryExists($directorio);
 
         foreach ($request->file('adjuntos') as $archivo) {
-            $extension    = strtolower($archivo->getClientOriginalExtension());
+            $extension    = ImageUploader::extensionSegura($archivo);
             $nombreOriginal = $archivo->getClientOriginalName();
+            // Se lee antes de mover: después de move() el archivo temporal ya no existe
+            $mimeType     = $archivo->getMimeType();
             $nombreBase   = pathinfo($nombreOriginal, PATHINFO_FILENAME);
             $nombreBase   = preg_replace('/[^a-zA-Z0-9_\-]/', '-', $nombreBase);
             $nombreFinal  = uniqid() . '-' . $nombreBase . '.' . $extension;
@@ -225,7 +227,7 @@ class TurismoAdminController extends Controller
                 'nombre_original' => $nombreOriginal,
                 'nombre_archivo'  => $nombreFinal,
                 'ruta'            => "/{$carpeta}/{$nombreFinal}",
-                'mime_type'       => $archivo->getMimeType(),
+                'mime_type'       => $mimeType,
                 'extension'       => $extension,
             ]);
         }

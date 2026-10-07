@@ -86,6 +86,14 @@
             
 
             <div class="admin-form-group full">
+                <label for="nueva_categoria">Crear categoría nueva</label>
+                <input type="text" name="nueva_categoria" id="nueva_categoria" class="filtro-input"
+                       maxlength="100" value="{{ old('nueva_categoria') }}" placeholder="Nombre de la nueva categoría">
+                <small class="fecha">Opcional. Se crea al guardar la noticia y queda disponible en la lista para las próximas.</small>
+                @error('nueva_categoria') <small class="auth-error">{{ $message }}</small> @enderror
+            </div>
+
+            <div class="admin-form-group full">
                 <label for="categorias">Categorías</label>
                 <select name="categorias[]" id="categorias" multiple class="filtro-input categorias-select">
                     @foreach($categoriasPadre as $categoriaPadre)

@@ -9,6 +9,29 @@ use Illuminate\Support\Str;
 
 class ImageUploader
 {
+    private const EXTENSIONES_SEGURAS = [
+        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'zip',
+        'jpg', 'jpeg', 'png', 'webp', 'gif',
+    ];
+
+    /**
+     * Extensión para guardar un archivo subido. Conserva la que eligió el usuario
+     * solo si está en la lista segura; si no, usa la detectada por contenido, y
+     * como último recurso 'bin'. Evita guardar .php u otros ejecutables en carpetas públicas.
+     */
+    public static function extensionSegura(UploadedFile $archivo): string
+    {
+        $cliente = strtolower($archivo->getClientOriginalExtension());
+
+        if (in_array($cliente, self::EXTENSIONES_SEGURAS, true)) {
+            return $cliente;
+        }
+
+        $detectada = strtolower((string) $archivo->guessExtension());
+
+        return in_array($detectada, self::EXTENSIONES_SEGURAS, true) ? $detectada : 'bin';
+    }
+
     public static function guardarWebp(UploadedFile $archivo, string $carpeta, int $maxAncho = 1600, int $calidad = 85): ?string
     {
         $directorio = Storage::disk('public')->path(trim($carpeta, '/'));

@@ -200,6 +200,8 @@
         </div>
     </section>
 
+    <x-turnstile />
+
     <div class="omic-actions">
         <button type="submit" class="btn btn-primary">
             <i class="fa-solid fa-paper-plane"></i>

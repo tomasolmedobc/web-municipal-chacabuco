@@ -92,7 +92,7 @@ class TasasAdminController extends Controller
 
     private function guardarArchivo(UploadedFile $file, string $carpeta): string
     {
-        $ext    = strtolower($file->getClientOriginalExtension());
+        $ext    = \App\Support\ImageUploader::extensionSegura($file);
         $base   = now()->format('dmY_Hi') . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
         $nombre = $base . '.' . $ext;
         $i      = 2;

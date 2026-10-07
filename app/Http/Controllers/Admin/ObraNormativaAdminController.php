@@ -133,7 +133,7 @@ class ObraNormativaAdminController extends Controller
         $this->eliminarArchivoFisico($normativa->archivo_ruta);
 
         $archivo   = $request->file('archivo');
-        $extension = strtolower($archivo->getClientOriginalExtension());
+        $extension = \App\Support\ImageUploader::extensionSegura($archivo);
         $carpeta   = 'obras-particulares/normativas/' . $normativa->categoria_id;
         $base      = now()->format('dmY_Hi') . '_' . Str::slug(pathinfo($archivo->getClientOriginalName(), PATHINFO_FILENAME));
         $nombre    = $this->nombreUnico($carpeta, $base, $extension);

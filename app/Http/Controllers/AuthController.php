@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -31,11 +33,25 @@ class AuthController extends Controller
             return back()->withErrors(['captcha' => 'Verificación de seguridad fallida. Intentá de nuevo.'])->onlyInput('email');
         }
 
+        // Límite por email (además del throttle por IP de la ruta): frena ataques distribuidos a una cuenta
+        $clave = 'login:' . Str::lower($request->input('email'));
+
+        if (RateLimiter::tooManyAttempts($clave, 5)) {
+            $segundos = RateLimiter::availableIn($clave);
+
+            return back()->withErrors([
+                'email' => "Demasiados intentos. Probá de nuevo en {$segundos} segundos.",
+            ])->onlyInput('email');
+        }
+
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            RateLimiter::clear($clave);
             $request->session()->regenerate();
 
             return redirect()->route('admin.dashboard');
         }
+
+        RateLimiter::hit($clave, 300);
 
         return back()->withErrors([
             'email' => 'Credenciales incorrectas.',

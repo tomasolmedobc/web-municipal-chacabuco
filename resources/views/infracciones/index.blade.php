@@ -55,6 +55,8 @@
             @enderror
         </label>
 
+        <x-turnstile />
+
         <button type="submit" class="btn btn-primary">
             <i class="fa-solid fa-magnifying-glass"></i>
             Consultar

@@ -5,6 +5,7 @@ namespace App\Http\Requests\Admin;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -22,7 +23,7 @@ class UpdateUserRequest extends FormRequest
             'rol'       => ['required', 'in:admin,editor'],
             'modulos'   => ['nullable', 'array'],
             'modulos.*' => ['string', 'in:' . implode(',', array_keys(User::MODULOS))],
-            'password'  => ['nullable', 'min:6', 'confirmed'],
+            'password'  => ['nullable', Password::min(10), 'confirmed'],
         ];
     }
 }
