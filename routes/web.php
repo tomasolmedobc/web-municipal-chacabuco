@@ -20,7 +20,6 @@ use App\Http\Controllers\InfraccionesController;
 use App\Http\Controllers\ReclamosController;
 use App\Http\Controllers\OmicController;
 use App\Http\Controllers\TurismoController;
-use App\Http\Controllers\BaileEgresadosController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\TelefonoUtilController;
 use App\Http\Controllers\ObrasParticularesController;
@@ -42,9 +41,6 @@ use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\PublicAccessButtonController;
 use App\Http\Controllers\Admin\TurismoAdminController;
 use App\Http\Controllers\Admin\LocalidadAdminController;
-use App\Http\Controllers\Admin\BaileUsuariosAdminController;
-use App\Http\Controllers\Admin\BaileAsientosAdminController;
-use App\Http\Controllers\Admin\BaileReservasAdminController;
 use App\Http\Controllers\Admin\PopupAdminController;
 use App\Http\Controllers\Admin\TelefonoUtilAdminController;
 use App\Http\Controllers\Admin\ObraParticularAdminController;
@@ -167,15 +163,6 @@ Route::get('/turismo/{localidad}/{item}', [TurismoController::class, 'showItem']
 
 Route::get('/turismo/{localidad}', [TurismoController::class, 'show'])
     ->name('turismo.show');
-
-Route::prefix('baile-egresados')->name('baile-egresados.')->group(function () {
-    Route::get('/', [BaileEgresadosController::class, 'index'])->name('index');
-    Route::get('/reservar', [BaileEgresadosController::class, 'reservarForm'])->name('reservar');
-    Route::post('/reservar', [BaileEgresadosController::class, 'guardarReserva'])->middleware('throttle:5,1')->name('guardar');
-    Route::get('/confirmacion', [BaileEgresadosController::class, 'confirmacion'])->name('confirmacion');
-    Route::get('/consultar', [BaileEgresadosController::class, 'consultarForm'])->name('consultar');
-    Route::post('/consultar', [BaileEgresadosController::class, 'consultar'])->middleware('throttle:10,1')->name('consultar.post');
-});
 
 Route::get('/telefonos-utiles', [TelefonoUtilController::class, 'index'])
     ->name('telefonos-utiles.index');
@@ -387,37 +374,6 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
         Route::delete('/habilitaciones/{habilitacion}', [HabilitacionAdminController::class, 'destroy'])
             ->name('admin.habilitaciones.destroy');
-
-    });
-
-    /*
-    |--------------------------------------------------------------------------
-    | Baile de Egresados
-    |--------------------------------------------------------------------------
-    */
-
-    Route::middleware('module:baile_egresados')->group(function () {
-
-        Route::prefix('baile-egresados')->name('admin.baile.')->group(function () {
-            Route::get('/usuarios', [BaileUsuariosAdminController::class, 'index'])->name('usuarios.index');
-            Route::get('/usuarios/crear', [BaileUsuariosAdminController::class, 'create'])->name('usuarios.create');
-            Route::post('/usuarios', [BaileUsuariosAdminController::class, 'store'])->name('usuarios.store');
-            Route::get('/usuarios/{usuario}/editar', [BaileUsuariosAdminController::class, 'edit'])->name('usuarios.edit');
-            Route::put('/usuarios/{usuario}', [BaileUsuariosAdminController::class, 'update'])->name('usuarios.update');
-            Route::delete('/usuarios/{usuario}', [BaileUsuariosAdminController::class, 'destroy'])->name('usuarios.destroy');
-
-            Route::get('/asientos', [BaileAsientosAdminController::class, 'index'])->name('asientos.index');
-            Route::get('/asientos/crear', [BaileAsientosAdminController::class, 'create'])->name('asientos.create');
-            Route::post('/asientos', [BaileAsientosAdminController::class, 'store'])->name('asientos.store');
-            Route::post('/asientos/masivo', [BaileAsientosAdminController::class, 'storeMasivo'])->name('asientos.masivo');
-            Route::get('/asientos/{asiento}/editar', [BaileAsientosAdminController::class, 'edit'])->name('asientos.edit');
-            Route::put('/asientos/{asiento}', [BaileAsientosAdminController::class, 'update'])->name('asientos.update');
-            Route::delete('/asientos/{asiento}', [BaileAsientosAdminController::class, 'destroy'])->name('asientos.destroy');
-
-            Route::get('/reservas', [BaileReservasAdminController::class, 'index'])->name('reservas.index');
-            Route::patch('/reservas/{reserva}/pago', [BaileReservasAdminController::class, 'togglePago'])->name('reservas.pago');
-            Route::delete('/reservas/{reserva}', [BaileReservasAdminController::class, 'destroy'])->name('reservas.destroy');
-        });
 
     });
 

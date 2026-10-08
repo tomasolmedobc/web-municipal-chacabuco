@@ -23,7 +23,6 @@ class User extends Authenticatable
         'turismo'            => 'Turismo',
         'telefonos_utiles'   => 'Teléfonos Útiles',
         'gobierno_abierto'   => 'Gobierno Abierto',
-        'baile_egresados'    => 'Baile de Egresados',
         'habilitaciones'     => 'Habilitaciones',
         'obras_particulares' => 'Obras Particulares',
         'proveedores'        => 'Compras y Proveedores',

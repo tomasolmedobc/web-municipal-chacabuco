@@ -77,13 +77,6 @@
                     <span class="admin-module-card__desc">Localidades y eventos del municipio</span>
                 </a>
                 @endif
-                @if($user->canAccess('baile_egresados'))
-                <a href="{{ route('admin.baile.usuarios.index') }}" class="admin-module-card">
-                    <span class="admin-module-card__icon"><i class="fa-solid fa-champagne-glasses"></i></span>
-                    <span class="admin-module-card__label">Baile de Egresados</span>
-                    <span class="admin-module-card__desc">Inscripciones y gestión del evento</span>
-                </a>
-                @endif
             </div>
         </section>
 

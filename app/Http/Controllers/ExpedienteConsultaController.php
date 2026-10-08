@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\Turnstile;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -26,6 +27,8 @@ class ExpedienteConsultaController extends Controller
 
     public function consultar(Request $request)
     {
+        Turnstile::exigir($request);
+
         $validated = $request->validate([
             'numero' => ['required', 'integer', 'min:1'],
             'letra' => ['nullable', 'alpha', 'max:3'],

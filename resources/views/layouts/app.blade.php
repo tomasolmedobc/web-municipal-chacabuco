@@ -74,7 +74,6 @@
                     <p><a href="{{ route('gobierno-abierto.index') }}">Gobierno Abierto</a></p>
                     <p><a href="{{ route('tramites-servicios.index') }}">Trámites y Servicios</a></p>
                     <p><a href="{{ route('turismo.index') }}">Turismo</a></p>
-                    <p><a href="{{ route('baile-egresados.index') }}">Baile de Egresados</a></p>
                 </div>
 
                 <div>

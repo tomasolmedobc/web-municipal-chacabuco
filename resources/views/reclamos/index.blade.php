@@ -140,6 +140,8 @@
                 @error('idreclamo') <small>{{ $message }}</small> @enderror
             </label>
 
+            <x-turnstile />
+
             <button type="submit" class="btn btn-secondary">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 Consultar

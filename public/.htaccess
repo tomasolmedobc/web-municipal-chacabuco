@@ -5,6 +5,9 @@
 
     RewriteEngine On
 
+    # Nunca ejecutar scripts desde carpetas de archivos subidos
+    RewriteRule ^(storage|files|images|uploads)/.*\.(php[0-9]?|phtml|phar)$ - [F,NC,L]
+
     # *** TODO PRODUCCIÓN: Descomentar el bloque de abajo para forzar HTTPS
     # Requiere que el servidor tenga SSL configurado (certificado válido)
     # RewriteCond %{HTTPS} off

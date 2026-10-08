@@ -85,6 +85,8 @@ class ReclamosController extends Controller
 
     public function consultar(Request $request)
     {
+        Turnstile::exigir($request);
+
         $data = $request->validate([
             'idreclamo' => ['required', 'integer', 'min:1'],
         ], [
