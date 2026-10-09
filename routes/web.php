@@ -255,6 +255,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         ->name('admin.perfil.edit');
 
     Route::put('/perfil', [PerfilController::class, 'update'])
+        ->middleware('throttle:10,1')
         ->name('admin.perfil.update');
 
 

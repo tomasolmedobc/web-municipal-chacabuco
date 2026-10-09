@@ -27,7 +27,10 @@ class PublicAccessButtonController extends Controller
             'activos' => ['array'],
             'activos.*' => ['boolean'],
             'links' => ['array'],
-            'links.*' => ['nullable', 'string', 'max:2048'],
+            // Solo http(s):// o una ruta interna (/pagina): evita javascript:, data: y similares en el href público
+            'links.*' => ['nullable', 'string', 'max:2048', 'regex:/^(https?:\/\/|\/(?!\/))/'],
+        ], [
+            'links.*.regex' => 'El link debe empezar con https:// (o http://) o ser una ruta interna que empiece con /.',
         ]);
 
         $activos = collect($data['activos'] ?? []);

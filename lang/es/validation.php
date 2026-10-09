@@ -168,6 +168,7 @@ return [
         'apellido' => 'apellido',
         'email' => 'correo electrónico',
         'password' => 'contraseña',
+        'current_password' => 'contraseña actual',
         'password_confirmation' => 'confirmación de contraseña',
         'rol' => 'rol',
         'modulos' => 'módulos',

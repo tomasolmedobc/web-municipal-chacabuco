@@ -72,6 +72,9 @@
                                    name="links[{{ $boton->id }}]"
                                    value="{{ old('links.' . $boton->id, $boton->url_personalizada) }}"
                                    placeholder="{{ $boton->url ?: 'Usa el link original o dinamico' }}">
+                            @error('links.' . $boton->id)
+                                <small class="auth-error">{{ $message }}</small>
+                            @enderror
                         </label>
 
                         <label class="visibility-switch">

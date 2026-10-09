@@ -65,11 +65,17 @@ class UserController extends Controller
         $usuario->rol      = $data['rol'];
         $usuario->modulos  = $data['rol'] === 'admin' ? null : ($data['modulos'] ?? []);
 
-        if (!empty($data['password'])) {
+        $cambioPassword = !empty($data['password']);
+
+        if ($cambioPassword) {
             $usuario->password = Hash::make($data['password']);
         }
 
         $usuario->save();
+
+        if ($cambioPassword) {
+            $usuario->cerrarSesiones(auth()->id() === $usuario->id ? $request->session()->getId() : null);
+        }
 
         AuditLog::registrar('editar', 'User', $usuario->id, "Usuario editado: \"{$usuario->name}\" ({$usuario->email}) — rol: {$usuario->rol}");
 
@@ -89,12 +95,14 @@ class UserController extends Controller
         return back()->with('ok', 'Usuario eliminado correctamente');
     }
 
-    public function resetPassword(User $usuario)
+    public function resetPassword(Request $request, User $usuario)
     {
         $nuevaPassword = Str::random(12);
 
         $usuario->password = Hash::make($nuevaPassword);
         $usuario->save();
+
+        $usuario->cerrarSesiones(auth()->id() === $usuario->id ? $request->session()->getId() : null);
 
         AuditLog::registrar('editar', 'User', $usuario->id, "Contraseña reseteada para: \"{$usuario->name}\" ({$usuario->email})");
 

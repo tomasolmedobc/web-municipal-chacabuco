@@ -30,6 +30,11 @@ class PerfilController extends Controller
 
         $usuario->save();
 
+        // Si cambió la contraseña, se cierran sus otras sesiones (la actual se conserva)
+        if (!empty($data['password'])) {
+            $usuario->cerrarSesiones($request->session()->getId());
+        }
+
         return back()->with('ok', 'Perfil actualizado correctamente');
     }
 }

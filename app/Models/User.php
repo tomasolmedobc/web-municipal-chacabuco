@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 #[Fillable(['name', 'apellido', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
@@ -41,6 +43,29 @@ class User extends Authenticatable
 
         $modulos = $this->modulos ?? [];
         return in_array($module, $modulos);
+    }
+
+    /**
+     * Cierra las sesiones abiertas del usuario (por ejemplo tras cambiarle la contraseña)
+     * e invalida su cookie de "recordarme". Con $excepto se conserva una sesión, normalmente la actual.
+     */
+    public function cerrarSesiones(?string $excepto = null): void
+    {
+        $this->forceFill(['remember_token' => Str::random(60)])->save();
+
+        if (config('session.driver') !== 'database') {
+            return;
+        }
+
+        $consulta = DB::connection(config('session.connection'))
+            ->table(config('session.table', 'sessions'))
+            ->where('user_id', $this->getKey());
+
+        if ($excepto) {
+            $consulta->where('id', '!=', $excepto);
+        }
+
+        $consulta->delete();
     }
 
     public function getFullNameAttribute(): string

@@ -74,15 +74,22 @@
                 <p class="fecha">Dejá la contraseña vacía si no querés cambiarla.</p>
             </div>
 
+            <div class="admin-form-group full">
+                <label for="current_password">Contraseña actual</label>
+                <input type="password" name="current_password" id="current_password" autocomplete="current-password">
+                <small class="fecha">Solo hace falta si vas a cambiar la contraseña.</small>
+                @error('current_password') <small class="auth-error">{{ $message }}</small> @enderror
+            </div>
+
             <div class="admin-form-group">
                 <label for="password">Nueva contraseña</label>
-                <input type="password" name="password" id="password">
+                <input type="password" name="password" id="password" autocomplete="new-password">
                 @error('password') <small class="auth-error">{{ $message }}</small> @enderror
             </div>
 
             <div class="admin-form-group">
                 <label for="password_confirmation">Confirmar contraseña</label>
-                <input type="password" name="password_confirmation" id="password_confirmation">
+                <input type="password" name="password_confirmation" id="password_confirmation" autocomplete="new-password">
             </div>
         </div>
 
