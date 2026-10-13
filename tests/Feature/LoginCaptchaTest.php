@@ -5,112 +5,111 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\RateLimiter;
 use Tests\TestCase;
 
+/**
+ * Login del panel: captcha (Cloudflare Turnstile), credenciales, límites y auditoría de accesos.
+ */
 class LoginCaptchaTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_login_page_shows_captcha_question(): void
-    {
-        $response = $this->get(route('login'));
-
-        $response->assertOk();
-        $response->assertSee('captcha');
-        $response->assertSessionHas('captcha_respuesta');
-    }
-
-    public function test_login_fails_with_wrong_captcha(): void
-    {
-        $this->get(route('login'));
-
-        $respuestaCorrecta = session('captcha_respuesta');
-        $respuestaIncorrecta = $respuestaCorrecta + 1;
-
-        $response = $this->post(route('login'), [
-            'email'    => 'user@example.com',
-            'password' => 'password',
-            'captcha'  => $respuestaIncorrecta,
-        ]);
-
-        $response->assertSessionHasErrors('captcha');
-    }
-
-    public function test_login_fails_with_missing_captcha(): void
-    {
-        $this->get(route('login'));
-
-        $response = $this->post(route('login'), [
-            'email'    => 'user@example.com',
-            'password' => 'password',
-        ]);
-
-        $response->assertSessionHasErrors('captcha');
-    }
-
-    public function test_login_fails_with_wrong_credentials_even_with_correct_captcha(): void
-    {
-        $this->get(route('login'));
-
-        $response = $this->post(route('login'), [
-            'email'    => 'noexiste@example.com',
-            'password' => 'wrongpassword',
-            'captcha'  => session('captcha_respuesta'),
-        ]);
-
-        $response->assertSessionHasErrors('email');
-    }
-
-    public function test_login_succeeds_with_correct_captcha_and_credentials(): void
+    private function admin(string $email = 'admin@chacabuco.gob.ar', string $password = 'secret123'): User
     {
         $user = User::factory()->create([
-            'email'    => 'admin@chacabuco.gob.ar',
-            'password' => Hash::make('secret123'),
+            'email'    => $email,
+            'password' => Hash::make($password),
         ]);
         $user->forceFill(['rol' => 'admin'])->save();
 
-        $this->get(route('login'));
+        return $user;
+    }
 
-        $response = $this->post(route('login'), [
-            'email'    => 'admin@chacabuco.gob.ar',
-            'password' => 'secret123',
-            'captcha'  => session('captcha_respuesta'),
+    private function intentar(string $email, string $password, string $token = 'token-de-prueba')
+    {
+        return $this->post(route('login.post'), [
+            'email'                 => $email,
+            'password'              => $password,
+            'cf-turnstile-response' => $token,
         ]);
+    }
 
-        $response->assertRedirect(route('admin.dashboard'));
+    private function activarTurnstile(bool $cloudflareAprueba): void
+    {
+        config(['services.turnstile.secret_key' => 'clave-secreta-de-prueba']);
+        Http::fake(['challenges.cloudflare.com/*' => Http::response(['success' => $cloudflareAprueba])]);
+    }
+
+    public function test_login_page_renders(): void
+    {
+        $this->get(route('login'))->assertOk();
+    }
+
+    public function test_login_requires_the_turnstile_token(): void
+    {
+        $this->admin();
+
+        $this->post(route('login.post'), ['email' => 'admin@chacabuco.gob.ar', 'password' => 'secret123'])
+            ->assertSessionHasErrors('cf-turnstile-response');
+
+        $this->assertGuest();
+    }
+
+    public function test_login_fails_when_cloudflare_rejects_the_token(): void
+    {
+        $this->admin();
+        $this->activarTurnstile(false);
+
+        $this->intentar('admin@chacabuco.gob.ar', 'secret123')->assertSessionHasErrors('captcha');
+
+        $this->assertGuest();
+    }
+
+    public function test_login_works_when_cloudflare_approves_the_token(): void
+    {
+        $user = $this->admin();
+        $this->activarTurnstile(true);
+
+        $this->intentar('admin@chacabuco.gob.ar', 'secret123')->assertRedirect(route('admin.dashboard'));
+
         $this->assertAuthenticatedAs($user);
     }
 
-    public function test_captcha_is_cleared_from_session_after_wrong_answer(): void
+    public function test_login_fails_with_wrong_credentials_and_is_audited(): void
     {
-        $this->get(route('login'));
+        $this->intentar('noexiste@example.com', 'wrongpassword')->assertSessionHasErrors('email');
 
-        $respuestaCorrecta = session('captcha_respuesta');
-
-        $this->post(route('login'), [
-            'email'    => 'user@example.com',
-            'password' => 'password',
-            'captcha'  => $respuestaCorrecta + 1,
-        ]);
-
-        $this->assertNull(session('captcha_respuesta'));
+        $this->assertGuest();
+        $this->assertDatabaseHas('audit_logs', ['accion' => 'login_fallido', 'modelo' => 'Acceso']);
     }
 
-    public function test_captcha_is_cleared_from_session_after_successful_login(): void
+    public function test_successful_login_and_logout_are_audited(): void
     {
-        $user = User::factory()->create([
-            'password' => Hash::make('secret123'),
-        ]);
-        $user->forceFill(['rol' => 'admin'])->save();
+        $user = $this->admin();
 
-        $this->get(route('login'));
+        $this->intentar('admin@chacabuco.gob.ar', 'secret123')->assertRedirect(route('admin.dashboard'));
+        $this->assertDatabaseHas('audit_logs', ['accion' => 'login', 'user_id' => $user->id]);
 
-        $this->post(route('login'), [
-            'email'    => $user->email,
-            'password' => 'secret123',
-            'captcha'  => session('captcha_respuesta'),
-        ]);
+        $this->post(route('logout'))->assertRedirect(route('login'));
+        $this->assertDatabaseHas('audit_logs', ['accion' => 'logout', 'user_id' => $user->id]);
+    }
 
-        $this->assertNull(session('captcha_respuesta'));
+    public function test_account_is_locked_after_too_many_failed_attempts_for_the_same_email(): void
+    {
+        $this->admin();
+
+        // Simula intentos fallidos previos desde otras IP (el límite por email es independiente del de la ruta)
+        for ($i = 0; $i < 5; $i++) {
+            RateLimiter::hit('login:admin@chacabuco.gob.ar', 300);
+        }
+
+        $respuesta = $this->intentar('admin@chacabuco.gob.ar', 'secret123');
+
+        $respuesta->assertSessionHasErrors('email');
+        $this->assertStringContainsString('Demasiados intentos', session('errors')->first('email'));
+        $this->assertGuest();
+        $this->assertDatabaseHas('audit_logs', ['accion' => 'login_bloqueado']);
     }
 }

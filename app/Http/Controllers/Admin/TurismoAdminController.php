@@ -123,9 +123,13 @@ class TurismoAdminController extends Controller
     {
         abort_if($archivo->turismo_item_id !== $turismo->id, 403);
 
-        $rutaFisica = public_path(ltrim($archivo->ruta, '/'));
-        if (File::isFile($rutaFisica)) {
-            File::delete($rutaFisica);
+        // Solo se borra dentro de la carpeta de adjuntos de turismo, y por nombre de archivo
+        $ruta = '/' . ltrim((string) $archivo->ruta, '/');
+        if (str_starts_with($ruta, '/files/turismo/')) {
+            $rutaFisica = public_path('files/turismo/' . basename($ruta));
+            if (File::isFile($rutaFisica)) {
+                File::delete($rutaFisica);
+            }
         }
 
         $archivo->delete();

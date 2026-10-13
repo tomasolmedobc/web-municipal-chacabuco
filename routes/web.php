@@ -66,7 +66,7 @@ Route::get('/rss.xml', [RssFeedController::class, 'index'])
     ->name('rss');
 
 Route::get('/buscar', [BusquedaController::class, 'index'])
-    ->middleware('throttle:30,1')
+    ->middleware('throttle:30,1,buscar-')
     ->name('busqueda');
 
 Route::get('/', [HomeController::class, 'index'])
@@ -112,7 +112,7 @@ Route::get('/tramites-y-servicios/expedientes', [ExpedienteConsultaController::c
     ->name('expedientes.index');
 
 Route::post('/tramites-y-servicios/expedientes', [ExpedienteConsultaController::class, 'consultar'])
-    ->middleware('throttle:10,1')
+    ->middleware('throttle:10,1,expedientes-')
     ->name('expedientes.consultar');
 
 Route::get('/tramites-y-servicios/habilitaciones', [HabilitacionesController::class, 'index'])
@@ -122,7 +122,7 @@ Route::get('/tramites-y-servicios/infracciones', [InfraccionesController::class,
     ->name('infracciones.index');
 
 Route::post('/tramites-y-servicios/infracciones', [InfraccionesController::class, 'consultar'])
-    ->middleware('throttle:10,1')
+    ->middleware('throttle:10,1,infracciones-')
     ->name('infracciones.consultar');
 
 Route::get('/tramites-y-servicios/infracciones/cedula/{falta}', [InfraccionesController::class, 'cedula'])
@@ -130,25 +130,25 @@ Route::get('/tramites-y-servicios/infracciones/cedula/{falta}', [InfraccionesCon
     ->name('infracciones.cedula');
 
 Route::post('/tramites-y-servicios/infracciones/libre-deuda', [InfraccionesController::class, 'libreDeuda'])
-    ->middleware('throttle:5,1')
+    ->middleware('throttle:5,1,libre-deuda-')
     ->name('infracciones.libre-deuda');
 
 Route::get('/tramites-y-servicios/reclamos', [ReclamosController::class, 'index'])
     ->name('reclamos.index');
 
 Route::post('/tramites-y-servicios/reclamos', [ReclamosController::class, 'store'])
-    ->middleware('throttle:5,1')
+    ->middleware('throttle:5,1,reclamos-alta-')
     ->name('reclamos.store');
 
 Route::post('/tramites-y-servicios/reclamos/consulta', [ReclamosController::class, 'consultar'])
-    ->middleware('throttle:10,1')
+    ->middleware('throttle:10,1,reclamos-consulta-')
     ->name('reclamos.consultar');
 
 Route::get('/tramites-y-servicios/omic', [OmicController::class, 'index'])
     ->name('omic.index');
 
 Route::post('/tramites-y-servicios/omic', [OmicController::class, 'store'])
-    ->middleware('throttle:3,1')
+    ->middleware('throttle:3,1,omic-')
     ->name('omic.store');
 
 Route::get('/turismo/eventos-proximos', [TurismoController::class, 'eventosProximos'])
@@ -177,14 +177,14 @@ Route::get('/tramites-y-servicios/carnet-conducir', [CarnetController::class, 'i
     ->name('carnet.index');
 
 Route::post('/chatbot', [ChatbotController::class, 'responder'])
-    ->middleware('throttle:20,1')
+    ->middleware('throttle:20,1,chatbot-')
     ->name('chatbot.responder');
 
 Route::get('/acceso-municipal', [AccesoMunicipalController::class, 'show'])
     ->name('acceso-municipal.index');
 
 Route::post('/acceso-municipal', [AccesoMunicipalController::class, 'authenticate'])
-    ->middleware('throttle:5,1')
+    ->middleware('throttle:5,1,acceso-municipal-')
     ->name('acceso-municipal.authenticate');
 
 Route::post('/acceso-municipal/salir', [AccesoMunicipalController::class, 'logout'])
@@ -203,21 +203,21 @@ Route::middleware('guest')->group(function () {
         ->name('login');
 
     Route::post('/acceso-interno', [AuthController::class, 'login'])
-        ->middleware('throttle:5,1')
+        ->middleware('throttle:5,1,login-')
         ->name('login.post');
 
     Route::get('/recuperar-contrasena', [PasswordResetController::class, 'showForgotForm'])
         ->name('password.request');
 
     Route::post('/recuperar-contrasena', [PasswordResetController::class, 'sendLink'])
-        ->middleware('throttle:5,1')
+        ->middleware('throttle:5,1,recuperar-')
         ->name('password.email');
 
     Route::get('/nueva-contrasena/{token}', [PasswordResetController::class, 'showResetForm'])
         ->name('password.reset');
 
     Route::post('/nueva-contrasena', [PasswordResetController::class, 'reset'])
-        ->middleware('throttle:5,1')
+        ->middleware('throttle:5,1,nueva-clave-')
         ->name('password.update');
 
 });
@@ -255,7 +255,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         ->name('admin.perfil.edit');
 
     Route::put('/perfil', [PerfilController::class, 'update'])
-        ->middleware('throttle:10,1')
+        ->middleware('throttle:10,1,perfil-')
         ->name('admin.perfil.update');
 
 

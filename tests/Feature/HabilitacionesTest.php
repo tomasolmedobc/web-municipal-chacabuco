@@ -20,7 +20,7 @@ class HabilitacionesTest extends TestCase
         $response->assertSee('Tramite de Prefactibilidad');
         $response->assertSee('Solicitud de Pre Factibilidad');
         $response->assertSee('Requisitos de Defensa Civil');
-        $response->assertSee('Listado de ordenanzas de referencia');
+        $response->assertSee('Normativas Vigentes');
     }
 
     public function test_habilitaciones_button_points_to_public_page(): void

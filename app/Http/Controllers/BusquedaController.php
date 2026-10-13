@@ -6,6 +6,7 @@ use App\Models\Noticia;
 use App\Models\PublicAccessButton;
 use App\Models\TurismoItem;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class BusquedaController extends Controller
 {
@@ -150,7 +151,8 @@ class BusquedaController extends Controller
     {
         $q = trim($request->get('q', ''));
 
-        $noticias  = collect();
+        // Paginador vacío (no una colección): la vista y el total usan total() y hasPages()
+        $noticias  = new LengthAwarePaginator([], 0, 12);
         $items     = collect();
         $secciones = collect();
         $accesos   = collect();

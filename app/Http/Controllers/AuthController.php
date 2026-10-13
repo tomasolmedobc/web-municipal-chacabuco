@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AuditLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -39,6 +40,8 @@ class AuthController extends Controller
         if (RateLimiter::tooManyAttempts($clave, 5)) {
             $segundos = RateLimiter::availableIn($clave);
 
+            AuditLog::registrarAcceso('login_bloqueado', 'Cuenta bloqueada por demasiados intentos: ' . Str::limit($request->input('email'), 100));
+
             return back()->withErrors([
                 'email' => "Demasiados intentos. Probá de nuevo en {$segundos} segundos.",
             ])->onlyInput('email');
@@ -48,10 +51,14 @@ class AuthController extends Controller
             RateLimiter::clear($clave);
             $request->session()->regenerate();
 
+            AuditLog::registrarAcceso('login', 'Inicio de sesión', Auth::user());
+
             return redirect()->route('admin.dashboard');
         }
 
         RateLimiter::hit($clave, 300);
+
+        AuditLog::registrarAcceso('login_fallido', 'Intento de acceso fallido con el correo: ' . Str::limit($request->input('email'), 100));
 
         return back()->withErrors([
             'email' => 'Credenciales incorrectas.',
@@ -60,6 +67,12 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        $usuario = Auth::user();
+
+        if ($usuario) {
+            AuditLog::registrarAcceso('logout', 'Cierre de sesión', $usuario);
+        }
+
         Auth::logout();
 
         $request->session()->invalidate();

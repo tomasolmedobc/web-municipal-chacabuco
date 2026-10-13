@@ -42,12 +42,21 @@ return new class extends Migration
             }
         }
 
-        // Drop seccion column from both tables (index is auto-dropped on MySQL)
-        Schema::table('obras_procedimientos', function (Blueprint $table) {
+        // Drop seccion column from both tables (index is auto-dropped on MySQL).
+        // SQLite (usado por los tests) no puede borrar una columna indexada: se quita el índice antes.
+        $esSqlite = Schema::getConnection()->getDriverName() === 'sqlite';
+
+        Schema::table('obras_procedimientos', function (Blueprint $table) use ($esSqlite) {
+            if ($esSqlite) {
+                $table->dropIndex(['seccion']);
+            }
             $table->dropColumn('seccion');
         });
 
-        Schema::table('obras_normativas', function (Blueprint $table) {
+        Schema::table('obras_normativas', function (Blueprint $table) use ($esSqlite) {
+            if ($esSqlite) {
+                $table->dropIndex(['seccion']);
+            }
             $table->dropColumn('seccion');
         });
     }

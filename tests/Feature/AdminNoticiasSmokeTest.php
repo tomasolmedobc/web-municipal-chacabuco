@@ -30,7 +30,7 @@ class AdminNoticiasSmokeTest extends TestCase
             'estado' => 'publicado',
         ]);
 
-        $response->assertRedirect(route('admin.dashboard'));
+        $response->assertRedirect(route('admin.noticias.index'));
 
         $this->assertDatabaseHas('noticias', [
             'titulo' => 'Nueva noticia de prueba',

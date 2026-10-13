@@ -25,6 +25,23 @@ class AuditLog extends Model
         'created_at' => 'datetime',
     ];
 
+    /**
+     * Registra eventos de acceso (login, logout, intentos fallidos). A diferencia de registrar(),
+     * el usuario se pasa explícito porque en un intento fallido todavía no hay sesión.
+     */
+    public static function registrarAcceso(string $accion, string $descripcion, ?User $usuario = null): void
+    {
+        static::create([
+            'user_id'     => $usuario?->id,
+            'user_nombre' => $usuario?->name,
+            'accion'      => $accion,
+            'modelo'      => 'Acceso',
+            'modelo_id'   => $usuario?->id,
+            'descripcion' => mb_substr($descripcion, 0, 255),
+            'ip'          => Request::ip(),
+        ]);
+    }
+
     public static function registrar(string $accion, string $modelo, ?int $modeloId, string $descripcion): void
     {
         static::create([

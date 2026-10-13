@@ -3,14 +3,16 @@
 @section('meta_description', $q ? 'Resultados de búsqueda para "' . $q . '" en el portal municipal de Chacabuco.' : 'Buscá noticias, atractivos turísticos y más en el portal de la Municipalidad de Chacabuco.')
 
 @php
-function busquedaHighlight(string $texto, array $palabras): string {
-    if (empty($palabras)) return e($texto);
-    $patron = implode('|', array_map(fn($p) => preg_quote($p, '/'), $palabras));
-    return preg_replace_callback(
-        '/(' . $patron . ')/iu',
-        fn($m) => '<mark class="busqueda-highlight">' . e($m[0]) . '</mark>',
-        e($texto)
-    );
+if (! function_exists('busquedaHighlight')) {
+    function busquedaHighlight(string $texto, array $palabras): string {
+        if (empty($palabras)) return e($texto);
+        $patron = implode('|', array_map(fn($p) => preg_quote($p, '/'), $palabras));
+        return preg_replace_callback(
+            '/(' . $patron . ')/iu',
+            fn($m) => '<mark class="busqueda-highlight">' . e($m[0]) . '</mark>',
+            e($texto)
+        );
+    }
 }
 @endphp
 

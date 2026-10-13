@@ -801,6 +801,25 @@ body.dark .visibility-item.is-hidden .visibility-item__title em {
     border: 1px solid var(--danger-border);
 }
 
+.audit-badge--login {
+    background: var(--success-bg);
+    color: var(--success);
+    border: 1px solid var(--success-border);
+}
+
+.audit-badge--login_fallido,
+.audit-badge--login_bloqueado {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid var(--danger-border);
+}
+
+.audit-badge--logout {
+    background: var(--card-soft, #f1f5f9);
+    color: var(--muted);
+    border: 1px solid var(--border);
+}
+
 .audit-id {
     font-size: 12px;
     color: var(--muted);
