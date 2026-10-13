@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\AuditLog;
 use App\Models\PublicAccessButton;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -103,6 +104,34 @@ class PanelAdminSeguridadTest extends TestCase
         $user->cerrarSesiones();
 
         $this->assertSame(['ajena'], DB::table('sessions')->pluck('id')->all());
+    }
+
+    public function test_audit_log_separates_changes_from_access_events(): void
+    {
+        $admin = $this->usuario();
+
+        AuditLog::registrar('crear', 'Noticia', 1, 'Noticia creada: "Titulo de prueba"');
+        AuditLog::registrarAcceso('login_fallido', 'Intento de acceso fallido con el correo: intruso@example.com');
+        AuditLog::registrarAcceso('login_bloqueado', 'Cuenta bloqueada por demasiados intentos: intruso@example.com');
+
+        // Pestaña por defecto: solo cambios
+        $this->actingAs($admin)->get(route('admin.audit-log.index'))
+            ->assertOk()
+            ->assertSee('Titulo de prueba')
+            ->assertDontSee('intruso@example.com');
+
+        // Pestaña de accesos: solo eventos de acceso, con etiquetas legibles
+        $this->actingAs($admin)->get(route('admin.audit-log.index', ['tab' => 'accesos']))
+            ->assertOk()
+            ->assertSee('intruso@example.com')
+            ->assertSee('Intento fallido')
+            ->assertSee('Bloqueo')
+            ->assertDontSee('Titulo de prueba');
+
+        // Un valor inválido vuelve a la pestaña de cambios
+        $this->actingAs($admin)->get(route('admin.audit-log.index', ['tab' => 'cualquiera']))
+            ->assertOk()
+            ->assertSee('Titulo de prueba');
     }
 
     public function test_button_custom_links_reject_dangerous_schemes(): void
