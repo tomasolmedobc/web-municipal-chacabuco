@@ -1,3 +1,15 @@
+# Archivos subidos: el navegador no debe "adivinar" su tipo, y los adjuntos de ciudadanos
+# (OMIC y reclamos) no deben indexarse ni guardarse en cachés compartidas.
+<IfModule mod_headers.c>
+    <If "%{REQUEST_URI} =~ m#^/(storage|files)/#">
+        Header set X-Content-Type-Options "nosniff"
+    </If>
+    <If "%{REQUEST_URI} =~ m#^/storage/(omic|reclamos)/#">
+        Header set X-Robots-Tag "noindex, nofollow, noarchive"
+        Header set Cache-Control "private, no-store"
+    </If>
+</IfModule>
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
