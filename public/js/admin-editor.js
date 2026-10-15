@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
         height: 500,
         menubar: true,
         plugins: 'lists link image table code help wordcount',
-        toolbar: 'undo redo | blocks | bold italic underline | bullist numlist | link image table | alignleft aligncenter alignright | code',
+        toolbar: 'undo redo | formatselect | bold italic underline | bullist numlist | link image table | alignleft aligncenter alignright | code',
         language: 'es',
         language_url: '/js/tinymce/langs/es.js',
         branding: false,

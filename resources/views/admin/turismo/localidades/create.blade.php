@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
         height: 380,
         menubar: false,
         plugins: 'lists link code wordcount',
-        toolbar: 'undo redo | blocks | bold italic underline | bullist numlist | link | code',
+        toolbar: 'undo redo | formatselect | bold italic underline | bullist numlist | link | code',
         language: 'es',
         language_url: '/js/tinymce/langs/es.js',
         branding: false,
