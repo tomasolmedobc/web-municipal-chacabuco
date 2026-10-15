@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Noticia;
+use App\Support\WordPressContent;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Database\Query\JoinClause;
@@ -195,6 +196,9 @@ class SyncWordPressNews extends Command
 
     protected function normalizeContent(string $content): string
     {
+        // Primero se quitan los shortcodes de Divi (los [et_pb_image] pasan a <img>) y después se reescriben las rutas de imágenes
+        $content = WordPressContent::quitarShortcodesDivi($content);
+
         return $this->normalizeMediaValue($content) ?? $content;
     }
 

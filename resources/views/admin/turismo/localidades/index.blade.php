@@ -32,6 +32,14 @@
         </script>
     @endif
 
+    @if(session('error'))
+        <script @nonce>
+            document.addEventListener('DOMContentLoaded', function () {
+                showToast(@json(session('error')), 'error');
+            });
+        </script>
+    @endif
+
     <div class="admin-list">
         @foreach($localidades as $localidad)
             <article class="admin-list-item">
@@ -53,6 +61,10 @@
                             <i class="fa-solid fa-arrow-down-1-9"></i>
                             Orden {{ $localidad->orden }}
                         </span>
+                        <span>
+                            <i class="fa-solid fa-map-location-dot"></i>
+                            {{ $localidad->turismo_items_count }} atractivo(s) o evento(s)
+                        </span>
                     </div>
                 </div>
 
@@ -63,6 +75,23 @@
                     <a href="{{ route('admin.turismo.localidades.edit', $localidad) }}" class="btn btn-secondary">
                         Editar
                     </a>
+
+                    @if(! $localidad->es_cabecera)
+                        <form action="{{ route('admin.turismo.localidades.destroy', $localidad) }}"
+                              method="POST"
+                              data-confirm="¿Eliminar la localidad &quot;{{ $localidad->nombre }}&quot;?">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                    class="btn btn-danger"
+                                    @if($localidad->turismo_items_count > 0)
+                                        disabled
+                                        title="Tiene atractivos o eventos: eliminalos o pasalos a otra localidad primero."
+                                    @endif>
+                                Eliminar
+                            </button>
+                        </form>
+                    @endif
                 </div>
             </article>
         @endforeach

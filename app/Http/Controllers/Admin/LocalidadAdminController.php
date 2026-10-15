@@ -13,7 +13,7 @@ class LocalidadAdminController extends Controller
 {
     public function index()
     {
-        $localidades = Localidad::orderBy('orden')->get();
+        $localidades = Localidad::withCount('turismoItems')->orderBy('orden')->get();
 
         return view('admin.turismo.localidades.index', [
             'localidades' => $localidades,
@@ -77,5 +77,34 @@ class LocalidadAdminController extends Controller
         return redirect()
             ->route('admin.turismo.localidades.index')
             ->with('ok', 'Localidad actualizada correctamente');
+    }
+
+    public function destroy(Localidad $localidad)
+    {
+        // La ciudad cabecera es la base del sitio de turismo: no se elimina.
+        if ($localidad->es_cabecera) {
+            return back()->with('error', 'La ciudad cabecera no se puede eliminar.');
+        }
+
+        // La relación con los atractivos y eventos es en cascada: borrar la localidad borraría todo su
+        // contenido (y dejaría sus imágenes y adjuntos sin limpiar). Se pide vaciarla o reubicarlo antes.
+        $cantidad = $localidad->turismoItems()->count();
+
+        if ($cantidad > 0) {
+            return back()->with('error', "No se puede eliminar \"{$localidad->nombre}\": tiene {$cantidad} atractivo(s) o evento(s). "
+                . 'Eliminalos o pasalos a otra localidad primero.');
+        }
+
+        $nombre = $localidad->nombre;
+        $id = $localidad->id;
+
+        ImageUploader::eliminar($localidad->imagen_portada);
+        $localidad->delete();
+
+        AuditLog::registrar('eliminar', 'Localidad', $id, "Localidad eliminada: \"{$nombre}\"");
+
+        return redirect()
+            ->route('admin.turismo.localidades.index')
+            ->with('ok', 'Localidad eliminada correctamente');
     }
 }

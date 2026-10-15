@@ -401,6 +401,9 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         Route::put('/turismo/localidades/{localidad}', [LocalidadAdminController::class, 'update'])
             ->name('admin.turismo.localidades.update');
 
+        Route::delete('/turismo/localidades/{localidad}', [LocalidadAdminController::class, 'destroy'])
+            ->name('admin.turismo.localidades.destroy');
+
         Route::get('/turismo', [TurismoAdminController::class, 'index'])
             ->name('admin.turismo.index');
 
